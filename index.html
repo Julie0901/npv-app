@@ -1,0 +1,1143 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#262B29">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="NPV 연습장">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}body{margin:0;font-size:14px}img{max-width:100%}</style>
+<title>기업재무 중간고사 연습장</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Share+Tech+Mono&display=swap">
+<style>
+/* Layout: a financial-calculator workbench — paper page, dark calculator bodies with gold keys and an LCD readout */
+:root{
+  --paper:#ECEEE8; --paper2:#E1E5DC; --card:#F7F8F4; --ink:#1B201D; --ink2:#4B554F; --line:#C8CEC4;
+  --body:#262B29; --body2:#323835; --key:#414844; --keyink:#EEF1EC; --keylab:#AAB4AD;
+  --gold:#B5822A; --goldink:#1E1607; --goldsoft:#E9D6AE;
+  --lcd:#B3BD9E; --lcdink:#1E2916; --lcddim:#5E6B4F;
+  --good:#2E7A4D; --bad:#B23F2E; --goodbg:#DCEBDF; --badbg:#F2DCD7;
+  --f-display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  --f-lcd:"Share Tech Mono","IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#131614; --paper2:#1A1E1C; --card:#1C201E; --ink:#E3E8E2; --ink2:#A2ADA6; --line:#2F3632;
+  --body:#262C29; --body2:#303733; --key:#3D4541; --keyink:#EEF1EC; --keylab:#A7B2AB;
+  --gold:#D3A042; --goldink:#1E1607; --goldsoft:#4A3B1D;
+  --lcd:#A2AD8C; --lcdink:#1A2413; --lcddim:#56624A;
+  --good:#63BE88; --bad:#E77560; --goodbg:#1D3326; --badbg:#3A221D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#131614; --paper2:#1A1E1C; --card:#1C201E; --ink:#E3E8E2; --ink2:#A2ADA6; --line:#2F3632;
+  --body:#262C29; --body2:#303733; --key:#3D4541; --keyink:#EEF1EC; --keylab:#A7B2AB;
+  --gold:#D3A042; --goldink:#1E1607; --goldsoft:#4A3B1D;
+  --lcd:#A2AD8C; --lcdink:#1A2413; --lcddim:#56624A;
+  --good:#63BE88; --bad:#E77560; --goodbg:#1D3326; --badbg:#3A221D; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+/* header */
+.top{padding-block:28px 18px;border-bottom:1px solid var(--line)}
+.top .eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;color:var(--ink2);text-transform:uppercase}
+.top h1{font-size:clamp(30px,5.4vw,52px);font-weight:800;font-stretch:72%;letter-spacing:-.01em;margin-top:6px}
+.top h1 em{font-style:normal;color:var(--gold)}
+.top p{margin:8px 0 0;color:var(--ink2);max-width:62ch}
+.statusline{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;font-family:var(--f-mono);font-size:12.5px;color:var(--ink2)}
+.statusline b{color:var(--ink);font-weight:600}
+
+/* nav */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line)}
+nav.tabs .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+nav.tabs button{flex:0 0 auto;font:600 13px/1 var(--f-body);color:var(--ink2);background:transparent;border:1px solid transparent;border-radius:6px;padding:9px 11px;cursor:pointer;white-space:nowrap}
+nav.tabs button:hover{color:var(--ink);border-color:var(--line)}
+nav.tabs button[aria-selected="true"]{background:var(--body);color:var(--keyink);border-color:var(--body)}
+nav.tabs button .ct{font-family:var(--f-mono);font-size:11px;color:var(--gold);margin-left:5px}
+
+main{padding-block:26px 80px}
+section.view{display:grid;gap:22px}
+.chhead{display:grid;gap:6px}
+.chhead .num{font-family:var(--f-mono);font-size:12.5px;color:var(--gold);letter-spacing:.06em}
+.chhead h2{font-size:clamp(24px,3.6vw,34px);font-weight:750;font-stretch:80%}
+
+/* concept panel */
+.concept{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px}
+@media (max-width:860px){.concept{grid-template-columns:minmax(0,1fr)}}
+.pane{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px;min-width:0}
+.pane h3{font-size:16px;font-weight:700;font-stretch:90%;margin-bottom:10px;display:flex;gap:8px;align-items:baseline}
+.pane h3 small{font-family:var(--f-mono);font-weight:400;font-size:11.5px;color:var(--ink2);letter-spacing:.04em}
+.lead{font-size:16px;font-weight:600;margin:0 0 10px}
+.pane ul{margin:0;padding-left:1.1em;display:grid;gap:6px}
+.pane li::marker{color:var(--gold)}
+.analogy{margin-top:12px;padding:10px 12px;border-left:3px solid var(--gold);background:var(--paper2);border-radius:0 6px 6px 0;font-size:14px}
+.fx{display:grid;gap:8px}
+.fx div{display:grid;gap:2px;padding-bottom:8px;border-bottom:1px dashed var(--line)}
+.fx div:last-child{border-bottom:0;padding-bottom:0}
+.fx span{font-size:12.5px;color:var(--ink2)}
+.fx code,.mono{font-family:var(--f-mono);font-size:13.5px;overflow-wrap:anywhere}
+.phr{display:grid;gap:8px;margin-top:4px}
+.phr div{display:grid;gap:1px}
+.phr .en{font-family:var(--f-mono);font-size:13px}
+.phr .ko{font-size:12.5px;color:var(--ink2)}
+
+/* problem card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.card>header{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:14px 18px 0}
+.ref{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--body);color:var(--gold);padding:3px 8px;border-radius:4px;letter-spacing:.03em}
+.card h3{font-size:18px;font-weight:700;font-stretch:88%;flex:1 1 280px;min-width:0}
+.solved{font:600 11.5px var(--f-mono);color:var(--good);border:1px solid var(--good);border-radius:999px;padding:2px 8px}
+.prompt{margin:10px 18px 14px;font-size:14.5px;line-height:1.65;color:var(--ink);max-width:90ch}
+.prompt .lbl{font:600 11px var(--f-mono);letter-spacing:.08em;color:var(--ink2);display:block;margin-bottom:2px}
+
+.calc{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);background:var(--body);color:var(--keyink)}
+@media (max-width:780px){.calc{grid-template-columns:minmax(0,1fr)}}
+.keys{padding:16px 18px;display:grid;gap:12px;min-width:0;align-content:start}
+.ins{align-items:end}
+.ins{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.in{display:grid;gap:3px;min-width:0}
+.in.wide{grid-column:1/-1}
+.in label{font:500 11.5px/1.3 var(--f-body);color:var(--keylab)}
+.in input,.in select{width:100%;min-width:0;font:500 15px var(--f-mono);color:var(--keyink);background:var(--key);border:0;border-bottom:2px solid transparent;border-radius:5px 5px 3px 3px;padding:8px 9px;text-align:right;box-shadow:inset 0 -2px 0 rgba(0,0,0,.25)}
+.in select{text-align:left}
+.in input:focus,.in select:focus{outline:none;border-bottom-color:var(--gold)}
+.in .unit{font:400 11px var(--f-mono);color:var(--keylab)}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:600 12.5px/1 var(--f-body);border:0;border-radius:6px;padding:10px 12px;cursor:pointer;background:var(--body2);color:var(--keyink);box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
+.btn:hover{filter:brightness(1.15)}
+.btn.gold{background:var(--gold);color:var(--goldink)}
+.btn[aria-pressed="true"]{background:var(--gold);color:var(--goldink)}
+.lcdwrap{padding:16px 18px;display:grid;align-content:start;gap:10px;background:var(--body2);min-width:0}
+.lcd{background:var(--lcd);color:var(--lcdink);border-radius:6px;padding:12px 14px;box-shadow:inset 0 2px 6px rgba(0,0,0,.35);font-family:var(--f-lcd);display:grid;gap:4px;min-width:0}
+.lcd .row{display:flex;justify-content:space-between;gap:10px;align-items:baseline;min-width:0}
+.lcd .row span:first-child{font-family:var(--f-body);font-size:11.5px;color:var(--lcddim);min-width:0}
+.lcd .row span:last-child{font-size:16px;white-space:nowrap}
+.lcd .row.key span:last-child{font-size:20px}
+.lcd .row.key span:first-child{color:var(--lcdink);font-weight:600}
+.card.practice:not(.revealed) .lcd .row span:last-child{color:transparent;text-shadow:0 0 9px var(--lcddim)}
+.pr{display:grid;gap:8px}
+.pr .q{display:grid;grid-template-columns:minmax(0,1fr) 120px auto;gap:6px;align-items:center}
+.pr .q label{font-size:12px;color:var(--keylab)}
+.pr .q input{font:500 14px var(--f-mono);background:var(--key);color:var(--keyink);border:0;border-radius:5px;padding:7px 8px;text-align:right;width:100%;min-width:0}
+.pr .mk{font:700 13px var(--f-mono);min-width:22px}
+.pr .mk.ok{color:var(--good)} .pr .mk.no{color:var(--bad)}
+.pr .hint{font-size:11.5px;color:var(--keylab)}
+
+.sol{padding:14px 18px 18px;border-top:1px solid var(--line)}
+.sol .shd{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;margin-bottom:8px}
+.sol .shd b{font:700 13px var(--f-mono);letter-spacing:.06em}
+.steps{font-family:var(--f-mono);font-size:13.2px;line-height:1.7;display:grid;gap:2px;overflow-x:auto;min-width:0}
+.steps .h{font-family:var(--f-body);font-weight:700;font-size:13.5px;margin-top:8px;color:var(--gold)}
+.steps .h:first-child{margin-top:0}
+.steps div{overflow-wrap:anywhere}
+.ans{margin-top:12px;padding:10px 12px;border-radius:6px;background:var(--paper2);border-left:3px solid var(--good);font-size:14px}
+.ans b{font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;color:var(--good);display:block}
+.card.practice:not(.revealed) .sol .steps,.card.practice:not(.revealed) .sol .ans{filter:blur(6px);user-select:none;pointer-events:none}
+.lockmsg{display:none;font-size:13px;color:var(--ink2);margin-bottom:6px}
+.card.practice:not(.revealed) .lockmsg{display:block}
+.chart{padding:4px 18px 14px;min-width:0}
+.chart svg{width:100%;height:auto;display:block}
+.chart .axis{stroke:var(--line)} .chart .zero{stroke:var(--ink2);stroke-dasharray:3 3}
+.chart text{fill:var(--ink2);font:11px var(--f-mono)}
+.chart .s0{stroke:var(--gold);fill:none;stroke-width:2.5}
+.chart .s1{stroke:var(--ink);fill:none;stroke-width:2;stroke-dasharray:6 4}
+.chart .dot{fill:var(--card);stroke:var(--bad);stroke-width:2}
+.chart .cap{font:600 11.5px var(--f-body);fill:var(--ink2)}
+
+/* home */
+.hero2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media (max-width:860px){.hero2{grid-template-columns:minmax(0,1fr)}}
+.tvm .regs{display:grid;gap:8px}
+.tvm .reg{display:grid;grid-template-columns:62px minmax(0,1fr) 64px;gap:8px;align-items:center}
+.tvm .reg b{font:700 14px var(--f-mono);color:var(--gold)}
+.tvm .reg input{font:500 15px var(--f-mono);color:var(--keyink);background:var(--key);border:0;border-radius:5px;padding:8px 9px;text-align:right;width:100%;min-width:0}
+.tvm .reg input.hit{background:var(--lcd);color:var(--lcdink)}
+.tvm .reg .btn{padding:9px 6px}
+.ord{counter-reset:s;display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.ord li{counter-increment:s;display:grid;grid-template-columns:28px minmax(0,1fr);gap:8px}
+.ord li::before{content:counter(s);font:700 13px var(--f-mono);color:var(--goldink);background:var(--gold);width:24px;height:24px;border-radius:5px;display:grid;place-items:center;margin-top:1px}
+.qa{display:grid;gap:14px}
+.qa details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+.qa summary{cursor:pointer;font-weight:600;display:flex;gap:10px;align-items:baseline}
+.qa summary .ref{flex:0 0 auto}
+.qa .en{font-family:var(--f-mono);font-size:13.2px;margin:10px 0 6px;line-height:1.7}
+.qa .ko{font-size:13.5px;color:var(--ink2)}
+.sheet{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12.5px;color:var(--ink2)}
+.copied{font-size:12px;color:var(--good)}
+@media (prefers-reduced-motion:no-preference){.lcd .row span:last-child{transition:color .2s,text-shadow .2s}}
+
+/* calculator shortcuts */
+.kbox{padding:14px 18px 6px;border-top:1px solid var(--line);display:grid;gap:10px}
+.khd{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}.khd b{font:700 14px var(--f-display);font-stretch:85%;letter-spacing:.02em;color:var(--gold)}.khd span{font-size:12px;color:var(--ink2)}
+.ksteps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.ksteps>li{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;min-width:0;background:var(--card)}
+.ksh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}.ksh b{font-size:14.5px}
+.kout{margin-left:auto;font:600 15px var(--f-lcd);background:var(--lcd);color:var(--lcdink);padding:2px 9px;border-radius:4px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.krow{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px;align-items:start}
+.kl{font:600 11px/2 var(--f-mono);color:var(--ink2);letter-spacing:.03em}
+.kc{font:13.2px/2 var(--f-mono);overflow-wrap:anywhere}
+.kc kbd{margin:0 1px}
+.kwhy{font-size:12.8px;color:var(--ink2);border-left:2px solid var(--gold);padding-left:8px;overflow-wrap:anywhere}
+.card.practice:not(.revealed) .kout{color:transparent;text-shadow:0 0 8px var(--lcddim)}
+@media (max-width:560px){.krow{grid-template-columns:minmax(0,1fr);gap:0}.kout{margin-left:0}}
+/* TA review */
+kbd{font:600 12px var(--f-mono);background:var(--body);color:var(--keyink);border-radius:4px;padding:1px 6px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.35);white-space:nowrap}
+.tajump{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.tajump a{text-decoration:none}
+.card.ta>header .btn{margin-left:auto}
+.tagoal{margin:0 18px 10px;padding:10px 12px;background:var(--paper2);border-radius:6px;font-size:14px}
+.tagoal b{font:700 12px var(--f-mono);color:var(--gold);margin-right:6px}
+pre.tl{margin:0 18px 14px;padding:12px 14px;background:var(--body);color:var(--lcd);border-radius:6px;font:13px/1.6 var(--f-mono);overflow-x:auto;white-space:pre}
+.tasteps{list-style:none;margin:0;padding:0 18px 6px;display:grid;gap:12px}
+.tasteps>li{border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:grid;gap:8px;min-width:0}
+.sh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}
+.sn{font:700 12px var(--f-mono);background:var(--gold);color:var(--goldink);border-radius:4px;padding:2px 7px}
+.sh b{font-size:15px}
+.sr{margin-left:auto;font:600 15px var(--f-lcd);background:var(--lcd);color:var(--lcdink);padding:2px 9px;border-radius:4px}
+.sf{font:13.5px/1.6 var(--f-mono);overflow-wrap:anywhere}
+.keytab{display:grid;border:1px solid var(--line);border-radius:6px;overflow:hidden;min-width:0}
+.keytab .kh,.keytab .kr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:6px 10px;align-items:center}
+.keytab .kh{background:var(--paper2);font:600 11px var(--f-mono);color:var(--ink2);letter-spacing:.05em}
+.keytab .kr+.kr{border-top:1px dashed var(--line)}
+.kk{font:13.5px/1.9 var(--f-mono);overflow-wrap:anywhere}
+.kv{font:600 14px var(--f-lcd);text-align:right;white-space:nowrap}
+.ba{display:grid;gap:3px}.ba span{font:600 11px var(--f-mono);color:var(--ink2);letter-spacing:.05em}.ba code{font:13px/1.6 var(--f-mono);background:var(--paper2);padding:6px 10px;border-radius:5px;overflow-wrap:anywhere}
+.sen{font:13.5px/1.6 var(--f-mono);border-left:3px solid var(--good);padding-left:10px}
+.tatips{margin:6px 18px 18px;padding:10px 14px;border-left:3px solid var(--bad);background:var(--paper2);border-radius:0 6px 6px 0;font-size:14px}
+.tatips b{font:700 12px var(--f-mono);color:var(--bad)}.tatips ul{margin:4px 0 0;padding-left:1.1em}
+@media (max-width:560px){.sr{margin-left:0}.card.ta>header .btn{margin-left:0}}
+</style>
+</head><body>
+<header class="top"><div class="wrap">
+<div class="eyebrow">KAIST · Corporate Finance BAF501K · Midterm</div>
+<h1>기업재무 <em>NPV</em> 연습장</h1>
+<p>교수님 지정 문제(RWJJ 12th ed.) 전부를 계산기 지름길로 풀어볼 수 있게 만들었습니다. 1단계 → 2단계 키 입력을 따라 하고, 숫자를 바꿔 새 문제로 연습하세요.</p>
+<div class="statusline"><span>계산 문제 <b id="nCalc">37</b>개 (전부 계산기 지름길) + 개념 <b>6</b> + TA 리뷰 <b>5</b></span><span>맞힌 문제 <b id="solvedTotal">0 / 37</b></span><span>연습 기록은 이 브라우저에만 저장됩니다</span></div>
+</div></header>
+<nav class="tabs" aria-label="Chapters"><div class="wrap" role="tablist"></div></nav>
+<main><div class="wrap"></div></main>
+<script>
+/* ===== CORE: math + problem definitions (no DOM) ===== */
+const pvif=(r,n)=>Math.pow(1+r,-n);
+const pvifa=(r,n)=>Math.abs(r)<1e-12?n:(1-Math.pow(1+r,-n))/r;
+const fvifa=(r,n)=>Math.abs(r)<1e-12?n:(Math.pow(1+r,n)-1)/r;
+const npv=(r,cf)=>cf.reduce((s,c,t)=>s+c/Math.pow(1+r,t),0);
+function bisect(f,lo,hi){let flo=f(lo);for(let i=0;i<300;i++){const m=(lo+hi)/2,fm=f(m);if(fm===0)return m;if((fm>0)===(flo>0)){lo=m;flo=fm}else hi=m;if(hi-lo<1e-13)break}return (lo+hi)/2}
+function roots(f,lo,hi,step){const out=[];let x0=lo,f0=f(x0);const n=Math.round((hi-lo)/step);for(let i=1;i<=n;i++){const x=lo+i*step,f1=f(x);if(isFinite(f0)&&isFinite(f1)){if(f0===0)out.push(x0);else if(f0*f1<0)out.push(bisect(f,x0,x))}x0=x;f0=f1}
+  return out.filter((v,i,a)=>i===0||Math.abs(v-a[i-1])>1e-6)}
+const irrs=(cf,lo=-0.95,hi=3)=>roots(r=>npv(r,cf),lo,hi,0.0005);
+function irr1(cf){const a=irrs(cf);if(!a.length)return NaN;const p=a.filter(x=>x>0);return p.length?p[0]:a[0]}
+function payback(cf,r=0){let cum=cf[0];if(cum>=0)return 0;for(let t=1;t<cf.length;t++){const c=cf[t]/Math.pow(1+r,t);if(c>0&&cum+c>=0)return t-1+(-cum)/c;cum+=c}return Infinity}
+const parseNum=s=>{s=String(s).replace(/[,$\s]/g,'').replace(/[–−]/g,'-');if(s.includes('/')){const[a,b]=s.split('/');return parseFloat(a)/parseFloat(b)}return parseFloat(s)};
+const parseList=s=>String(s).split(/[;,\s]+/).filter(x=>x.length).map(parseNum);
+
+/* formatting */
+const M=(x,d=2)=>!isFinite(x)?(x>0?'∞':'n/a'):(x<-1e-9?'–':'')+'$'+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const M0=x=>M(x,0);
+const P=(x,d=2)=>!isFinite(x)?'n/a':(x<0?'–':'')+Math.abs(x*100).toFixed(d)+'%';
+const N=(x,d=4)=>!isFinite(x)?(x>0?'∞':'n/a'):(x<0?'–':'')+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const D=x=>{const s=String(+x.toFixed(6));return s.startsWith('0.')?s.slice(1):s.startsWith('-0.')?'–'+s.slice(2):s};   /* .079 style */
+const pc=x=>String(+(+x).toFixed(4))+'%';
+const o=(l,v,f,key,d)=>({l,v,f,key:!!key,d});
+
+const CALCS=[];
+const Cx=o2=>CALCS.push(o2);
+const I=(k,l,t,v,x={})=>Object.assign({k,l,t,v},x);
+
+/* ---------- CH 2 ---------- */
+Cx({ch:'ch2',id:'p2-17',ref:'2-17 · 2-18',title:'Net income, OCF, and the change in long-term debt',
+inputs:[I('s','Sales','$',630000),I('cogs','COGS','$',465000),I('sga','Admin & selling exp.','$',85000),I('dep','Depreciation','$',135000),I('int','Interest expense','$',70000),I('t','Tax rate','%',21),I('div','Dividends paid','$',34000),I('ncs','Net capital spending','$',0,{fixed:1}),I('dnwc','Change in NWC','$',0,{fixed:1}),I('neq','Net new equity','$',0,{fixed:1})],
+prompt:v=>`During the year, a firm had sales of ${M0(v.s)}. Cost of goods sold, administrative and selling expenses, and depreciation were ${M0(v.cogs)}, ${M0(v.sga)}, and ${M0(v.dep)}. Interest expense was ${M0(v.int)} and the tax rate is ${pc(v.t)} (interest is fully deductible). (a) What is net income? (b) What is operating cash flow? (c) The firm paid ${M0(v.div)} in cash dividends. If net capital spending was ${M0(v.ncs)}, the change in NWC was ${M0(v.dnwc)}, and no new stock was issued (net new equity ${M0(v.neq)}), what was the change in long-term debt?`,
+compute:v=>{const t=v.t/100,ebit=v.s-v.cogs-v.sga-v.dep,ti=ebit-v.int,tax=Math.max(0,ti*t),ni=ti-tax,ocf=ebit+v.dep-tax,cfa=ocf-v.dnwc-v.ncs,cfs=v.div-v.neq,cfc=cfa-cfs,nld=v.int-cfc;
+return{out:[o('Net income',ni,'$',1),o('Operating cash flow',ocf,'$',1),o('Net new LTD',nld,'$',1),o('EBIT',ebit,'$'),o('Taxes',tax,'$'),o('Cash flow from assets',cfa,'$'),o('CF to creditors',cfc,'$')],
+steps:['## (a) Income statement',`EBIT = Sales – COGS – A&S – Depreciation`,`EBIT = ${M0(v.s)} – ${M0(v.cogs)} – ${M0(v.sga)} – ${M0(v.dep)} = ${M0(ebit)}`,`Taxable income = EBIT – Interest = ${M0(ebit)} – ${M0(v.int)} = ${M0(ti)}`,
+ti<0?`Taxes = $0 (taxable income is negative, so no tax is paid)`:`Taxes = ${pc(v.t)} × ${M0(ti)} = ${M(tax)}`,`Net income = ${M(ni)}`,
+'## (b) Operating cash flow',`OCF = EBIT + Depreciation – Taxes`,`OCF = ${M0(ebit)} + ${M0(v.dep)} – ${M(tax)} = ${M(ocf)}`,
+'## (c) Cash flow identity',`CFA = OCF – ΔNWC – Net capital spending = ${M(ocf)} – ${M0(v.dnwc)} – ${M0(v.ncs)} = ${M(cfa)}`,`CF to stockholders = Dividends – Net new equity = ${M0(v.div)} – ${M0(v.neq)} = ${M(cfs)}`,`CF to creditors = CFA – CF to stockholders = ${M(cfa)} – ${M(cfs)} = ${M(cfc)}`,`CF to creditors = Interest – Net new LTD  →  Net new LTD = ${M0(v.int)} – ${M(cfc)} = ${M(nld)}`],
+answer:`Net income is ${M(ni)}, while OCF is ${M(ocf)}. ${ni<0&&ocf>0?'Net income is negative because depreciation and interest are tax-deductible, but OCF is positive because depreciation is a non-cash expense and interest is a financing cost, not an operating cost. ':''}A firm can pay dividends even with negative net income as long as it has enough cash flow. Long-term debt ${nld>=0?'increased':'decreased'} by ${M(Math.abs(nld))}.`}}});
+
+Cx({ch:'ch2',id:'p2-19',ref:'2-19',title:'Calculating cash flows (CFA, creditors, stockholders)',
+inputs:[I('s','Sales','$',24360),I('cogs','COGS','$',17600),I('dep','Depreciation','$',3400),I('int','Interest expense','$',860),I('div','Dividends paid','$',790),I('t','Tax rate','%',21),I('nfa0','Net fixed assets (beg)','$',18650),I('nfa1','Net fixed assets (end)','$',21180),I('ca0','Current assets (beg)','$',5560),I('ca1','Current assets (end)','$',6410),I('cl0','Current liab. (beg)','$',3040),I('cl1','Current liab. (end)','$',3445),I('nd','Net new debt','$',0,{fixed:1})],
+prompt:v=>`A firm had the following results: sales = ${M0(v.s)}; COGS = ${M0(v.cogs)}; depreciation = ${M0(v.dep)}; interest = ${M0(v.int)}; dividends = ${M0(v.div)}. At the beginning of the year, net fixed assets were ${M0(v.nfa0)}, current assets ${M0(v.ca0)}, and current liabilities ${M0(v.cl0)}. At year end: net fixed assets ${M0(v.nfa1)}, current assets ${M0(v.ca1)}, current liabilities ${M0(v.cl1)}. Tax rate = ${pc(v.t)}. (a) Net income? (b) OCF? (c) Cash flow from assets? (d) If net new debt was ${M0(v.nd)}, what are the cash flows to creditors and to stockholders?`,
+compute:v=>{const t=v.t/100,ebit=v.s-v.cogs-v.dep,ti=ebit-v.int,tax=Math.max(0,ti*t),ni=ti-tax,ocf=ebit+v.dep-tax,nwc0=v.ca0-v.cl0,nwc1=v.ca1-v.cl1,dnwc=nwc1-nwc0,ncs=v.nfa1-v.nfa0+v.dep,cfa=ocf-dnwc-ncs,cfc=v.int-v.nd,cfs=cfa-cfc,neq=v.div-cfs;
+return{out:[o('Net income',ni,'$',1),o('OCF',ocf,'$',1),o('Cash flow from assets',cfa,'$',1),o('CF to creditors',cfc,'$',1),o('CF to stockholders',cfs,'$',1),o('ΔNWC',dnwc,'$'),o('Net capital spending',ncs,'$'),o('Net new equity',neq,'$')],
+steps:['## (a) Net income',`EBIT = ${M0(v.s)} – ${M0(v.cogs)} – ${M0(v.dep)} = ${M0(ebit)}`,`Taxable income = ${M0(ebit)} – ${M0(v.int)} = ${M0(ti)}`,`Taxes = ${pc(v.t)} × ${M0(ti)} = ${M(tax)}`,`Net income = ${M(ni)}`,
+'## (b) OCF',`OCF = EBIT + Depreciation – Taxes = ${M0(ebit)} + ${M0(v.dep)} – ${M(tax)} = ${M(ocf)}`,
+'## (c) Cash flow from assets',`ΔNWC = (CA_end – CL_end) – (CA_beg – CL_beg) = (${M0(v.ca1)} – ${M0(v.cl1)}) – (${M0(v.ca0)} – ${M0(v.cl0)}) = ${M0(nwc1)} – ${M0(nwc0)} = ${M0(dnwc)}`,`Net capital spending = NFA_end – NFA_beg + Depreciation = ${M0(v.nfa1)} – ${M0(v.nfa0)} + ${M0(v.dep)} = ${M0(ncs)}`,`CFA = OCF – ΔNWC – NCS = ${M(ocf)} – ${M0(dnwc)} – ${M0(ncs)} = ${M(cfa)}`,
+'## (d) Creditors and stockholders',`CF to creditors = Interest – Net new LTD = ${M0(v.int)} – ${M0(v.nd)} = ${M(cfc)}`,`CF to stockholders = CFA – CF to creditors = ${M(cfa)} – ${M(cfc)} = ${M(cfs)}`,`CF to stockholders = Dividends – Net new equity  →  Net new equity = ${M0(v.div)} – (${M(cfs)}) = ${M(neq)}`],
+answer:`Net income (${M(ni)}) and OCF (${M(ocf)}) are positive. CFA is ${M(cfa)}${cfa<0?': negative CFA is possible because the firm invested heavily in fixed assets and NWC, so it had to raise funds on a net basis from stockholders and creditors':''}. Cash flow to creditors is ${M(cfc)} and cash flow to stockholders is ${M(cfs)}${cfs<0?', meaning the firm raised '+M(neq)+' of new equity, more than it paid out in dividends':''}.`}}});
+
+/* ---------- CH 4 ---------- */
+Cx({ch:'ch4',id:'p4-52',ref:'4-52',title:'Annuities: saving for two children’s college',
+inputs:[I('c','Cost per year per child','$',72000),I('n','Years of college','int',4),I('r','Interest rate','%',7.9),I('a','Oldest starts in year','int',15),I('b','Youngest starts in year','int',17)],
+prompt:v=>`You are saving for your two children's college education. One begins college ${v.a} years from today and the other ${v.b} years from today. Expenses are ${M0(v.c)} per year per child, paid at the beginning of each school year, for ${v.n} years each. The interest rate is ${pc(v.r)}. You make equal annual deposits starting one year from today, with the last deposit when the oldest child enters college. How much must you deposit each year?`,
+compute:v=>{const r=v.r/100,pva=v.c*pvifa(r,v.n),pv1=pva*pvif(r,v.a-1),pv2=pva*pvif(r,v.b-1),tot=pv1+pv2,pmt=tot/pvifa(r,v.a);
+return{out:[o('Annual deposit (C)',pmt,'$',1),o('PV of college cost, one child (at year '+(v.a-1)+')',pva,'$'),o('Total cost today',tot,'$',1)],
+steps:['## Step 1. PV of one child’s expenses (an annuity)',`PVA = C × {1 – [1/(1 + r)]^t}/r = ${M0(v.c)} × {1 – [1/(1 + ${D(r)})]^${v.n}}/${D(r)} = ${M(pva)}`,`This is the value one year before each child enters college (year ${v.a-1} and year ${v.b-1}).`,
+'## Step 2. Discount each to today',`Oldest: PV = ${M(pva)}/(1 + ${D(r)})^${v.a-1} = ${M(pv1)}`,`Youngest: PV = ${M(pva)}/(1 + ${D(r)})^${v.b-1} = ${M(pv2)}`,`Total cost today = ${M(pv1)} + ${M(pv2)} = ${M(tot)}`,
+'## Step 3. Solve for the annual deposit',`${M(tot)} = C × {1 – [1/(1 + ${D(r)})]^${v.a}}/${D(r)}`,`C = ${M(tot)}/${N(pvifa(r,v.a))} = ${M(pmt)}`],
+answer:`You must deposit ${M(pmt)} per year for ${v.a} years.`}}});
+
+Cx({ch:'ch4',id:'p4-55',ref:'4-55',title:'Growing annuity: what % of salary to save',
+inputs:[I('T','Years to retirement','int',30),I('fv','Retirement goal','$',2500000),I('s','Salary at end of year 1','$',86000),I('g','Salary growth','%',3),I('r','Return on investment','%',9.4)],
+prompt:v=>`You have ${v.T} years left until retirement and want to retire with ${M0(v.fv)}. You will receive a salary of ${M0(v.s)} at the end of this year, growing at ${pc(v.g)} per year. You can earn ${pc(v.r)} on your investments. If you save a constant percentage of your salary, what percentage must you save each year?`,
+compute:v=>{const r=v.r/100,g=v.g/100,pv=v.fv*pvif(r,v.T),f=(1/(r-g))*(1-Math.pow((1+g)/(1+r),v.T)),c=pv/f,pct=c/v.s;
+return{out:[o('Savings rate',pct,'%',1),o('First-year savings (C)',c,'$',1),o('PV of goal',pv,'$')],
+steps:['## Step 1. PV of the retirement goal',`PV = FV/(1 + r)^t = ${M0(v.fv)}/(1 + ${D(r)})^${v.T} = ${M(pv)}`,
+'## Step 2. Growing annuity — solve for the first payment',`PV = C × {[1/(r – g)] – [1/(r – g)] × [(1 + g)/(1 + r)]^t}`,`${M(pv)} = C × {[1/(${D(r)} – ${D(g)})] × [1 – (${D(1+g)}/${D(1+r)})^${v.T}]} = C × ${N(f)}`,`C = ${M(c)}`,
+'## Step 3. As a percentage of salary',`Percentage = ${M(c)}/${M0(v.s)} = ${N(pct,4)}, or ${P(pct)}`],
+answer:`You must save ${P(pct)} of your salary each year. Because salary and savings both grow at ${pc(v.g)}, the percentage stays constant.`}}});
+
+Cx({ch:'ch4',id:'p4-56',ref:'4-56',title:'Balloon payment: paying off a loan early',
+inputs:[I('p','Purchase price','$',17000),I('dn','Down payment','$',1500),I('apr','APR (monthly comp.)','%',6.8),I('y','Loan term (years)','int',5),I('m','Payments already made','int',25),I('pen','Prepayment penalty','%',1)],
+prompt:v=>`You buy a motorcycle for ${M0(v.p)}, pay ${M0(v.dn)} down, and finance the balance with a ${v.y}-year loan at ${pc(v.apr)} APR compounded monthly. Payments start one month after purchase. After ${v.m} payments, you decide to pay off the loan on the next payment date. If the bank charges a ${pc(v.pen)} prepayment penalty on the loan balance, how much must you pay on that date?`,
+compute:v=>{const i=v.apr/1200,n=v.y*12,L=v.p-v.dn,pmt=L/pvifa(i,n),rem=n-v.m-1,bal=pmt*pvifa(i,rem),tot=bal*(1+v.pen/100)+pmt;
+return{out:[o('Total payment on payoff date',tot,'$',1),o('Monthly payment',pmt,'$',1),o('Remaining balance',bal,'$')],
+steps:['## Step 1. Monthly payment',`Amount borrowed = ${M0(v.p)} – ${M0(v.dn)} = ${M0(L)}`,`${M0(L)} = C × {1 – [1/(1 + ${D(v.apr/100)}/12)]^${n}}/(${D(v.apr/100)}/12)`,`C = ${M(pmt)}`,
+'## Step 2. Remaining balance',`${v.m} payments made; on the payoff date one more payment is due, leaving ${n} – ${v.m} – 1 = ${rem} payments after it.`,`Balance = ${M(pmt)} × {1 – [1/(1 + ${D(v.apr/100)}/12)]^${rem}}/(${D(v.apr/100)}/12) = ${M(bal)}`,
+'## Step 3. Total payment',`Total = Balance × (1 + penalty) + current payment = ${M(bal)} × (1 + ${D(v.pen/100)}) + ${M(pmt)} = ${M(tot)}`],
+answer:`She must pay ${M(tot)} on the payoff date.`}}});
+
+Cx({ch:'ch4',id:'p4-65',ref:'4-65',title:'Number of periods: credit-card balance transfer',
+inputs:[I('pv','Balance','$',12000),I('c','Monthly payment','$',250),I('a1','Current card APR','%',18.6),I('a2','New card APR','%',8.2),I('fee','Transfer fee','%',2)],
+prompt:v=>`You have a ${M0(v.pv)} credit card balance at ${pc(v.a1)} APR. A new card offers ${pc(v.a2)} APR. How much faster could you pay off the balance with your planned monthly payments of ${M0(v.c)} on the new card? What if there is a ${pc(v.fee)} fee on balances transferred?`,
+compute:v=>{const t=(pv,apr)=>{const i=apr/1200,x=1-pv*i/v.c;return x<=0?Infinity:-Math.log(x)/Math.log(1+i)};const t1=t(v.pv,v.a1),t2=t(v.pv,v.a2),pvf=v.pv*(1+v.fee/100),t3=t(pvf,v.a2);
+const ln=(pv,apr)=>{const i=apr/1200;return `t = ln{1/[1 – (${M0(pv)}/${M0(v.c)})(${N(i,6)})]}/ln(${N(1+i,6)}) = ${N(t(pv,apr),2)} months`};
+return{out:[o('Months faster (no fee)',t1-t2,'n',1,2),o('Months faster (with fee)',t1-t3,'n',1,2),o('Months, current card',t1,'n',0,2),o('Months, new card',t2,'n',0,2),o('Months, new card + fee',t3,'n',0,2)],
+steps:['## PVA = C × {[1 – 1/(1 + r)^t]/r}, solve for t',`t = ln{1/[1 – (PV/C)(r)]}/ln(1 + r), with r = APR/12`,'## Current card',ln(v.pv,v.a1),'## New card, no fee',ln(v.pv,v.a2),`Faster by ${N(t1,2)} – ${N(t2,2)} = ${N(t1-t2,2)} months`,'## New card with fee',`Transferred balance = ${M0(v.pv)} × (1 + ${D(v.fee/100)}) = ${M(pvf)}`,ln(pvf,v.a2),`Faster by ${N(t1,2)} – ${N(t3,2)} = ${N(t1-t3,2)} months`],
+answer:`Without a fee you pay off the balance ${N(t1-t2,2)} months sooner; with the ${pc(v.fee)} fee, ${N(t1-t3,2)} months sooner.`}}});
+
+Cx({ch:'ch4',id:'p4-66',ref:'4-66',title:'FV of multiple cash flows with two interest rates',
+inputs:[I('cf','Premiums (birthdays 1, 2, …)','list','500, 600, 700, 800, 900, 1000'),I('r1','Rate during premium years','%',11),I('r2','Rate afterwards','%',7),I('age','Payoff at age','int',65),I('pay','Payoff amount','$',300000)],
+prompt:v=>{const c=parseList(v.cf);return `A policy requires payments of ${c.map(M0).join(', ')} on the child's birthdays 1 through ${c.length}. At age ${v.age}, the child receives ${M0(v.pay)}. If the relevant rate is ${pc(v.r1)} for the first ${c.length} years and ${pc(v.r2)} thereafter, is the policy worth buying?`},
+compute:v=>{const c=parseList(v.cf),n=c.length,r1=v.r1/100,r2=v.r2/100;let vn=0;const lines=[];c.forEach((x,i)=>{const f=x*Math.pow(1+r1,n-1-i);vn+=f;lines.push(`FV${i+1} = ${M0(x)} × (${D(1+r1)})^${n-1-i} = ${M(f)}`)});
+const fv=vn*Math.pow(1+r2,v.age-n),pvPrem=c.reduce((s,x,i)=>s+x*pvif(r1,i+1),0),pvPay=v.pay*pvif(r2,v.age-n)*pvif(r1,n);
+return{out:[o('FV of premiums at age '+v.age,fv,'$',1),o('Value at year '+n,vn,'$'),o('PV of premiums',pvPrem,'$'),o('PV of payoff',pvPay,'$')],
+steps:[`## Step 1. Value of premiums at year ${n} (rate ${pc(v.r1)})`,...lines,`Value at year ${n} = ${M(vn)}`,`## Step 2. Compound to age ${v.age} (rate ${pc(v.r2)})`,`FV = ${M(vn)} × (${D(1+r2)})^${v.age-n} = ${M(fv)}`,'## Check with present values',`PV of premiums = ${M(pvPrem)};  PV of payoff = ${M0(v.pay)}/(${D(1+r2)})^${v.age-n}/(${D(1+r1)})^${n} = ${M(pvPay)}`],
+answer:fv>v.pay?`The policy is not worth buying: the premiums grow to ${M(fv)} by age ${v.age}, which is ${M(fv-v.pay)} more than the ${M0(v.pay)} payoff.`:`The policy is worth buying: the premiums grow to only ${M(fv)}, which is less than the ${M0(v.pay)} payoff.`}}});
+
+Cx({ch:'ch4',id:'p4-68',ref:'4-68',title:'Calculating the rate of return on a savings plan',
+inputs:[I('p','Annual payment','$',9000),I('np','Number of payments (first today)','int',6),I('c','Annual benefit','$',20000),I('nc','Number of benefits','int',4),I('st','First benefit in year','int',6)],
+prompt:v=>`A college savings program asks you to make ${v.np} annual payments of ${M0(v.p)}, the first one today. Beginning ${v.st} years from today, the plan pays ${M0(v.c)} per year for ${v.nc} years. What return is this investment offering?`,
+compute:v=>{const T=Math.max(v.np,v.st+v.nc);const cf=Array(T).fill(0);for(let t=0;t<v.np;t++)cf[t]-=v.p;for(let t=v.st;t<v.st+v.nc;t++)cf[t]+=v.c;const r=irr1(cf);
+return{out:[o('Return (IRR)',r,'%',1)],
+steps:['## Set PV of benefits = PV of payments',`Cash flows by year: ${cf.map((x,t)=>t+': '+M0(x)).join(' | ')}`,`0 = Σ CF_t/(1 + r)^t`,`Equivalently: ${M0(v.c)} × {1 – [1/(1 + r)]^${v.nc}}/r, discounted ${v.st-1} years  =  ${M0(v.p)} × (annuity due of ${v.np} payments)`,`Solve by trial and error / spreadsheet:  r = ${P(r)}`,`Check: NPV at ${P(r)} = ${M(npv(r,cf))}`],
+answer:`The investment offers a return of ${P(r)}.`}}});
+
+Cx({ch:'ch4',id:'p4-69',ref:'4-69',title:'Break-even rate: perpetuity vs. annuity',
+inputs:[I('x','Perpetuity payment','$',25000),I('y','Annuity payment','$',51000),I('n','Annuity years','int',10)],
+prompt:v=>`Plan X is a ${M0(v.x)} annual perpetuity. Plan Y is a ${v.n}-year, ${M0(v.y)} annual annuity. Both make their first payment one year from today. At what discount rate would you be indifferent between the two plans?`,
+compute:v=>{const k=v.x/v.y,r=Math.pow(1-k,-1/v.n)-1;
+return{out:[o('Indifference rate',r,'%',1)],
+steps:['## Set the two PVs equal',`PV(perpetuity) = ${M0(v.x)}/r`,`PV(annuity) = ${M0(v.y)} × {1 – [1/(1 + r)]^${v.n}}/r`,`${M0(v.x)}/r = ${M0(v.y)} × {1 – [1/(1 + r)]^${v.n}}/r`,`${M0(v.x)}/${M0(v.y)} = ${N(k,5)} = 1 – [1/(1 + r)]^${v.n}`,`1/(1 + r) = (1 – ${N(k,5)})^(1/${v.n}) = ${N(Math.pow(1-k,1/v.n),5)}`,`r = ${N(r,4)}, or ${P(r)}`],
+answer:`You are indifferent at a discount rate of ${P(r)}. Above this rate the annuity is worth more; below it, the perpetuity is worth more.`}}});
+
+Cx({ch:'ch4',id:'p4-70',ref:'4-70',title:'Perpetuity paid every other year (daily compounding)',
+inputs:[I('c','Payment','$',50000),I('k','Paid every k years','int',2),I('apr','Annual rate','%',9),I('m','Compounding per year','int',365),I('f1','First payment (case 1), year','int',1),I('f2','First payment (case 2), year','int',4)],
+prompt:v=>`What is the value of an investment that pays ${M0(v.c)} every ${v.k} years forever, if the first payment occurs ${v.f1} year(s) from today and the discount rate is ${pc(v.apr)} compounded ${v.m===365?'daily':v.m+' times per year'}? What is the value today if the first payment occurs ${v.f2} years from today?`,
+compute:v=>{const j=v.apr/100/v.m,Rk=Math.pow(1+j,v.m*v.k)-1,pv=v.c/Rk,a=pv*Math.pow(1+j,v.m*(v.k-v.f1)),b=pv*Math.pow(1+j,v.m*(v.k-v.f2));
+const mv=(x,f)=>{const d=v.k-f;return d>=0?`Value today = ${M(pv)} × (1 + ${D(v.apr/100)}/${v.m})^(${v.m}×${d}) = ${M(x)}  (compound ${d} yr forward)`:`Value today = ${M(pv)}/(1 + ${D(v.apr/100)}/${v.m})^(${v.m}×${-d}) = ${M(x)}  (discount ${-d} yr)`};
+return{out:[o('Value today (case 1)',a,'$',1),o('Value today (case 2)',b,'$',1),o(`Effective ${v.k}-year rate`,Rk,'%')],
+steps:[`## Step 1. Effective ${v.k}-year rate`,`R = [1 + (${D(v.apr/100)}/${v.m})]^(${v.m}×${v.k}) – 1 = ${N(Rk,4)}, or ${P(Rk)}`,'## Step 2. Perpetuity formula',`PV = C/R = ${M0(v.c)}/${N(Rk,4)} = ${M(pv)}`,`Remember: this is the value one period (${v.k} years) before the first payment.`,`## Case 1: first payment in year ${v.f1}`,`The perpetuity value is at year ${v.f1-v.k}.`,mv(a,v.f1),`## Case 2: first payment in year ${v.f2}`,`The perpetuity value is at year ${v.f2-v.k}.`,mv(b,v.f2)],
+answer:`The investment is worth ${M(a)} today if the first payment is in year ${v.f1}, and ${M(b)} if the first payment is in year ${v.f2}.`}}});
+
+/* ---------- CH 5 ---------- */
+Cx({ch:'ch5',id:'p5-18',ref:'5-18',title:'Comparing investment criteria (payback, NPV, IRR, incremental IRR)',
+inputs:[I('a','Project A cash flows (Y0…)','list','-1500000, 900000, 700000, 725000'),I('b','Project B cash flows (Y0…)','list','-650000, 345000, 570000, 360000'),I('r','Discount rate','%',8)],
+prompt:v=>{const a=parseList(v.a),b=parseList(v.b);return `Consider two mutually exclusive projects with a discount rate of ${pc(v.r)}. Project A (Dry Prepreg): ${a.map(M0).join(', ')}. Project B (Solvent Prepreg): ${b.map(M0).join(', ')} (Years 0, 1, 2, …). (a) Which project is chosen by payback? (b) By NPV? (c) By IRR? (d) Is incremental IRR analysis necessary? If yes, conduct it.`},
+compute:v=>{const a=parseList(v.a),b=parseList(v.b),r=v.r/100;const pa=payback(a),pb=payback(b),na=npv(r,a),nb=npv(r,b),ia=irr1(a),ib=irr1(b);const big=Math.abs(a[0])>=Math.abs(b[0]);const L=big?a:b,S=big?b:a,Ln=big?'A':'B',Sn=big?'B':'A';const T=Math.max(L.length,S.length);const inc=Array.from({length:T},(_,t)=>(L[t]||0)-(S[t]||0));const ii=irr1(inc);
+const npvLine=(x,nm)=>`NPV_${nm} = ${M0(x[0])} + `+x.slice(1).map((c,t)=>`${M0(c)}/${D(1+r)}^${t+1}`).join(' + ')+` = ${M(npv(r,x))}`;
+const pbLine=(x,nm)=>{let cum=0;const p=payback(x);const t=Math.floor(p);for(let i=1;i<=t;i++)cum+=x[i];return isFinite(p)?`Payback_${nm} = ${t} + (${M0(-x[0]-cum)}/${M0(x[t+1])}) = ${N(p,2)} years`:`Payback_${nm}: never`};
+const choose=(x,y,hi)=>hi?(x>y?'A':'B'):(x<y?'A':'B');
+const needInc=(ia>ib)!==(na>nb);
+return{out:[o('NPV A',na,'$',1),o('NPV B',nb,'$',1),o('IRR A',ia,'%',1),o('IRR B',ib,'%',1),o('Incremental IRR ('+Ln+'–'+Sn+')',ii,'%',1),o('Payback A',pa,'yr',0,2),o('Payback B',pb,'yr',0,2),o('PI A',1+na/-a[0],'n',0,3),o('PI B',1+nb/-b[0],'n',0,3)],
+steps:['## (a) Payback period',pbLine(a,'A'),pbLine(b,'B'),`Payback chooses Project ${choose(pa,pb,false)} (shorter payback). Payback does not necessarily rank projects correctly.`,
+'## (b) NPV',npvLine(a,'A'),npvLine(b,'B'),`NPV chooses Project ${choose(na,nb,true)} (higher NPV).`,
+'## (c) IRR',`0 = CF0 + CF1/(1 + IRR) + CF2/(1 + IRR)^2 + …`,`IRR_A = ${P(ia)};  IRR_B = ${P(ib)}`,`IRR chooses Project ${choose(ia,ib,true)}. IRR can rank mutually exclusive projects incorrectly (scale problem).`,
+'## (d) Incremental IRR',`Incremental CF (${Ln} – ${Sn}) = ${inc.map(M0).join(', ')}`,`0 = `+inc.map((c,t)=>t?`${M0(c)}/(1 + IRR)^${t}`:M0(c)).join(' + '),`Incremental IRR = ${P(ii)}`,`Rule: for investing-type flows, take the larger project if incremental IRR > discount rate (${pc(v.r)}).`],
+answer:`${needInc?'Incremental IRR analysis is necessary because NPV and IRR give conflicting rankings. ':''}The incremental IRR is ${P(ii)}, which is ${ii>r?'greater':'less'} than the ${pc(v.r)} discount rate, so choose Project ${ii>r?Ln:Sn}. This agrees with the NPV rule.`,
+chart:{series:[{cf:a,name:'A'},{cf:b,name:'B'}],lo:0,hi:Math.min(1,Math.max(ia,ib)*1.25||.5)}}}});
+
+Cx({ch:'ch5',id:'p5-22',ref:'5-22',title:'NPV and multiple IRRs (quadratic)',
+inputs:[I('c0','Cash flow today','$',-75000),I('c1','Cash flow year 1','$',155000),I('c2','Cash flow year 2','$',-65000)],
+prompt:v=>`A project has a cash flow of ${M0(v.c0)} today, ${M0(v.c1)} in one year, and ${M0(v.c2)} in two years. What are the IRRs? What discount rate results in the maximum NPV, and how can you tell it is a maximum?`,
+compute:v=>{const a=v.c2,b=v.c1,c=v.c0,disc=b*b-4*a*c;let X=[],R=[];if(disc>=0){X=[(-b+Math.sqrt(disc))/(2*a),(-b-Math.sqrt(disc))/(2*a)].sort((x,y)=>x-y);R=X.map(x=>1/x-1)}
+const g=-2*a/b,rs=g-1,sd=2*b*Math.pow(g,-3)+6*a*Math.pow(g,-4),cf=[c,b,a];
+return{out:[o('IRR 1',R.length?Math.max(...R):NaN,'%',1),o('IRR 2',R.length?Math.min(...R):NaN,'%',1),o('Rate at max NPV',rs,'%',1),o('Max NPV',npv(rs,cf),'$'),o('2nd derivative',sd,'n',0,2)],
+steps:['## Set up',`0 = ${M0(c)} + ${M0(b)}/(1 + IRR) + ${M0(a)}/(1 + IRR)^2`,`Descartes’ rule of signs: the cash flows change sign twice, so there are 0 or 2 IRRs.`,`Let X = 1/(1 + IRR):  0 = ${M0(a)}X² + ${M0(b)}X + ${M0(c)}`,
+`X = [–b ± √(b² – 4ac)]/(2a),  b² – 4ac = ${N(disc,0)}`,disc<0?'No real roots → no IRR.':`X = ${X.map(x=>N(x,4)).join(', ')}`,...R.map((r,i)=>`IRR = 1/${N(X[i],4)} – 1 = ${P(r)}`),
+'## Maximum NPV',`dNPV/dr = –${M0(b)}(1 + r)^–2 – 2(${M0(a)})(1 + r)^–3 = 0`,`(1 + r) = –2(${M0(a)})/${M0(b)} = ${N(g,4)}  →  r = ${P(rs)}`,`Second derivative = 2(${M0(b)})(1 + r)^–3 + 6(${M0(a)})(1 + r)^–4 = ${N(sd,2)}`,sd<0?'Negative second derivative → this is a maximum.':'Positive second derivative → this is a minimum.'],
+answer:R.length?`The IRRs are ${P(Math.max(...R))} and ${P(Math.min(...R))}. NPV is maximized at r = ${P(rs)} (second derivative ${sd<0?'negative → maximum':'positive → minimum'}).`:'There is no real IRR.',
+chart:{series:[{cf,name:'NPV'}],lo:-0.6,hi:0.8}}}});
+
+Cx({ch:'ch5',id:'p5-23',ref:'5-23',title:'Payback and NPV: worst and best case',
+inputs:[I('c','Cost','$',573000),I('pb','Payback (years)','int',6),I('r','Required return','%',11)],
+prompt:v=>`An investment has a payback of ${v.pb} years and a cost of ${M0(v.c)}. If the required return is ${pc(v.r)}, what is the worst-case NPV? The best-case NPV? Assume conventional cash flows.`,
+compute:v=>{const r=v.r/100,w=-v.c+v.c*pvif(r,v.pb);
+return{out:[o('Worst-case NPV',w,'$',1),o('Best-case NPV',Infinity,'$')],
+steps:['## Worst case',`All cash flows recovering the cost arrive at the end of year ${v.pb}, and nothing comes after.`,`NPV = –${M0(v.c)} + ${M0(v.c)}/(${D(1+r)})^${v.pb} = ${M(w)}`,'## Best case','The project could have unlimited cash flows after the payback point, so the best-case NPV is infinite.'],
+answer:`Worst-case NPV is ${M(w)}; the best-case NPV is infinite. Payback ignores cash flows after the cutoff and the time value of money.`}}});
+
+Cx({ch:'ch5',id:'p5-24',ref:'5-24',title:'Multiple IRRs (four sign changes)',
+inputs:[I('cf','Cash flows (Y0…)','list','-6048, 34344, -72840, 68400, -24000'),I('lo','Search from','%',20),I('hi','Search to','%',70)],
+prompt:v=>{const c=parseList(v.cf);return `Consider the cash flows ${c.map(M0).join(', ')} (Years 0–${c.length-1}). How many different IRRs are there? (Hint: search between ${pc(v.lo)} and ${pc(v.hi)}.) When should we take this project?`},
+compute:v=>{const cf=parseList(v.cf),lo=v.lo/100,hi=v.hi/100;const R=roots(r=>npv(r,cf),lo-0.0001,hi+0.0001,0.0001);let sc=0;for(let i=1;i<cf.length;i++)if(cf[i]*cf[i-1]<0)sc++;
+const pts=[lo,...R,hi];const acc=[];for(let i=0;i<pts.length-1;i++){const m=(pts[i]+pts[i+1])/2;if(npv(m,cf)>0)acc.push(`${P(pts[i])} – ${P(pts[i+1])}`)}
+return{out:[o('Number of IRRs',R.length,'n',1,0),...R.map((r,i)=>o('IRR '+(i+1),r,'%',1))],
+steps:['## Set up',`0 = `+cf.map((c,t)=>t?`${M0(c)}/(1 + IRR)^${t}`:M0(c)).join(' + '),`Descartes’ rule of signs: ${sc} sign changes → up to ${sc} IRRs.`,`Trial and error between ${pc(v.lo)} and ${pc(v.hi)}: IRR = ${R.map(r=>P(r)).join(', ')}`,'## Decision',`Accept when NPV > 0, i.e., when the required return lies in: ${acc.join('  or  ')||'(none in range)'}`],
+answer:`There are ${R.length} IRRs: ${R.map(r=>P(r)).join(', ')}. The IRR rule is unreliable here; accept the project only when NPV > 0, which happens for required returns between ${acc.join(' or between ')}.`,
+chart:{series:[{cf,name:'NPV'}],lo:Math.max(-.5,lo-0.05),hi:hi+0.05}}}});
+
+/* ---------- CH 6 ---------- */
+const MACRS={'MACRS 3-yr':[.3333,.4445,.1481,.0741],'MACRS 5-yr':[.2,.32,.192,.1152,.1152,.0576],'MACRS 7-yr':[.1429,.2449,.1749,.1249,.0893,.0892,.0893,.0446]};
+Cx({ch:'ch6',id:'p6-13',ref:'6-13',title:'Cost-cutting proposal with MACRS and NWC',
+inputs:[I('c','Machine cost','$',670000),I('sav','Annual pretax cost savings','$',245000),I('n','Project life (years)','int',4),I('dm','Depreciation','sel','MACRS 5-yr',{opts:['MACRS 3-yr','MACRS 5-yr','MACRS 7-yr','Straight-line']}),I('s','Salvage value','$',55000),I('w0','Initial NWC (inventory)','$',20000),I('w1','Extra NWC each later year','$',2500),I('t','Tax rate','%',23),I('r','Discount rate','%',8)],
+prompt:v=>`A ${v.n}-year project requires buying a machine for ${M0(v.c)}, producing ${M0(v.sav)} in annual pretax cost savings. The machine is depreciated using ${v.dm==='Straight-line'?'straight-line to zero over the project life':'the '+v.dm.replace('MACRS ','')+' MACRS class'} and has a salvage value of ${M0(v.s)} at the end. The project needs an initial investment of ${M0(v.w0)} in spare-parts inventory plus ${M0(v.w1)} in each succeeding year. The tax rate is ${pc(v.t)} and the discount rate is ${pc(v.r)}. Should the firm buy the machine?`,
+compute:v=>{const t=v.t/100,r=v.r/100,n=v.n;const rates=v.dm==='Straight-line'?Array(n).fill(1/n):MACRS[v.dm];const dep=Array.from({length:n},(_,i)=>v.c*(rates[i]||0));const bv=v.c-dep.reduce((a,b)=>a+b,0),ats=v.s+(bv-v.s)*t;
+const ocf=dep.map(d=>v.sav*(1-t)+t*d);const rec=v.w0+v.w1*(n-1);const cf=[-v.c-v.w0];for(let i=1;i<=n;i++)cf.push(ocf[i-1]+(i<n?-v.w1:rec+ats));const NPV=npv(r,cf);
+return{out:[o('NPV',NPV,'$',1),o('After-tax salvage',ats,'$',1),o('Book value at end',bv,'$'),o('IRR',irr1(cf),'%')],
+steps:['## Depreciation',...dep.map((d,i)=>`D${i+1} = ${M0(v.c)} × ${N(rates[i]||0,4)} = ${M(d)}`),`Book value at year ${n} = ${M0(v.c)} – ${M(v.c-bv)} = ${M(bv)}`,
+'## After-tax salvage',`ATSV = Salvage + (BV – Salvage) × T = ${M0(v.s)} + (${M(bv)} – ${M0(v.s)}) × ${D(t)} = ${M(ats)}`,bv>v.s?'(Sold below book value → tax refund.)':'(Sold above book value → tax on the gain.)',
+'## OCF (tax shield approach)',`OCF = Savings × (1 – T) + T × D`,...ocf.map((x,i)=>`OCF${i+1} = ${M0(v.sav)}(1 – ${D(t)}) + ${D(t)}(${M(dep[i])}) = ${M(x)}`),
+'## Net working capital',`Spend ${M0(v.w0)} at year 0 and ${M0(v.w1)} in years 1–${n-1}; recover the total ${M0(rec)} at year ${n}. (The year-${n} addition is recovered immediately, so it nets to zero.)`,
+'## NPV',...cf.map((x,i)=>`CF${i} = ${M(x)}`),`NPV = Σ CF_t/(${D(1+r)})^t = ${M(NPV)}`],
+answer:`NPV = ${M(NPV)}${NPV>0?' > 0, so the company should buy and install the machine press.':' < 0, so the company should not buy the machine.'}`}}});
+
+Cx({ch:'ch6',id:'p6-18',ref:'6-18',title:'EAC: choosing between machines with different lives',
+inputs:[I('ca','Machine A cost','$',1980000),I('la','A life (years)','int',6),I('va','A variable cost (% of sales)','%',35),I('fa','A fixed cost','$',187000),I('cb','Machine B cost','$',5400000),I('lb','B life (years)','int',9),I('vb','B variable cost (% of sales)','%',30),I('fb','B fixed cost','$',145000),I('s','Sales per year','$',12400000),I('r','Required return','%',10),I('t','Tax rate','%',21)],
+prompt:v=>`Machine A costs ${M0(v.ca)} and lasts ${v.la} years; variable costs are ${pc(v.va)} of sales and fixed costs are ${M0(v.fa)} per year. Machine B costs ${M0(v.cb)} and lasts ${v.lb} years; variable costs are ${pc(v.vb)} of sales and fixed costs are ${M0(v.fb)}. Sales are ${M0(v.s)} per year for either machine. Required return is ${pc(v.r)}, the tax rate is ${pc(v.t)}, and both use straight-line depreciation. If the machine is replaced forever when it wears out, which should you choose?`,
+compute:v=>{const r=v.r/100,t=v.t/100;const f=(c,l,vc,fc)=>{const VC=v.s*vc/100,dep=c/l,ebt=-VC-fc-dep,tax=-ebt*t,ni=ebt+tax,ocf=ni+dep,pv=-c+ocf*pvifa(r,l),eac=pv/pvifa(r,l);return{VC,dep,ebt,tax,ni,ocf,pv,eac}};const A=f(v.ca,v.la,v.va,v.fa),B=f(v.cb,v.lb,v.vb,v.fb);
+const blk=(X,nm,c,l,fc)=>[`## Machine ${nm}`,`Variable costs = ${M0(-X.VC)}; Fixed = ${M0(-fc)}; Depreciation = ${M0(c)}/${l} = ${M0(-X.dep)}`,`EBT = ${M0(X.ebt)};  Tax = ${M0(X.tax)} (tax credit);  NI = ${M0(X.ni)}`,`OCF = NI + Depreciation = ${M0(X.ocf)}`,`PV of costs = –${M0(c)} + (${M0(X.ocf)}) × PVIFA(${pc(v.r)}, ${l}) = ${M(X.pv)}`,`EAC = ${M(X.pv)}/PVIFA(${pc(v.r)}, ${l}) = ${M(X.eac)}`];
+return{out:[o('EAC A',A.eac,'$',1),o('EAC B',B.eac,'$',1),o('OCF A',A.ocf,'$'),o('OCF B',B.ocf,'$'),o('PV costs A',A.pv,'$'),o('PV costs B',B.pv,'$')],
+steps:['Sales are the same for both machines, so they are irrelevant: compare costs only.',...blk(A,'A',v.ca,v.la,v.fa),...blk(B,'B',v.cb,v.lb,v.fb)],
+answer:`Choose Machine ${A.eac>B.eac?'A':'B'} because it has the less negative EAC (${M(Math.max(A.eac,B.eac))} vs. ${M(Math.min(A.eac,B.eac))}).`}}});
+
+Cx({ch:'ch6',id:'p6-30',ref:'6-30',title:'Replacement decision: replace now or in five years?',
+inputs:[I('os','Old machine: salvage today','$',2800000),I('ob','Old machine: book value today','$',1600000),I('om','Old: annual maintenance','$',855000),I('od','Old: annual depreciation','$',320000),I('oe','Old: salvage in N years','$',140000),I('nc','New machine cost','$',4500000),I('nm','New: annual maintenance','$',350000),I('ne','New: salvage in N years','$',900000),I('n','Horizon N (years)','int',5),I('t','Tax rate','%',21),I('r','Discount rate','%',8)],
+prompt:v=>`The old machine could be sold today for ${M0(v.os)}; its book value is ${M0(v.ob)}. If kept, it needs maintenance of ${M0(v.om)} per year for ${v.n} years, is depreciated ${M0(v.od)} per year, and will sell for ${M0(v.oe)} in ${v.n} years (book value then ${M0(Math.max(0,v.ob-v.od*v.n))}). A new machine costs ${M0(v.nc)}, needs ${M0(v.nm)} of maintenance per year, is depreciated straight-line to zero over ${v.n} years, and will sell for ${M0(v.ne)} in ${v.n} years. Tax rate ${pc(v.t)}, discount rate ${pc(v.r)}. Should the company replace the old machine now?`,
+compute:v=>{const t=v.t/100,r=v.r/100,n=v.n,A=pvifa(r,n),F=pvif(r,n);const nd=v.nc/n,nocf=-v.nm*(1-t)+t*nd,nats=v.ne-(v.ne-0)*t,NPVn=-v.nc+nocf*A+nats*F;
+const obe=Math.max(0,v.ob-v.od*n),oi=-(v.os-(v.os-v.ob)*t),oocf=-v.om*(1-t)+t*v.od,oats=v.oe-(v.oe-obe)*t,NPVo=oi+oocf*A+oats*F;
+return{out:[o('NPV (buy new)',NPVn,'$',1),o('NPV (keep old)',NPVo,'$',1),o('Incremental NPV',NPVn-NPVo,'$',1),o('OCF new',nocf,'$'),o('OCF old',oocf,'$')],
+steps:['## Option 1: Buy the new machine',`Depreciation = ${M0(v.nc)}/${n} = ${M0(nd)}`,`OCF = –Maintenance × (1 – T) + T × D = –${M0(v.nm)}(1 – ${D(t)}) + ${D(t)}(${M0(nd)}) = ${M(nocf)}`,`After-tax salvage = ${M0(v.ne)} – ${D(t)}(${M0(v.ne)} – 0) = ${M(nats)}`,`NPV = –${M0(v.nc)} + (${M(nocf)}) × PVIFA(${pc(v.r)}, ${n}) + ${M(nats)}/${D(1+r)}^${n} = ${M(NPVn)}`,
+'## Option 2: Keep the old machine',`Initial cost = opportunity cost of not selling: –[${M0(v.os)} – ${D(t)}(${M0(v.os)} – ${M0(v.ob)})] = ${M(oi)}`,`OCF = –${M0(v.om)}(1 – ${D(t)}) + ${D(t)}(${M0(v.od)}) = ${M(oocf)}`,`After-tax salvage = ${M0(v.oe)} – ${D(t)}(${M0(v.oe)} – ${M0(obe)}) = ${M(oats)}`,`NPV = ${M(oi)} + (${M(oocf)}) × PVIFA(${pc(v.r)}, ${n}) + ${M(oats)}/${D(1+r)}^${n} = ${M(NPVo)}`,
+'## Incremental view',`ΔNPV = ${M(NPVn)} – (${M(NPVo)}) = ${M(NPVn-NPVo)}`,'Both NPVs are negative because only costs are included; choose the less negative one.'],
+answer:`The company should ${NPVn>NPVo?'replace the old machine now':'keep the old machine for '+n+' more years'}: NPV of buying new is ${M(NPVn)} vs. ${M(NPVo)} for keeping the old one (difference ${M(Math.abs(NPVn-NPVo))}).`}}});
+
+/* ---------- CH 7 ---------- */
+Cx({ch:'ch7',id:'p7-5',ref:'7-5',title:'Option to wait: when to buy the machine',
+inputs:[I('cf','Extra cash flow per year','$',435000),I('L','Obsolete in year','int',10),I('p','Price today','$',2800000),I('d','Price decline per year','$',215000),I('fl','Price floor','$',2155000),I('r','Required return','%',9)],
+prompt:v=>`A new machine will increase cash flow by ${M0(v.cf)} per year. The technology will be obsolete ${v.L} years from today regardless of when you buy. The machine costs ${M0(v.p)} today, and its price will decline by ${M0(v.d)} per year until it reaches ${M0(v.fl)}, where it stays. If your required return is ${pc(v.r)}, should you purchase the machine? If so, when?`,
+compute:v=>{const r=v.r/100;const rows=[];for(let k=0;k<v.L;k++){const c=Math.max(v.fl,v.p-v.d*k),nv=(-c+v.cf*pvifa(r,v.L-k))*pvif(r,k);rows.push({k,c,nv})}const best=rows.reduce((a,b)=>b.nv>a.nv?b:a);
+return{out:[o('Best year to buy',best.k,'n',1,0),o('NPV (today’s $) at best year',best.nv,'$',1),o('NPV if bought today',rows[0].nv,'$')],
+steps:['NPV of buying in year k, discounted to today:',`NPV_k = [–Cost_k + ${M0(v.cf)} × PVIFA(${pc(v.r)}, ${v.L} – k)]/(${D(1+r)})^k`,...rows.slice(0,Math.min(rows.length,8)).map(x=>`Year ${x.k}: [–${M0(x.c)} + ${M0(v.cf)} × PVIFA(${pc(v.r)}, ${v.L-x.k})]/${D(1+r)}^${x.k} = ${M(x.nv)}`),'All NPVs must be taken to the same date (today) before comparing.'],
+answer:best.nv>0?`Buy the machine in year ${best.k}, when its NPV in today’s dollars is highest (${M(best.nv)}).${rows[0].nv<0?' Buying today has a negative NPV ('+M(rows[0].nv)+').':''}`:'Do not buy the machine: the NPV is negative in every year.'}}});
+
+Cx({ch:'ch7',id:'p7-10',ref:'7-10',title:'Financial break-even point',
+inputs:[I('c','Machine cost','$',530000),I('n','Economic life (years)','int',5),I('p','Price per unit','$',75),I('vc','Variable cost per unit','$',27),I('fc','Fixed costs per year','$',235000),I('t','Tax rate','%',21),I('r','Discount rate','%',8)],
+prompt:v=>`A machine costs ${M0(v.c)} and has a ${v.n}-year life, depreciated straight-line to zero. Price per unit is ${M(v.p)}, variable cost is ${M(v.vc)}, and fixed costs are ${M0(v.fc)} per year. The tax rate is ${pc(v.t)} and the discount rate is ${pc(v.r)}. What is the financial break-even point?`,
+compute:v=>{const r=v.r/100,t=v.t/100,A=pvifa(r,v.n),eac=v.c/A,d=v.c/v.n,q=(eac+v.fc*(1-t)-d*t)/((v.p-v.vc)*(1-t)),qa=(v.fc+d)/(v.p-v.vc),qc=v.fc/(v.p-v.vc);
+return{out:[o('Financial break-even (units)',q,'n',1,2),o('EAC of investment',eac,'$'),o('Accounting break-even',qa,'n',0,2),o('Cash break-even',qc,'n',0,2)],
+steps:['## Step 1. EAC of the initial investment',`EAC = ${M0(v.c)}/PVIFA(${pc(v.r)}, ${v.n}) = ${M0(v.c)}/${N(A,5)} = ${M(eac)}`,'## Step 2. Depreciation',`D = ${M0(v.c)}/${v.n} = ${M(d)}`,'## Step 3. Financial break-even',`Q_F = [EAC + FC(1 – T) – D(T)]/[(P – v)(1 – T)]`,`Q_F = [${M(eac)} + ${M0(v.fc)}(1 – ${D(t)}) – ${M(d)}(${D(t)})]/[(${M(v.p)} – ${M(v.vc)})(1 – ${D(t)})]`,`Q_F = ${N(q,2)} units`,'## For comparison',`Accounting BE = (FC + D)/(P – v) = ${N(qa,2)};  Cash BE = FC/(P – v) = ${N(qc,2)}`],
+answer:`The financial break-even point is about ${Math.round(q).toLocaleString('en-US')} units per year; at this volume the project's NPV is zero.`}}});
+
+Cx({ch:'ch7',id:'p7-23',ref:'7-23',title:'Abandonment decision',
+inputs:[I('cf','Annual OCF','$',8700000),I('n','Years','int',10),I('r','Discount rate','%',13),I('i','Initial investment','$',43000000),I('s','Abandonment value after year 1','$',28000000)],
+prompt:v=>`A new product is expected to generate annual OCF of ${M0(v.cf)} for ${v.n} years. The discount rate is ${pc(v.r)} and the initial investment is ${M0(v.i)}, with no salvage value. (a) What is the NPV? (b) After the first year, the project can be dismantled and sold for ${M0(v.s)}. If the remaining cash flows are revised after year 1, below what level of expected cash flows should the project be abandoned?`,
+compute:v=>{const r=v.r/100,NPV=-v.i+v.cf*pvifa(r,v.n),A=pvifa(r,v.n-1),c2=v.s/A;
+return{out:[o('NPV',NPV,'$',1),o('Abandon if annual CF below',c2,'$',1)],
+steps:['## (a) NPV',`NPV = –${M0(v.i)} + ${M0(v.cf)} × PVIFA(${pc(v.r)}, ${v.n}) = ${M(NPV)}`,'## (b) Abandonment threshold',`Abandon if PV (at year 1) of the remaining ${v.n-1} cash flows < abandonment value.`,`${M0(v.s)} = C2 × PVIFA(${pc(v.r)}, ${v.n-1}) = C2 × ${N(A,5)}`,`C2 = ${M(c2)}`],
+answer:`The NPV is ${M(NPV)}. The firm should abandon the project if the revised annual cash flow falls below ${M(c2)}.`}}});
+
+/* ---------- CH 8 ---------- */
+const bondP=(F,cpn,yrs,y,m)=>{const n=Math.round(yrs*m),i=y/m;return F*cpn/m*pvifa(i,n)+F*pvif(i,n)};
+const ytm=(P,F,cpn,yrs,m)=>{const r=roots(y=>bondP(F,cpn,yrs,y,m)-P,0.00001,1,0.0005);return r.length?r[0]:NaN};
+Cx({ch:'ch8',id:'p8-19',ref:'8-19',title:'Interest rate risk: low vs. high coupon',
+inputs:[I('c1','Bond 1 coupon','%',7),I('c2','Bond 2 coupon','%',11),I('n','Years to maturity','int',12),I('m','Payments per year','int',2),I('y','Current YTM','%',9),I('dy','Rate change (±)','%',2)],
+prompt:v=>`Bond 1 has a ${pc(v.c1)} coupon and Bond 2 has a ${pc(v.c2)} coupon. Both have ${v.n} years to maturity, make ${v.m===2?'semiannual':v.m===1?'annual':v.m+'-times-a-year'} payments, and have a YTM of ${pc(v.y)}. If interest rates suddenly rise by ${pc(v.dy)}, what is the percentage change in each bond's price? What if rates fall by ${pc(v.dy)}? What does this tell you about the interest rate risk of lower coupon bonds?`,
+compute:v=>{const y=v.y/100,d=v.dy/100,F=1000,b=c=>[bondP(F,c/100,v.n,y,v.m),bondP(F,c/100,v.n,y+d,v.m),bondP(F,c/100,v.n,y-d,v.m)];const B1=b(v.c1),B2=b(v.c2);const ch=(a,x)=>(x-a)/a;const n=v.n*v.m;
+const line=(c,yy,p)=>`P = ${M(F*c/100/v.m)} × PVIFA(${pc(yy*100/v.m)}, ${n}) + ${M0(F)} × PVIF(${pc(yy*100/v.m)}, ${n}) = ${M(p)}`;
+return{out:[o('Bond 1: % change if rates rise',ch(B1[0],B1[1]),'%',1),o('Bond 2: % change if rates rise',ch(B2[0],B2[1]),'%',1),o('Bond 1: % change if rates fall',ch(B1[0],B1[2]),'%',1),o('Bond 2: % change if rates fall',ch(B2[0],B2[2]),'%',1),o('Bond 1 price now',B1[0],'$'),o('Bond 2 price now',B2[0],'$')],
+steps:[`## Prices at YTM = ${pc(v.y)}`,line(v.c1,y,B1[0]),line(v.c2,y,B2[0]),`## YTM rises to ${pc(v.y+v.dy)}`,line(v.c1,y+d,B1[1]),line(v.c2,y+d,B2[1]),`%ΔP1 = (${M(B1[1])} – ${M(B1[0])})/${M(B1[0])} = ${P(ch(B1[0],B1[1]))}`,`%ΔP2 = (${M(B2[1])} – ${M(B2[0])})/${M(B2[0])} = ${P(ch(B2[0],B2[1]))}`,`## YTM falls to ${pc(v.y-v.dy)}`,line(v.c1,y-d,B1[2]),line(v.c2,y-d,B2[2]),`%ΔP1 = ${P(ch(B1[0],B1[2]))};  %ΔP2 = ${P(ch(B2[0],B2[2]))}`],
+answer:`All else equal, the lower the coupon rate, the greater the bond's price sensitivity to interest rate changes: the ${pc(Math.min(v.c1,v.c2))} coupon bond moves ${P(Math.abs(ch(B1[0],B1[1])))} vs. ${P(Math.abs(ch(B2[0],B2[1])))} when rates rise.`}}});
+
+Cx({ch:'ch8',id:'p8-21',ref:'8-21',title:'Bond yields: setting the coupon to sell at par',
+inputs:[I('p','Price of existing bond','$',1048),I('c','Existing coupon rate','%',5.7),I('n','Years to maturity','int',20),I('m','Payments per year','int',2),I('F','Par value','$',1000,{fixed:1})],
+prompt:v=>`A company has ${pc(v.c)} coupon bonds on the market that sell for ${M(v.p)}, have a par value of ${M0(v.F)}, make ${v.m===2?'semiannual':'annual'} payments, and mature in ${v.n} years. What coupon rate should it set on new ${v.n}-year bonds if it wants them to sell at par?`,
+compute:v=>{const y=ytm(v.p,v.F,v.c/100,v.n,v.m),n=v.n*v.m;
+return{out:[o('Required coupon rate (= YTM)',y,'%',1),o('Periodic rate',y/v.m,'%')],
+steps:['A bond sells at par when its coupon rate equals the required return (YTM). Find the YTM of the existing bonds.',`${M(v.p)} = ${M(v.F*v.c/100/v.m)} × PVIFA(R, ${n}) + ${M0(v.F)} × PVIF(R, ${n})`,`Trial and error / calculator:  R = ${P(y/v.m,3)} per period`,`YTM = ${v.m} × ${P(y/v.m,3)} = ${P(y)}`],
+answer:`The company should set a coupon rate of ${P(y)} on the new bonds.`}}});
+
+Cx({ch:'ch8',id:'p8-29',ref:'8-29',title:'Components of bond returns: current yield vs. capital gains yield',
+inputs:[I('cp','Premium bond coupon','%',8),I('cd','Discount bond coupon','%',5),I('y','YTM (both)','%',6.5),I('n','Years to maturity','int',10)],
+prompt:v=>`Bond P is a premium bond with a ${pc(v.cp)} coupon. Bond D has a ${pc(v.cd)} coupon and sells at a discount. Both make annual payments, have a YTM of ${pc(v.y)}, and have ${v.n} years to maturity. What is the current yield for each? If interest rates remain unchanged, what is the expected capital gains yield over the next year for each? Explain.`,
+compute:v=>{const y=v.y/100,f=c=>{const p0=bondP(1000,c/100,v.n,y,1),p1=bondP(1000,c/100,v.n-1,y,1);return{p0,p1,cy:c*10/p0,cg:(p1-p0)/p0}};const A=f(v.cp),B=f(v.cd);
+const bl=(X,c,nm)=>[`## Bond ${nm}`,`P0 = ${M0(c*10)} × PVIFA(${pc(v.y)}, ${v.n}) + $1,000 × PVIF(${pc(v.y)}, ${v.n}) = ${M(X.p0)}`,`P1 = ${M0(c*10)} × PVIFA(${pc(v.y)}, ${v.n-1}) + $1,000 × PVIF(${pc(v.y)}, ${v.n-1}) = ${M(X.p1)}`,`Current yield = ${M0(c*10)}/${M(X.p0)} = ${P(X.cy)}`,`Capital gains yield = (${M(X.p1)} – ${M(X.p0)})/${M(X.p0)} = ${P(X.cg)}`,`Total = ${P(X.cy)} + (${P(X.cg)}) = ${P(X.cy+X.cg)}`];
+return{out:[o('Bond P current yield',A.cy,'%',1),o('Bond P capital gains yield',A.cg,'%',1),o('Bond D current yield',B.cy,'%',1),o('Bond D capital gains yield',B.cg,'%',1),o('Bond P price',A.p0,'$'),o('Bond D price',B.p0,'$')],
+steps:[...bl(A,v.cp,'P'),...bl(B,v.cd,'D')],
+answer:`Premium bonds pay high current income but lose value as maturity nears; discount bonds pay less current income but gain value. For both, current yield + capital gains yield = YTM = ${pc(v.y)}.`}}});
+
+Cx({ch:'ch8',id:'p8-30',ref:'8-30',title:'Holding period yield (HPY)',
+inputs:[I('c','Annual coupon rate','%',5.4),I('p','Purchase price','$',940),I('n','Years to maturity','int',10),I('h','Years held','int',2),I('dy','Change in YTM when sold','%',-1)],
+prompt:v=>`You buy a bond with an annual coupon of ${pc(v.c)} for ${M(v.p)}. The bond has ${v.n} years to maturity. (a) What rate of return do you expect to earn? (b) ${v.h} years from now, the YTM has ${v.dy<0?'declined':'risen'} by ${pc(Math.abs(v.dy))} and you sell. What price will the bond sell for? What is your HPY? Compare it with the original YTM.`,
+compute:v=>{const y=ytm(v.p,1000,v.c/100,v.n,1),y2=y+v.dy/100,p2=bondP(1000,v.c/100,v.n-v.h,y2,1),cp=v.c*10;const cf=[-v.p];for(let t=1;t<=v.h;t++)cf.push(cp+(t===v.h?p2:0));const hpy=irr1(cf);
+return{out:[o('Expected return (YTM)',y,'%',1),o('Selling price',p2,'$',1),o('HPY',hpy,'%',1)],
+steps:['## (a) Expected return = YTM',`${M(v.p)} = ${M0(cp)} × PVIFA(R, ${v.n}) + $1,000 × PVIF(R, ${v.n})`,`R = YTM = ${P(y)}`,`## (b) Price in ${v.h} years`,`New YTM = ${P(y)} ${v.dy<0?'–':'+'} ${pc(Math.abs(v.dy))} = ${P(y2)}`,`P${v.h} = ${M0(cp)} × PVIFA(${P(y2)}, ${v.n-v.h}) + $1,000 × PVIF(${P(y2)}, ${v.n-v.h}) = ${M(p2)}`,'## HPY',`${M(v.p)} = ${M0(cp)} × PVIFA(R, ${v.h}) + ${M(p2)} × PVIF(R, ${v.h})`,`R = HPY = ${P(hpy)}`],
+answer:`The expected return is the YTM of ${P(y)}. The bond sells for ${M(p2)} and the HPY is ${P(hpy)}, ${hpy>y?'higher':'lower'} than the original YTM because interest rates ${v.dy<0?'fell, and bond prices rise when yields fall':'rose, and bond prices fall when yields rise'}.`}}});
+
+Cx({ch:'ch8',id:'p8-31',ref:'8-31',title:'Valuing bonds with irregular payments and a zero',
+inputs:[I('F','Face value','$',30000),I('z','Years with no payment','int',6),I('y1','Years of coupon 1','int',8),I('k1','Coupon 1 (per 6 months)','$',800),I('y2','Years of coupon 2','int',6),I('k2','Coupon 2 (per 6 months)','$',1000),I('r','Required return (semiannual comp.)','%',5.6)],
+prompt:v=>`Bond M has a face value of ${M0(v.F)} and matures in ${v.z+v.y1+v.y2} years. It makes no payments for the first ${v.z} years, then pays ${M0(v.k1)} every six months for the next ${v.y1} years, and ${M0(v.k2)} every six months for the last ${v.y2} years. Bond N has the same face value and maturity but makes no coupon payments. If the required return is ${pc(v.r)} compounded semiannually, what is the current price of each bond?`,
+compute:v=>{const i=v.r/200,T=2*(v.z+v.y1+v.y2),a=v.k1*pvifa(i,2*v.y1)*pvif(i,2*v.z),b=v.k2*pvifa(i,2*v.y2)*pvif(i,2*(v.z+v.y1)),f=v.F*pvif(i,T);
+return{out:[o('Price of Bond M',a+b+f,'$',1),o('Price of Bond N',f,'$',1)],
+steps:[`Semiannual rate = ${pc(v.r)}/2 = ${pc(v.r/2)}; total periods = ${T}`,'## Bond M',`PV(coupon 1) = ${M0(v.k1)} × PVIFA(${pc(v.r/2)}, ${2*v.y1}) × PVIF(${pc(v.r/2)}, ${2*v.z}) = ${M(a)}`,`PV(coupon 2) = ${M0(v.k2)} × PVIFA(${pc(v.r/2)}, ${2*v.y2}) × PVIF(${pc(v.r/2)}, ${2*(v.z+v.y1)}) = ${M(b)}`,`PV(face) = ${M0(v.F)} × PVIF(${pc(v.r/2)}, ${T}) = ${M(f)}`,`P_M = ${M(a)} + ${M(b)} + ${M(f)} = ${M(a+b+f)}`,'## Bond N (zero coupon)',`P_N = ${M0(v.F)}/(1 + ${D(i)})^${T} = ${M(f)}`],
+answer:`Bond M is worth ${M(a+b+f)} and Bond N is worth ${M(f)}. Each annuity is valued first and then discounted back as a lump sum from the period before it starts.`}}});
+
+/* ---------- CH 9 ---------- */
+function diffGrowth(v){const R=v.r/100,g=v.g/100,gs=parseList(v.gs).map(x=>x/100);let d=v.d0;const divs=[];gs.forEach(x=>{d*=1+x;divs.push(d)});const n=gs.length,dn1=d*(1+g),Pn=dn1/(R-g);let pv=0;const ls=[];divs.forEach((x,i)=>{pv+=x*pvif(R,i+1);ls.push(`D${i+1} = ${M(i?divs[i-1]:v.d0)} × ${D(1+gs[i])} = ${M(x)}`)});const P0=pv+Pn*pvif(R,n);
+return{out:[o('Price today (P0)',P0,'$',1),o(`Price in year ${n} (P${n})`,Pn,'$',1)],
+steps:['## Dividends during the high-growth period',...ls,`## Price when constant growth starts (year ${n})`,`P${n} = D${n+1}/(R – g) = ${M(d)} × ${D(1+g)}/(${D(R)} – ${D(g)}) = ${M(Pn)}`,'## Price today',`P0 = `+divs.map((x,i)=>`${M(x)}/${D(1+R)}^${i+1}`).join(' + ')+` + ${M(Pn)}/${D(1+R)}^${n}`,`P0 = ${M(P0)}`],
+answer:`The current share price is ${M(P0)}.`}}
+Cx({ch:'ch9',id:'p9-15',ref:'9-15',title:'Differential (supernormal) growth',
+inputs:[I('d0','Dividend just paid (D0)','$',3.24),I('gs','High-growth rates by year','list','20, 20, 20'),I('g','Constant growth after','%',5),I('r','Required return','%',11)],
+prompt:v=>{const g=parseList(v.gs);return `A company's dividends are expected to grow at ${[...new Set(g)].length===1?pc(g[0])+' for the next '+g.length+' years':g.map(pc).join(', ')+' over the next '+g.length+' years'}, with growth falling to a constant ${pc(v.g)} thereafter. If the required return is ${pc(v.r)} and the company just paid a dividend of ${M(v.d0)}, what is the current share price?`},
+compute:diffGrowth});
+Cx({ch:'ch9',id:'p9-31',ref:'9-31',title:'Nonconstant growth (declining step by step)',
+inputs:[I('d0','Dividend just paid (D0)','$',2.95),I('gs','Growth rates by year','list','20, 15, 10'),I('g','Long-run constant growth','%',5),I('r','Required return','%',13)],
+prompt:v=>{const g=parseList(v.gs);return `A company just paid a dividend of ${M(v.d0)} per share. Dividend growth will be ${g.map(pc).join(', ')} over the next ${g.length} years, after which it settles at the industry average of ${pc(v.g)} forever. If the required return is ${pc(v.r)}, what will a share sell for today?`},
+compute:diffGrowth});
+
+Cx({ch:'ch9',id:'p9-18',ref:'9-18',title:'Finding the dividend (constant growth model)',
+inputs:[I('p','Stock price','$',74.32),I('r','Required return','%',10.5),I('g','Dividend growth','%',4)],
+prompt:v=>`A stock sells for ${M(v.p)} per share. The market requires a return of ${pc(v.r)}. If the company maintains a constant ${pc(v.g)} growth rate in dividends, what was the most recent dividend per share?`,
+compute:v=>{const R=v.r/100,g=v.g/100,d0=v.p*(R-g)/(1+g);
+return{out:[o('Most recent dividend (D0)',d0,'$',1),o('Next dividend (D1)',d0*(1+g),'$'),o('Dividend yield',d0*(1+g)/v.p,'%')],
+steps:['P0 = D0(1 + g)/(R – g)',`${M(v.p)} = D0(1 + ${D(g)})/(${D(R)} – ${D(g)})`,`D0 = ${M(v.p)} × (${D(R)} – ${D(g)})/${D(1+g)} = ${M(d0)}`,`Check: dividend yield ${P(d0*(1+g)/v.p)} + capital gains yield ${pc(v.g)} = R ${pc(v.r)}`],
+answer:`The most recent dividend was ${M(d0)} per share.`}}});
+
+Cx({ch:'ch9',id:'p9-19',ref:'9-19',title:'Valuing preferred stock with delayed dividends',
+inputs:[I('d','Annual dividend','$',4),I('s','First dividend in year','int',5),I('r','Required return','%',4.3)],
+prompt:v=>`A bank just issued preferred stock that pays an annual dividend of ${M(v.d)} in perpetuity, beginning ${v.s} years from now. If the market requires a return of ${pc(v.r)}, how much does a share cost today?`,
+compute:v=>{const R=v.r/100,pk=v.d/R,p0=pk*pvif(R,v.s-1);
+return{out:[o('Price today',p0,'$',1),o(`Price in year ${v.s-1}`,pk,'$')],
+steps:[`The perpetuity formula gives the value one year before the first dividend, i.e., year ${v.s-1}.`,`P${v.s-1} = D/R = ${M(v.d)}/${D(R)} = ${M(pk)}`,`P0 = ${M(pk)}/(${D(1+R)})^${v.s-1} = ${M(p0)}`],
+answer:`A share of preferred stock costs ${M(p0)} today.`}}});
+
+Cx({ch:'ch9',id:'p9-25',ref:'9-25',title:'Price-earnings ratio with new projects',
+inputs:[I('e','Earnings (both firms)','$',720000),I('r','Required return','%',11),I('a','Pacific: added earnings','$',150000),I('b','Atlantic: added earnings','$',300000)],
+prompt:v=>`Two firms each report earnings of ${M0(v.e)} that will continue in perpetuity without new projects. All earnings are paid as dividends and both require a return of ${pc(v.r)}. (a) What is each firm's current PE ratio? (b) Pacific has a new project that adds ${M0(v.a)} of earnings per year in perpetuity. What is its new PE? (c) Atlantic's new project adds ${M0(v.b)} per year in perpetuity. What is its new PE?`,
+compute:v=>{const R=v.r/100,p=v.e/R,pa=(v.e+v.a)/R,pb=(v.e+v.b)/R;
+return{out:[o('Current PE',p/v.e,'x',1),o('Pacific new PE',pa/v.e,'x',1),o('Atlantic new PE',pb/v.e,'x',1)],
+steps:['## (a) No growth: value = perpetuity',`P = E/R = ${M0(v.e)}/${D(R)} = ${M(p)}`,`PE = ${M(p)}/${M0(v.e)} = ${N(p/v.e,2)} times`,'## (b) Pacific',`P = (${M0(v.e)} + ${M0(v.a)})/${D(R)} = ${M(pa)}`,`PE = ${M(pa)}/${M0(v.e)} = ${N(pa/v.e,2)} times`,'## (c) Atlantic',`P = (${M0(v.e)} + ${M0(v.b)})/${D(R)} = ${M(pb)}`,`PE = ${M(pb)}/${M0(v.e)} = ${N(pb/v.e,2)} times`],
+answer:`Current PE = ${N(p/v.e,2)}×. With the new projects, PE rises to ${N(pa/v.e,2)}× (Pacific) and ${N(pb/v.e,2)}× (Atlantic): the PE ratio reflects the value of growth opportunities (NPVGO) relative to current earnings.`}}});
+
+/* ---------- CH 11 ---------- */
+Cx({ch:'ch11',id:'p11-18',ref:'11-18',title:'Reward-to-risk ratios: are the stocks correctly priced?',
+inputs:[I('by','Stock Y beta','n',1.15),I('ey','Stock Y expected return','%',11.8),I('bz','Stock Z beta','n',0.85),I('ez','Stock Z expected return','%',10.7),I('rf','Risk-free rate','%',4.5),I('mrp','Market risk premium','%',7.1)],
+prompt:v=>`Stock Y has a beta of ${v.by} and an expected return of ${pc(v.ey)}. Stock Z has a beta of ${v.bz} and an expected return of ${pc(v.ez)}. If the risk-free rate is ${pc(v.rf)} and the market risk premium is ${pc(v.mrp)}, are these stocks correctly priced?`,
+compute:v=>{const rf=v.rf/100,m=v.mrp/100,cy=rf+m*v.by,cz=rf+m*v.bz,ty=(v.ey/100-rf)/v.by,tz=(v.ez/100-rf)/v.bz;const st=(e,c)=>e>c?'above the SML → undervalued':e<c?'below the SML → overvalued':'on the SML → correctly priced';
+return{out:[o('CAPM required return, Y',cy,'%',1),o('CAPM required return, Z',cz,'%',1),o('Reward-to-risk, Y',ty,'n',0,4),o('Reward-to-risk, Z',tz,'n',0,4)],
+steps:['## Method 1: CAPM',`E(R_Y) = ${D(rf)} + ${D(m)}(${v.by}) = ${P(cy)} vs. given ${pc(v.ey)} → ${st(v.ey/100,cy)}`,`E(R_Z) = ${D(rf)} + ${D(m)}(${v.bz}) = ${P(cz)} vs. given ${pc(v.ez)} → ${st(v.ez/100,cz)}`,'## Method 2: Reward-to-risk (Treynor) ratio',`Market: ${D(m)}/1 = ${N(m,4)}`,`Y: (${D(v.ey/100)} – ${D(rf)})/${v.by} = ${N(ty,4)}`,`Z: (${D(v.ez/100)} – ${D(rf)})/${v.bz} = ${N(tz,4)}`,'A ratio below the market’s means too little return for the risk (overvalued); above means undervalued.'],
+answer:`Stock Y plots ${st(v.ey/100,cy)}; its price must ${v.ey/100<cy?'fall':'rise'}. Stock Z plots ${st(v.ez/100,cz)}; its price must ${v.ez/100<cz?'fall':'rise'}.`}}});
+
+Cx({ch:'ch11',id:'p11-24',ref:'11-24',title:'Analyzing a portfolio: hitting a target return',
+inputs:[I('w','Amount to invest','$',100000),I('tg','Target return','%',12.7),I('ex','Stock X expected return','%',11.4),I('bx','Stock X beta','n',1.25),I('ey','Stock Y expected return','%',8.68),I('by','Stock Y beta','n',0.85)],
+prompt:v=>`You have ${M0(v.w)} to invest in Stocks X and Y. You want a portfolio expected return of ${pc(v.tg)}. Stock X has an expected return of ${pc(v.ex)} and a beta of ${v.bx}; Stock Y has an expected return of ${pc(v.ey)} and a beta of ${v.by}. How much will you invest in Stock Y? How do you interpret your answer? What is the beta of your portfolio?`,
+compute:v=>{const t=v.tg/100,x=v.ex/100,y=v.ey/100,wx=(t-y)/(x-y),wy=1-wx,bp=wx*v.bx+wy*v.by;
+return{out:[o('Investment in Y',wy*v.w,'$',1),o('Weight in X',wx,'n',0,5),o('Weight in Y',wy,'n',0,5),o('Portfolio beta',bp,'n',1,4)],
+steps:['E(R_p) = w_X·E(R_X) + (1 – w_X)·E(R_Y)',`${D(t)} = w_X(${D(x)}) + (1 – w_X)(${D(y)})`,`w_X = (${D(t)} – ${D(y)})/(${D(x)} – ${D(y)}) = ${N(wx,5)}`,`w_Y = 1 – ${N(wx,5)} = ${N(wy,5)}`,`Investment in Y = ${N(wy,5)} × ${M0(v.w)} = ${M(wy*v.w)}`,`β_p = ${N(wx,5)}(${v.bx}) + (${N(wy,5)})(${v.by}) = ${N(bp,4)}`],
+answer:wy<0?`You invest ${M(wy*v.w)} in Stock Y: a negative weight means you short sell ${M(-wy*v.w)} of Stock Y and invest ${M(wx*v.w)} in Stock X. The portfolio beta is ${N(bp,2)}.`:`You invest ${M(wy*v.w)} in Stock Y and ${M(wx*v.w)} in Stock X. The portfolio beta is ${N(bp,2)}.`}}});
+
+function statsCalc(pr,a,b){const p=parseList(pr),A=parseList(a).map(Number),B=parseList(b).map(Number);const E=x=>x.reduce((s,r,i)=>s+p[i]*r,0);const ea=E(A),eb=E(B);const va=A.reduce((s,r,i)=>s+p[i]*(r-ea)**2,0),vb=B.reduce((s,r,i)=>s+p[i]*(r-eb)**2,0);const cov=A.reduce((s,r,i)=>s+p[i]*(r-ea)*(B[i]-eb),0);return{p,A,B,ea,eb,va,vb,sa:Math.sqrt(va),sb:Math.sqrt(vb),cov,rho:cov/Math.sqrt(va*vb)}}
+const pf=x=>x.toFixed(4).replace(/0+$/,'').replace(/\.$/,'');
+Cx({ch:'ch11',id:'p11-25',ref:'11-25',title:'Expected return, SD, covariance and correlation',
+inputs:[I('p','Probabilities by state','list','1/3, 1/3, 1/3',{fixed:1}),I('a','Stock A returns','list','.099, .113, .059'),I('b','Stock B returns','list','-.073, .128, .293')],
+prompt:v=>`States of the economy (bear, normal, bull) occur with probabilities ${v.p}. Returns on Stock A are ${v.a}; returns on Stock B are ${v.b}. Calculate the expected return and standard deviation of each stock, and the covariance and correlation between them.`,
+compute:v=>{const s=statsCalc(v.p,v.a,v.b),pp=s.p.map(pf);
+return{out:[o('E(R_A)',s.ea,'%',1),o('E(R_B)',s.eb,'%',1),o('σ_A',s.sa,'%',1),o('σ_B',s.sb,'%',1),o('Cov(A,B)',s.cov,'n',1,6),o('Correlation',s.rho,'n',1,4)],
+steps:['## Expected returns',`E(R_A) = `+s.A.map((r,i)=>`${pp[i]}(${r})`).join(' + ')+` = ${P(s.ea)}`,`E(R_B) = `+s.B.map((r,i)=>`${pp[i]}(${r})`).join(' + ')+` = ${P(s.eb)}`,'## Variances and standard deviations',`σ²_A = `+s.A.map((r,i)=>`${pp[i]}(${r} – ${N(s.ea,4)})²`).join(' + ')+` = ${N(s.va,5)};  σ_A = ${P(s.sa)}`,`σ²_B = `+s.B.map((r,i)=>`${pp[i]}(${r} – ${N(s.eb,4)})²`).join(' + ')+` = ${N(s.vb,5)};  σ_B = ${P(s.sb)}`,'## Covariance and correlation',`Cov(A,B) = Σ p_s (R_A – E[R_A])(R_B – E[R_B]) = ${N(s.cov,6)}`,`ρ = Cov/(σ_A σ_B) = ${N(s.cov,6)}/(${N(s.sa,4)} × ${N(s.sb,4)}) = ${N(s.rho,4)}`],
+answer:`E(R_A) = ${P(s.ea)}, σ_A = ${P(s.sa)}; E(R_B) = ${P(s.eb)}, σ_B = ${P(s.sb)}. Cov(A,B) = ${N(s.cov,6)} and the correlation is ${N(s.rho,4)}, so the stocks tend to move in ${s.rho<0?'opposite directions':'the same direction'}.`}}});
+
+Cx({ch:'ch11',id:'p11-33',ref:'11-33',title:'Systematic vs. unsystematic risk',
+inputs:[I('p','Probabilities by state','list','.15, .55, .30',{fixed:1}),I('a','Stock I returns','list','.12, .17, .06'),I('b','Stock II returns','list','-.35, .12, .33'),I('m','Market risk premium','%',7.5),I('rf','Risk-free rate','%',4)],
+prompt:v=>`States of the economy (recession, normal, irrational exuberance) have probabilities ${v.p}. Stock I returns: ${v.a}. Stock II returns: ${v.b}. The market risk premium is ${pc(v.m)} and the risk-free rate is ${pc(v.rf)}. Which stock has more systematic risk? Which has more unsystematic risk? Which is “riskier”?`,
+compute:v=>{const s=statsCalc(v.p,v.a,v.b),rf=v.rf/100,m=v.m/100,bi=(s.ea-rf)/m,bii=(s.eb-rf)/m,pp=s.p.map(pf);
+return{out:[o('β_I',bi,'n',1,2),o('β_II',bii,'n',1,2),o('σ_I',s.sa,'%',1),o('σ_II',s.sb,'%',1),o('E(R_I)',s.ea,'%'),o('E(R_II)',s.eb,'%')],
+steps:['## Stock I',`E(R_I) = `+s.A.map((r,i)=>`${pp[i]}(${r})`).join(' + ')+` = ${P(s.ea)}`,`CAPM: ${P(s.ea)} = ${pc(v.rf)} + ${pc(v.m)} × β_I  →  β_I = ${N(bi,2)}`,`σ²_I = ${N(s.va,5)};  σ_I = ${P(s.sa)}`,'## Stock II',`E(R_II) = `+s.B.map((r,i)=>`${pp[i]}(${r})`).join(' + ')+` = ${P(s.eb)}`,`CAPM: β_II = (${P(s.eb)} – ${pc(v.rf)})/${pc(v.m)} = ${N(bii,2)}`,`σ²_II = ${N(s.vb,5)};  σ_II = ${P(s.sb)}`,'## Interpretation','Beta measures systematic risk; standard deviation measures total risk. Unsystematic risk can be diversified away, so only systematic risk is rewarded.'],
+answer:`Stock ${bi>bii?'I':'II'} has more systematic risk (β = ${N(Math.max(bi,bii),2)}), while Stock ${s.sb>s.sa?'II':'I'} has more total and unsystematic risk (σ = ${P(Math.max(s.sa,s.sb))}). Since unsystematic risk can be diversified away, Stock ${bi>bii?'I':'II'} is actually the “riskier” stock and has the higher risk premium.`}}});
+
+Cx({ch:'ch11',id:'p11-30',ref:'11-30',title:'Capital Market Line (CML)',
+inputs:[I('em','Market expected return','%',11.5),I('sm','Market SD','%',19),I('rf','Risk-free rate','%',4.1),I('sp','(a) Portfolio SD','%',9),I('ep','(b) Target expected return','%',20)],
+prompt:v=>`The market portfolio has an expected return of ${pc(v.em)} and a standard deviation of ${pc(v.sm)}. The risk-free rate is ${pc(v.rf)}. (a) What is the expected return on a well-diversified portfolio with a standard deviation of ${pc(v.sp)}? (b) What is the standard deviation of a well-diversified portfolio with an expected return of ${pc(v.ep)}?`,
+compute:v=>{const s=(v.em-v.rf)/v.sm,ea=v.rf/100+s*v.sp/100,sb=(v.ep-v.rf)/100/s;
+return{out:[o('(a) Expected return',ea,'%',1),o('(b) Standard deviation',sb,'%',1),o('CML slope',s,'n',0,5)],
+steps:['A well-diversified portfolio has no unsystematic risk, so it lies on the CML.',`Slope = [E(R_M) – R_f]/σ_M = (${D(v.em/100)} – ${D(v.rf/100)})/${D(v.sm/100)} = ${N(s,5)}`,`(a) E(R_P) = R_f + slope × σ_P = ${D(v.rf/100)} + ${N(s,5)}(${D(v.sp/100)}) = ${P(ea)}`,`(b) ${D(v.ep/100)} = ${D(v.rf/100)} + ${N(s,5)} × σ_P  →  σ_P = ${P(sb)}`],
+answer:`(a) The expected return is ${P(ea)}. (b) The standard deviation is ${P(sb)}.`}}});
+
+Cx({ch:'ch11',id:'p11-31',ref:'11-31',title:'Beta from correlation, then CAPM',
+inputs:[I('ep','Portfolio (Rf + market) return','%',9),I('sp','Portfolio SD','%',16),I('rf','Risk-free rate','%',4.1),I('em','Market expected return','%',11),I('rho','Correlation with market','n',0.38),I('si','Security SD','%',60)],
+prompt:v=>`A portfolio combining the risk-free asset and the market portfolio has an expected return of ${pc(v.ep)} and a standard deviation of ${pc(v.sp)}. The risk-free rate is ${pc(v.rf)} and the market's expected return is ${pc(v.em)}. Assuming CAPM holds, what expected return would a security earn if it had a ${v.rho} correlation with the market and a standard deviation of ${pc(v.si)}?`,
+compute:v=>{const s=(v.ep-v.rf)/v.sp,sm=(v.em-v.rf)/s/100,b=v.rho*v.si/100/sm,e=v.rf/100+b*(v.em-v.rf)/100;
+return{out:[o('Expected return',e,'%',1),o('Beta',b,'n',1,4),o('Market SD',sm,'%',1),o('CML slope',s,'n',0,4)],
+steps:['## Step 1. CML slope from the two points (R_f, 0) and the portfolio',`Slope = (${D(v.ep/100)} – ${D(v.rf/100)})/(${D(v.sp/100)} – 0) = ${N(s,4)}`,'## Step 2. Market SD',`${D(v.em/100)} = ${D(v.rf/100)} + ${N(s,4)} × σ_M  →  σ_M = ${P(sm)}`,'## Step 3. Beta',`β = ρ × σ_i/σ_M = ${v.rho} × ${D(v.si/100)}/${N(sm,4)} = ${N(b,4)}`,'## Step 4. CAPM',`E(R_i) = ${D(v.rf/100)} + ${N(b,4)}(${D(v.em/100)} – ${D(v.rf/100)}) = ${P(e)}`],
+answer:`The security's beta is ${N(b,2)}, so its expected return is ${P(e)}.`}}});
+
+Cx({ch:'ch11',id:'p11-34',ref:'11-34',title:'SML: backing out Rf and the market return',
+inputs:[I('b1','Security 1 beta','n',1.25),I('e1','Security 1 expected return','%',13.28),I('b2','Security 2 beta','n',0.85),I('e2','Security 2 expected return','%',10.12)],
+prompt:v=>`Pete Corp. has a beta of ${v.b1} and an expected return of ${pc(v.e1)}. Repete Co. has a beta of ${v.b2} and an expected return of ${pc(v.e2)}. Assume both are correctly priced. Based on the CAPM, what is the expected return on the market? What is the risk-free rate?`,
+compute:v=>{const e1=v.e1/100,e2=v.e2/100,rf=(v.b1*e2-v.b2*e1)/(v.b1-v.b2),rm=rf+(e1-rf)/v.b1;
+return{out:[o('Risk-free rate',rf,'%',1),o('Market expected return',rm,'%',1)],
+steps:['Correctly priced securities have equal reward-to-risk ratios:',`(${D(e1)} – R_f)/${v.b1} = (${D(e2)} – R_f)/${v.b2}`,`${v.b2}(${D(e1)} – R_f) = ${v.b1}(${D(e2)} – R_f)`,`R_f = (${v.b1} × ${D(e2)} – ${v.b2} × ${D(e1)})/(${v.b1} – ${v.b2}) = ${P(rf)}`,`CAPM: ${D(e1)} = ${N(rf,4)} + ${v.b1}(R_M – ${N(rf,4)})  →  R_M = ${P(rm)}`,`Check with security 2: ${N(rf,4)} + ${v.b2}(${N(rm,4)} – ${N(rf,4)}) = ${P(rf+v.b2*(rm-rf))}`],
+answer:`The risk-free rate is ${P(rf)} and the expected market return is ${P(rm)}.`}}});
+
+/* ===== CALCULATOR SHORTCUTS: step-by-step keystrokes for every problem =====
+   step = {t:title, ba:'BA II Plus keys', sci:'scientific keys', out:'display', why:'Korean note'}
+   [X] = a key; plain text = number you type */
+const rd=x=>Math.abs(x)>=100?+(+x).toFixed(2):+(+x).toFixed(6);
+const kn=x=>{x=rd(x);return x<0?`${-x} [+/-]`:`${x}`};
+const kp=x=>String(rd(x));               /* plain number for scientific entry */
+const dv=(x,d=2)=>!isFinite(x)?'Error':(x<0?'-':'')+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const TVM=(o,c)=>'[2ND] [CLR TVM]  '+['N','I/Y','PV','PMT','FV'].filter(k=>o[k]!==undefined).map(k=>`${kn(o[k])} [${k}]`).join('  ')+`  [CPT] [${c}]`;
+const TVMc=(o,c)=>['N','I/Y','PV','PMT','FV'].filter(k=>o[k]!==undefined).map(k=>`${kn(o[k])} [${k}]`).join('  ')+`  [CPT] [${c}]`;   /* keep other registers */
+function runs(cf){const r=[];for(let i=1;i<cf.length;i++){const v=+cf[i].toFixed(6);if(r.length&&r[r.length-1].v===v)r[r.length-1].f++;else r.push({v,f:1})}return r}
+const CFK=(cf,I)=>'[CF] [2ND] [CLR WORK]  '+kn(cf[0])+' [ENTER]  '+runs(cf).map(x=>`[↓] ${kn(x.v)} [ENTER] [↓]${x.f>1?' '+x.f+' [ENTER]':''}`).join('  ')+(I!==undefined?`  [NPV] ${kp(I)} [ENTER] [↓] [CPT]`:'');
+const cfSum=cf=>'CF0 = '+dv(cf[0],0)+'  ·  '+runs(cf).map((x,i)=>`C${String(i+1).padStart(2,'0')} = ${dv(x.v,x.v%1?4:0)}${x.f>1?` (F${String(i+1).padStart(2,'0')} = ${x.f})`:''}`).join('  ·  ');
+const pc2=x=>kp(x/100);
+const KEYS={};
+
+/* CH2 */
+KEYS['p2-17']=v=>{const t=v.t/100,ebit=v.s-v.cogs-v.sga-v.dep,ti=ebit-v.int,tax=Math.max(0,ti*t),ni=ti-tax,ocf=ebit+v.dep-tax,nld=v.int-(ocf-v.dnwc-v.ncs-(v.div-v.neq));
+return[{t:'EBIT',sci:`${kp(v.s)} [−] ${kp(v.cogs)} [−] ${kp(v.sga)} [−] ${kp(v.dep)} [=]`,out:dv(ebit)},
+{t:'과세표준 → 세금 → 순이익',sci:`[Ans] [−] ${kp(v.int)} [=]  →  ${ti>0?`[Ans] [×] ${kp(1-t)} [=]`:'음수이므로 세금 0, 순이익 = 과세표준'}`,out:dv(ni),why:'TI × (1 – T)로 세금과 순이익을 한 번에.'},
+{t:'OCF',sci:`${kp(ebit)} [+] ${kp(v.dep)} [−] ${kp(tax)} [=]`,out:dv(ocf)},
+{t:'지름길: 장기부채 변화 한 줄',sci:`${kp(v.int)} [−] [(] ${kp(ocf)} [−] ${kp(v.dnwc)} [−] ${kp(v.ncs)} [−] ${kp(v.div)} [+] ${kp(v.neq)} [)] [=]`,out:dv(nld),why:'Net new LTD = Interest – (CFA – CF to stockholders).'}]};
+KEYS['p2-19']=v=>{const t=v.t/100,ebit=v.s-v.cogs-v.dep,ti=ebit-v.int,tax=Math.max(0,ti*t),ni=ti-tax,ocf=ebit+v.dep-tax,dn=(v.ca1-v.cl1)-(v.ca0-v.cl0),ncs=v.nfa1-v.nfa0+v.dep,cfa=ocf-dn-ncs,cfc=v.int-v.nd,cfs=cfa-cfc;
+return[{t:'EBIT → 순이익',sci:`${kp(v.s)} [−] ${kp(v.cogs)} [−] ${kp(v.dep)} [=]  [Ans] [−] ${kp(v.int)} [=]  [Ans] [×] ${kp(1-t)} [=]`,out:dv(ni),why:'EBIT = '+dv(ebit)+', 과세표준 = '+dv(ti)},
+{t:'OCF',sci:`${kp(ebit)} [+] ${kp(v.dep)} [−] ${kp(tax)} [=]`,out:dv(ocf)},
+{t:'ΔNWC 한 줄',sci:`[(] ${kp(v.ca1)} [−] ${kp(v.cl1)} [)] [−] [(] ${kp(v.ca0)} [−] ${kp(v.cl0)} [)] [=]`,out:dv(dn)},
+{t:'순자본지출(NCS)',sci:`${kp(v.nfa1)} [−] ${kp(v.nfa0)} [+] ${kp(v.dep)} [=]`,out:dv(ncs)},
+{t:'CFA',sci:`${kp(ocf)} [−] ${kp(dn)} [−] ${kp(ncs)} [=]`,out:dv(cfa)},
+{t:'채권자 → 주주 → 신규 주식',sci:`${kp(v.int)} [−] ${kp(v.nd)} [=]   ${kp(cfa)} [−] ${kp(cfc)} [=]   ${kp(v.div)} [−] ${kp(cfs)} [=]`,out:`${dv(cfc)} / ${dv(cfs)} / ${dv(v.div-cfs)}`}]};
+
+/* CH4 */
+KEYS['p4-52']=v=>{const r=v.r/100,pva=v.c*pvifa(r,v.n),cf=Array(v.b+v.n).fill(0);for(let t=v.a;t<v.a+v.n;t++)cf[t]+=v.c;for(let t=v.b;t<v.b+v.n;t++)cf[t]+=v.c;const tot=npv(r,cf),pmt=tot/pvifa(r,v.a);
+return[{t:'지름길: 학비 전체를 CF 워크시트에 한 번에',ba:CFK(cf,v.r),out:dv(tot),why:'두 아이 학비가 겹치는 해는 더해서 입력하고, 같은 금액이 이어지면 F(빈도)로 묶습니다. '+cfSum(cf)},
+{t:'(대안) 한 아이 학비 PV → 각각 할인',ba:TVM({N:v.n,'I/Y':v.r,PMT:v.c,FV:0},'PV')+`   →   ${kn(pva)} [FV]  ${v.a-1} [N]  0 [PMT]  [CPT] [PV]`,sci:`[(] 1 [−] 1 [÷] ${kp(1+r)} [^] ${v.n} [)] [÷] ${kp(r)} [×] ${kp(v.c)} [=]   [Ans] [÷] ${kp(1+r)} [^] ${v.a-1} [=]`,out:dv(pva)+' → '+dv(pva*pvif(r,v.a-1))},
+{t:'매년 저축액 PMT',ba:TVM({N:v.a,'I/Y':v.r,PV:-tot,FV:0},'PMT'),sci:`${kp(tot)} [×] ${kp(r)} [÷] [(] 1 [−] 1 [÷] ${kp(1+r)} [^] ${v.a} [)] [=]`,out:dv(pmt)}]};
+KEYS['p4-55']=v=>{const r=v.r/100,g=v.g/100,pv=v.fv*pvif(r,v.T),ra=(1+r)/(1+g)-1,c1=pv/pvifa(ra,v.T),c=c1*(1+g);
+return[{t:'목표액의 PV',ba:TVM({N:v.T,'I/Y':v.r,PMT:0,FV:v.fv},'PV'),sci:`${kp(v.fv)} [÷] ${kp(1+r)} [^] ${v.T} [=]`,out:dv(-pv)},
+{t:'지름길: 성장 연금용 조정 이자율',sci:`${kp(1+r)} [÷] ${kp(1+g)} [−] 1 [=] [×] 100 [=]`,out:N(ra*100,4)+'%',why:'성장 연금 PV = C₁/(1+g) × PVIFA(r*, T), r* = (1+r)/(1+g) – 1. 일반 TVM으로 풀 수 있게 바꾸는 요령.'},
+{t:'TVM으로 C₁/(1+g) → × (1+g)',ba:TVMc({N:v.T,'I/Y':+(ra*100).toFixed(6),PV:-pv,FV:0},'PMT')+`   [×] ${kp(1+g)} [=]`,out:dv(c1)+' → '+dv(c)},
+{t:'월급 대비 저축률',sci:`${kp(c)} [÷] ${kp(v.s)} [=]`,out:N(c/v.s*100,2)+'%'}]};
+KEYS['p4-56']=v=>{const i=v.apr/12,n=v.y*12,L=v.p-v.dn,pmt=L/pvifa(i/100,n),rem=n-v.m-1,bal=pmt*pvifa(i/100,rem);
+return[{t:'월 상환액',ba:TVM({N:n,'I/Y':+i.toFixed(6),PV:L,FV:0},'PMT'),sci:`${kp(L)} [×] ${kp(i/100)} [÷] [(] 1 [−] 1 [÷] ${kp(1+i/100)} [^] ${n} [)] [=]`,out:dv(-pmt),why:'월복리: I/Y = APR ÷ 12 = '+N(i,4)+', N = 개월 수.'},
+{t:'지름길: 남은 잔액 (PMT 그대로 두고 N만 변경)',ba:`${rem} [N]  0 [FV]  [CPT] [PV]`,out:dv(bal),why:`이미 ${v.m}회 냈고 상환일에 1회 더 → 그 뒤 남은 ${rem}회의 PV. (BA: [2ND] [AMORT] P1=1, P2=${v.m+1} → BAL도 같은 값)`},
+{t:'총 상환액',sci:`${kp(bal)} [×] ${kp(1+v.pen/100)} [+] ${kp(pmt)} [=]`,out:dv(bal*(1+v.pen/100)+pmt)}]};
+KEYS['p4-65']=v=>{const t=(pv,a)=>{const i=a/1200,x=1-pv*i/v.c;return x<=0?Infinity:-Math.log(x)/Math.log(1+i)};const pf=v.pv*(1+v.fee/100);
+return[{t:'현재 카드: 개월 수',ba:TVM({'I/Y':+(v.a1/12).toFixed(6),PV:v.pv,PMT:-v.c,FV:0},'N'),sci:`[ln] [(] 1 [÷] [(] 1 [−] ${kp(v.pv)} [×] ${kp(v.a1/1200)} [÷] ${kp(v.c)} [)] [)] [÷] [ln] ${kp(1+v.a1/1200)} [=]`,out:dv(t(v.pv,v.a1))},
+{t:'새 카드 (수수료 없음)',ba:TVMc({'I/Y':+(v.a2/12).toFixed(6)},'N'),out:dv(t(v.pv,v.a2)),why:'다른 값은 그대로 두고 I/Y만 바꿔 CPT N.'},
+{t:'새 카드 + 수수료',ba:TVMc({PV:+pf.toFixed(2)},'N'),out:dv(t(pf,v.a2)),why:`잔액 × (1 + ${pc(v.fee)}) = ${dv(pf)}`},
+{t:'단축 개월 수',sci:`${kp(t(v.pv,v.a1))} [−] ${kp(t(v.pv,v.a2))} [=]   ${kp(t(v.pv,v.a1))} [−] ${kp(t(pf,v.a2))} [=]`,out:dv(t(v.pv,v.a1)-t(v.pv,v.a2))+' / '+dv(t(v.pv,v.a1)-t(pf,v.a2))}]};
+KEYS['p4-66']=v=>{const c=parseList(v.cf),n=c.length,r1=v.r1/100,r2=v.r2/100,cf=[0,...c],pp=npv(r1,cf),p6=v.pay*pvif(r2,v.age-n),p0=p6*pvif(r1,n);
+return[{t:'지름길: 보험료 PV를 CF 워크시트로',ba:CFK(cf,v.r1),sci:c.map((x,i)=>`${kp(x)} [÷] ${kp(1+r1)} [^] ${i+1} [M+]`).join('  ')+'  [RCL] [M]',out:dv(pp)},
+{t:`받는 돈 → Year ${n} (${pc(v.r2)}, ${v.age-n}년)`,ba:TVM({N:v.age-n,'I/Y':v.r2,PMT:0,FV:v.pay},'PV'),sci:`${kp(v.pay)} [÷] ${kp(1+r2)} [^] ${v.age-n} [=]`,out:dv(-p6)},
+{t:`Year ${n} → 오늘 (${pc(v.r1)})`,ba:`${n} [N]  ${v.r1} [I/Y]  ${kn(p6)} [FV]  [CPT] [PV]`,sci:`[Ans] [÷] ${kp(1+r1)} [^] ${n} [=]`,out:dv(-p0),why:'금리가 바뀌는 시점에서 끊어 두 번 할인.'},
+{t:'비교',sci:`${kp(pp)} [−] ${kp(p0)} [=]`,out:dv(pp-p0),why:pp>p0?'양수 → 내는 돈 PV가 더 큼 → 사지 않음':'음수 → 받는 돈 PV가 더 큼 → 삼'}]};
+KEYS['p4-68']=v=>{const T=Math.max(v.np,v.st+v.nc),cf=Array(T).fill(0);for(let t=0;t<v.np;t++)cf[t]-=v.p;for(let t=v.st;t<v.st+v.nc;t++)cf[t]+=v.c;const r=irr1(cf);
+return[{t:'지름길: CF 워크시트 + IRR',ba:CFK(cf)+'  [IRR] [CPT]',out:N(r*100,2)+'%',why:'첫 납입이 오늘이므로 CF0부터 음수. 받는 해 사이에 0인 해가 있으면 0도 입력. '+cfSum(cf)}]};
+KEYS['p4-69']=v=>{const k=v.x/v.y,r=Math.pow(1-k,-1/v.n)-1;
+return[{t:'비율',sci:`${kp(v.x)} [÷] ${kp(v.y)} [=]`,out:N(k,6)},
+{t:'1/(1+r)ⁿ',sci:`1 [−] [Ans] [=]`,out:N(1-k,6)},
+{t:'지름길: TVM으로 r 바로',ba:TVM({N:v.n,PV:-(1-k),PMT:0,FV:1},'I/Y'),sci:`[(] 1 [÷] ${kp(1-k)} [)] [^] [(] 1 [÷] ${v.n} [)] [−] 1 [=]`,out:N(r*100,2)+'%',why:'(1+r)ⁿ = 1/0.5098 → "PV 0.5098이 n년 뒤 1이 되는 이자율"로 보면 TVM 한 번.'}]};
+KEYS['p4-70']=v=>{const j=v.apr/100/v.m,ear=Math.pow(1+j,v.m)-1,Rk=Math.pow(1+j,v.m*v.k)-1,pv=v.c/Rk,a=pv*Math.pow(1+ear,v.k-v.f1),b=pv*Math.pow(1+ear,v.k-v.f2);
+return[{t:'연 실효이자율(EAR)',ba:`[2ND] [ICONV]  ${kp(v.apr)} [ENTER] [↓] [↓] ${v.m} [ENTER] [↑] [CPT]`,sci:`[(] 1 [+] ${kp(v.apr/100)} [÷] ${v.m} [)] [^] ${v.m} [−] 1 [=]`,out:N(ear*100,4)+'%'},
+{t:`${v.k}년 실효이자율`,sci:`[(] 1 [+] ${kp(ear)} [)] [^] ${v.k} [−] 1 [=]`,out:N(Rk*100,4)+'%'},
+{t:'영구연금 PV (첫 지급 한 기간 전 시점)',sci:`${kp(v.c)} [÷] ${kp(Rk)} [=]`,out:dv(pv)},
+{t:'오늘 가치로 옮기기',sci:`${kp(pv)} [×] ${kp(1+ear)} [^] ${v.k-v.f1} [=]    ${kp(pv)} [÷] ${kp(1+ear)} [^] ${v.f2-v.k} [=]`,out:dv(a)+' / '+dv(b),why:`case 1은 ${v.k-v.f1}년 앞으로(복리), case 2는 ${v.f2-v.k}년 뒤로(할인). EAR로 1년 단위 이동.`}]};
+
+/* CH5 */
+KEYS['p5-18']=v=>{const a=parseList(v.a),b=parseList(v.b),big=Math.abs(a[0])>=Math.abs(b[0]),L=big?a:b,S=big?b:a,inc=L.map((x,i)=>x-(S[i]||0));const pbl=x=>{let cum=-x[0],t=1;while(t<x.length&&cum>x[t]){cum-=x[t];t++}return{cum,t}};const pa=pbl(a),pb=pbl(b);
+return[{t:'Project A: NPV → IRR',ba:CFK(a,v.r)+'  [IRR] [CPT]',out:dv(npv(v.r/100,a))+' / '+N(irr1(a)*100,2)+'%'},
+{t:'Project B: NPV → IRR',ba:CFK(b,v.r)+'  [IRR] [CPT]',out:dv(npv(v.r/100,b))+' / '+N(irr1(b)*100,2)+'%'},
+{t:'지름길: 증분 CF (큰 것 – 작은 것) IRR',ba:CFK(inc)+'  [IRR] [CPT]',out:N(irr1(inc)*100,2)+'%',why:'증분 CF = '+inc.map(x=>dv(x,0)).join(', ')+'. 증분 IRR > r 이면 큰 프로젝트.'},
+{t:'Payback (A / B)',sci:`${kp(pa.cum)} [÷] ${kp(a[pa.t])} [+] ${pa.t-1} [=]    ${kp(pb.cum)} [÷] ${kp(b[pb.t])} [+] ${pb.t-1} [=]`,out:dv(payback(a))+' / '+dv(payback(b))+' yrs',why:'남은 미회수액 ÷ 다음 해 CF + 완전히 회수한 연수. (BA II Plus Professional은 NPV 화면 아래 PB)'}]};
+KEYS['p5-22']=v=>{const a=v.c2,b=v.c1,c=v.c0,d=b*b-4*a*c,X=d>=0?[(-b+Math.sqrt(d))/(2*a),(-b-Math.sqrt(d))/(2*a)]:[];const rs=-2*a/b-1;
+return[{t:'X = 1/(1+IRR)로 놓고 2차방정식',sci:`a = ${kp(a)},  b = ${kp(b)},  c = ${kp(c)}   →  EQN(2차방정식) 기능에 입력`,out:X.map(x=>N(x,4)).join(' , ')||'실근 없음',why:'공학용 계산기의 방정식 풀이(EQN) 모드를 쓰면 근의 공식을 손으로 안 풀어도 됩니다.'},
+{t:'IRR = 1/X – 1',sci:X.map(x=>`1 [÷] ${kp(+x.toFixed(6))} [−] 1 [=]`).join('    '),out:X.map(x=>N((1/x-1)*100,2)+'%').join(' , ')},
+{t:'검산: 각 IRR에서 NPV = 0',ba:X.length?CFK([c,b,a],+((1/X[0]-1)*100).toFixed(4)):'',out:'0.00',why:'BA [IRR] [CPT]는 근 하나만 보여주므로, NPV 화면에서 I에 각 IRR을 넣어 0이 나오는지 확인.'},
+{t:'NPV 최대가 되는 r',sci:`[(-)] 2 [×] ${kp(a)} [÷] ${kp(b)} [−] 1 [=]`,out:N(rs*100,2)+'%',why:'dNPV/dr = 0 → (1+r) = –2·C₂/C₁.'}]};
+KEYS['p5-23']=v=>{const p=v.c*pvif(v.r/100,v.pb);
+return[{t:'회수 시점에 원금이 한 번에 들어오는 최악의 경우',ba:TVM({N:v.pb,'I/Y':v.r,PMT:0,FV:v.c},'PV')+`  [+] ${kp(v.c)} [=]`,sci:`${kp(v.c)} [÷] ${kp(1+v.r/100)} [^] ${v.pb} [−] ${kp(v.c)} [=]`,out:dv(p-v.c),why:'PV가 음수로 표시되므로 원금을 더하면 –NPV가 됩니다 (부호만 반대로 읽기). 최선은 무한대.'}]};
+KEYS['p5-24']=v=>{const cf=parseList(v.cf),R=roots(r=>npv(r,cf),v.lo/100-1e-4,v.hi/100+1e-4,1e-4);const mids=[];const pts=[v.lo/100,...R,v.hi/100];for(let i=0;i<pts.length-1;i++)mids.push((pts[i]+pts[i+1])/2);
+return[{t:'CF 입력',ba:CFK(cf),out:'—',why:cfSum(cf)},
+{t:'지름길: I만 바꿔가며 NPV 부호 확인',ba:mids.map(m=>`[NPV] ${kp(+(m*100).toFixed(2))} [ENTER] [↓] [CPT]`).join('   '),out:mids.map(m=>(npv(m,cf)>0?'+':'–')).join(' '),why:'부호가 바뀌는 구간마다 IRR이 하나씩. '+mids.map(m=>`${N(m*100,1)}% → ${npv(m,cf)>0?'+':'–'}`).join(', ')},
+{t:'IRR 확인 (NPV = 0)',ba:R.map(r=>`[NPV] ${kp(+(r*100).toFixed(4))} [ENTER] [↓] [CPT]`).join('   '),out:R.map(r=>N(r*100,2)+'%').join(', ')}]};
+
+/* CH6 */
+KEYS['p6-13']=v=>{const t=v.t/100,n=v.n,rates=v.dm==='Straight-line'?Array(n).fill(1/n):MACRS[v.dm],dep=Array.from({length:n},(_,i)=>v.c*(rates[i]||0)),bv=v.c-dep.reduce((a,b)=>a+b,0),ats=v.s+(bv-v.s)*t,ocf=dep.map(d=>v.sav*(1-t)+t*d),rec=v.w0+v.w1*(n-1),cf=[-v.c-v.w0];for(let i=1;i<=n;i++)cf.push(ocf[i-1]+(i<n?-v.w1:rec+ats));
+return[{t:'세후 절감액 (매년 같음)',sci:`${kp(v.sav)} [×] ${kp(1-t)} [=] [STO] A`,out:dv(v.sav*(1-t)),why:'메모리에 저장해 두고 매년 감가상각 절세효과만 더합니다.'},
+{t:'연도별 OCF = A + T × D',sci:dep.map((d,i)=>`[RCL] A [+] ${kp(t)} [×] ${kp(v.c)} [×] ${kp(rates[i]||0)} [=]`).join('   '),out:ocf.map(x=>dv(x,0)).join(' / ')},
+{t:'세후 잔존가치',sci:`${kp(v.s)} [+] [(] ${kp(bv)} [−] ${kp(v.s)} [)] [×] ${kp(t)} [=]`,out:dv(ats),why:'장부가 = '+dv(bv)+' (원가 – 감가상각 누계)'},
+{t:'지름길: 순현금흐름을 CF 워크시트에',ba:CFK(cf,v.r),out:dv(npv(v.r/100,cf)),why:cfSum(cf)+'  (마지막 해 = OCF + NWC 회수 '+dv(rec,0)+' + 세후 잔존가치)'}]};
+KEYS['p6-18']=v=>{const r=v.r/100,t=v.t/100,f=(c,l,vc,fc)=>{const ocf=-(v.s*vc/100+fc)*(1-t)+t*c/l,ann=c/pvifa(r,l);return{ocf,ann,eac:ocf-ann}};const A=f(v.ca,v.la,v.va,v.fa),B=f(v.cb,v.lb,v.vb,v.fb);
+const blk=(X,nm,c,l,vc,fc)=>[{t:`Machine ${nm}: OCF 한 줄`,sci:`[(-)] [(] ${kp(v.s)} [×] ${kp(vc/100)} [+] ${kp(fc)} [)] [×] ${kp(1-t)} [+] ${kp(t)} [×] ${kp(c)} [÷] ${l} [=]`,out:dv(X.ocf),why:'OCF = –(VC + FC)(1 – T) + T × D (매출은 두 기계 같으니 제외).'},
+{t:`지름길: Machine ${nm} EAC = 원가의 연금환산 + OCF`,ba:TVM({N:l,'I/Y':v.r,PV:c,FV:0},'PMT')+`  [+] ${kp(X.ocf)} [=]`,out:dv(X.eac),why:'PV of costs를 따로 구하지 않고, 원가를 연금으로 바꾼 값(PMT)에 OCF를 더하면 바로 EAC.'}];
+return[...blk(A,'A',v.ca,v.la,v.va,v.fa),...blk(B,'B',v.cb,v.lb,v.vb,v.fb)]};
+KEYS['p6-30']=v=>{const t=v.t/100,n=v.n,nd=v.nc/n,nocf=-v.nm*(1-t)+t*nd,nats=v.ne*(1-t),obe=Math.max(0,v.ob-v.od*n),oi=-(v.os-(v.os-v.ob)*t),oocf=-v.om*(1-t)+t*v.od,oats=v.oe-(v.oe-obe)*t;const cf=[-v.nc-oi,...Array(n-1).fill(nocf-oocf),nocf-oocf+nats-oats];
+return[{t:'새 기계 OCF / 기존 기계 OCF',sci:`[(-)] ${kp(v.nm)} [×] ${kp(1-t)} [+] ${kp(t)} [×] ${kp(nd)} [=]    [(-)] ${kp(v.om)} [×] ${kp(1-t)} [+] ${kp(t)} [×] ${kp(v.od)} [=]`,out:dv(nocf)+' / '+dv(oocf)},
+{t:'기존 기계를 지금 팔 때 세후 금액',sci:`${kp(v.os)} [−] [(] ${kp(v.os)} [−] ${kp(v.ob)} [)] [×] ${kp(t)} [=]`,out:dv(-oi)},
+{t:'세후 잔존가치 (새 / 기존)',sci:`${kp(v.ne)} [×] ${kp(1-t)} [=]    ${kp(v.oe)} [−] [(] ${kp(v.oe)} [−] ${kp(obe)} [)] [×] ${kp(t)} [=]`,out:dv(nats)+' / '+dv(oats)},
+{t:'지름길: 증분 CF 하나로 NPV',ba:CFK(cf,v.r),out:dv(npv(v.r/100,cf)),why:'CF0 = –새 기계 + 기존 기계 세후 매각액, 매년 = OCF 차이, 마지막 해 = OCF 차이 + 잔존가치 차이. '+cfSum(cf)+'. 양수면 지금 교체.'}]};
+
+/* CH7 */
+KEYS['p7-5']=v=>{const r=v.r/100,rows=[];for(let k=0;k<v.L;k++){const c=Math.max(v.fl,v.p-v.d*k),pa=v.cf*pvifa(r,v.L-k);rows.push({k,c,pa,nv:(pa-c)*pvif(r,k)})}const best=rows.reduce((a,b)=>b.nv>a.nv?b:a);const show=rows.filter(x=>x.k<=best.k+2);
+return show.map(x=>({t:`Year ${x.k}에 산다면`,ba:`${v.L-x.k} [N]  ${v.r} [I/Y]  ${kn(v.cf)} [PMT]  0 [FV]  [CPT] [PV]  [+/-] [−] ${kp(x.c)} [=]  [÷] ${kp(1+r)} [^] ${x.k} [=]`,out:dv(x.nv),why:x.k===best.k?'최대 → 이때 산다':''}))};
+KEYS['p7-10']=v=>{const r=v.r/100,t=v.t/100,eac=v.c/pvifa(r,v.n),d=v.c/v.n,q=(eac+v.fc*(1-t)-d*t)/((v.p-v.vc)*(1-t));
+return[{t:'초기투자의 EAC',ba:TVM({N:v.n,'I/Y':v.r,PV:-v.c,FV:0},'PMT'),out:dv(eac)},
+{t:'지름길: 재무적 손익분기점 한 줄',sci:`[(] ${kp(eac)} [+] ${kp(v.fc)} [×] ${kp(1-t)} [−] ${kp(d)} [×] ${kp(t)} [)] [÷] [(] ${kp(v.p-v.vc)} [×] ${kp(1-t)} [)] [=]`,out:dv(q),why:`D = ${dv(d)}. 분자·분모를 각각 괄호로 묶는 게 핵심.`}]};
+KEYS['p7-23']=v=>{const r=v.r/100,pv=v.cf*pvifa(r,v.n),c2=v.s/pvifa(r,v.n-1);
+return[{t:'NPV',ba:TVM({N:v.n,'I/Y':v.r,PMT:v.cf,FV:0},'PV')+`  [+/-] [−] ${kp(v.i)} [=]`,out:dv(pv-v.i)},
+{t:'지름길: 포기 기준 현금흐름 (매각가치를 연금으로)',ba:TVM({N:v.n-1,'I/Y':v.r,PV:-v.s,FV:0},'PMT'),out:dv(c2),why:`남은 ${v.n-1}년 동안 매년 이만큼 못 벌면 포기.`}]};
+
+/* CH8 */
+KEYS['p8-19']=v=>{const F=1000,n=v.n*v.m,p=(c,y)=>bondP(F,c/100,v.n,y/100,v.m),c1=F*v.c1/100/v.m,c2=F*v.c2/100/v.m;const y0=v.y,yu=v.y+v.dy,yd=v.y-v.dy;
+const P=[[p(v.c1,y0),p(v.c2,y0)],[p(v.c1,yu),p(v.c2,yu)],[p(v.c1,yd),p(v.c2,yd)]];
+return[{t:`YTM ${pc(y0)}: 두 채권 가격`,ba:TVM({N:n,'I/Y':+(y0/v.m).toFixed(6),PMT:c1,FV:F},'PV')+`   →   ${kn(c2)} [PMT]  [CPT] [PV]`,out:dv(-P[0][0])+' / '+dv(-P[0][1]),why:`반기: N = ${n}, I/Y = ${pc(y0)} ÷ ${v.m}, PMT = 쿠폰 ÷ ${v.m}. 두 번째 채권은 PMT만 바꿔 다시 CPT.`},
+{t:`YTM ${pc(yu)}: I/Y만 바꾸기`,ba:`${kp(yu/v.m)} [I/Y]  ${kn(c1)} [PMT]  [CPT] [PV]   →   ${kn(c2)} [PMT]  [CPT] [PV]`,out:dv(-P[1][0])+' / '+dv(-P[1][1])},
+{t:'변화율',sci:`[(] ${kp(P[1][0].toFixed(2))} [−] ${kp(P[0][0].toFixed(2))} [)] [÷] ${kp(P[0][0].toFixed(2))} [=]    [(] ${kp(P[1][1].toFixed(2))} [−] ${kp(P[0][1].toFixed(2))} [)] [÷] ${kp(P[0][1].toFixed(2))} [=]`,out:N((P[1][0]/P[0][0]-1)*100,2)+'% / '+N((P[1][1]/P[0][1]-1)*100,2)+'%',why:'BA에서는 [2ND] [Δ%] 워크시트로도 가능: OLD, NEW 입력 → %CH.'},
+{t:`YTM ${pc(yd)}: I/Y만 바꾸기 → 변화율`,ba:`${kp(yd/v.m)} [I/Y]  ${kn(c1)} [PMT]  [CPT] [PV]   →   ${kn(c2)} [PMT]  [CPT] [PV]`,out:dv(-P[2][0])+' / '+dv(-P[2][1])+'  ('+N((P[2][0]/P[0][0]-1)*100,2)+'% / '+N((P[2][1]/P[0][1]-1)*100,2)+'%)'}]};
+KEYS['p8-21']=v=>{const n=v.n*v.m,y=ytm(v.p,v.F,v.c/100,v.n,v.m);
+return[{t:'지름길: TVM으로 기간 이자율',ba:TVM({N:n,PV:-v.p,PMT:+(v.F*v.c/100/v.m).toFixed(6),FV:v.F},'I/Y'),out:N(y/v.m*100,4)+'%'},
+{t:'연 YTM = 쿠폰율',sci:`[Ans] [×] ${v.m} [=]`,out:N(y*100,2)+'%'}]};
+KEYS['p8-29']=v=>{const y=v.y/100,f=c=>[bondP(1000,c/100,v.n,y,1),bondP(1000,c/100,v.n-1,y,1)];const A=f(v.cp),B=f(v.cd);
+const blk=(X,c,nm)=>[{t:`Bond ${nm}: P0 → P1 (N만 바꾸기)`,ba:TVM({N:v.n,'I/Y':v.y,PMT:c*10,FV:1000},'PV')+`   →   ${v.n-1} [N]  [CPT] [PV]`,out:dv(-X[0])+' → '+dv(-X[1])},
+{t:`Bond ${nm}: 현재수익률 / 자본이득률`,sci:`${c*10} [÷] ${kp(X[0].toFixed(2))} [=]    [(] ${kp(X[1].toFixed(2))} [−] ${kp(X[0].toFixed(2))} [)] [÷] ${kp(X[0].toFixed(2))} [=]`,out:N(c*10/X[0]*100,2)+'% / '+N((X[1]/X[0]-1)*100,2)+'%',why:'두 수익률의 합 = YTM으로 검산.'}];
+return[...blk(A,v.cp,'P'),...blk(B,v.cd,'D')]};
+KEYS['p8-30']=v=>{const y=ytm(v.p,1000,v.c/100,v.n,1),y2=y+v.dy/100,p2=bondP(1000,v.c/100,v.n-v.h,y2,1),cf=[-v.p];for(let t=1;t<=v.h;t++)cf.push(v.c*10+(t===v.h?p2:0));
+return[{t:'YTM (기대수익률)',ba:TVM({N:v.n,PV:-v.p,PMT:v.c*10,FV:1000},'I/Y'),out:N(y*100,4)+'%'},
+{t:`${v.h}년 뒤 매도가격 (I/Y ${v.dy<0?'–':'+'} ${Math.abs(v.dy)}, N = ${v.n-v.h})`,ba:`[−] ${Math.abs(v.dy)} [=] [I/Y]  ${v.n-v.h} [N]  [CPT] [PV]`,out:dv(-p2),why:'YTM 결과가 화면에 남아 있을 때 바로 1을 빼서 I/Y에 저장.'},
+{t:'지름길: HPY는 TVM 한 번',ba:`${v.h} [N]  ${kn(v.p)} [PV]  ${kn(v.c*10)} [PMT]  ${kn(+p2.toFixed(2))} [FV]  [CPT] [I/Y]`,out:N(irr1(cf)*100,2)+'%',why:'산 가격 = PV, 매년 쿠폰 = PMT, 판 가격 = FV.'}]};
+KEYS['p8-31']=v=>{const i=v.r/2,T=2*(v.z+v.y1+v.y2),cf=Array(T+1).fill(0);for(let t=2*v.z+1;t<=2*(v.z+v.y1);t++)cf[t]=v.k1;for(let t=2*(v.z+v.y1)+1;t<=T;t++)cf[t]=v.k2;cf[T]+=v.F;
+return[{t:'지름길: Bond M을 CF 워크시트로 (반기 단위)',ba:CFK(cf,i),out:dv(npv(i/100,cf)),why:'0인 기간도 F로 묶어 입력, 마지막 기간 = 쿠폰 + 액면. '+cfSum(cf)},
+{t:'Bond N (무이표채)',ba:TVM({N:T,'I/Y':i,PMT:0,FV:v.F},'PV'),sci:`${kp(v.F)} [÷] ${kp(1+i/100)} [^] ${T} [=]`,out:dv(-v.F*pvif(i/100,T))}]};
+
+/* CH9 */
+function dgKeys(v){const R=v.r/100,g=v.g/100,gs=parseList(v.gs).map(x=>x/100);let d=v.d0;const ds=gs.map(x=>d*=1+x);const n=gs.length,pn=d*(1+g)/(R-g),cf=[0,...ds];cf[n]+=pn;
+return[{t:'배당을 Ans로 이어서 계산',sci:`${kp(v.d0)} `+gs.map(x=>`[×] ${kp(1+x)} [=]`).join(' ')+`  →  [×] ${kp(1+g)} [=]`,out:ds.map(x=>N(x,4)).join(' → ')+' → D'+(n+1)+' '+N(d*(1+g),4),why:'곱한 결과가 화면에 남으니 다음 성장률만 계속 곱하면 됩니다.'},
+{t:`P${n} = D${n+1}/(R – g)`,sci:`[Ans] [÷] ${kp(R-g)} [=]`,out:N(pn,4)},
+{t:`지름길: CF 워크시트 (C0${n} = D${n} + P${n})`,ba:CFK(cf,v.r),out:dv(npv(R,cf)),why:'같은 시점의 배당과 주가를 더해서 한 칸에 입력. '+cfSum(cf)}]}
+KEYS['p9-15']=dgKeys;KEYS['p9-31']=dgKeys;
+KEYS['p9-18']=v=>[{t:'한 줄로 D0',sci:`${kp(v.p)} [×] [(] ${kp(v.r/100)} [−] ${kp(v.g/100)} [)] [÷] ${kp(1+v.g/100)} [=]`,out:N(v.p*(v.r-v.g)/100/(1+v.g/100),4)}];
+KEYS['p9-19']=v=>{const R=v.r/100,pk=v.d/R;return[{t:`P${v.s-1} = D/R`,sci:`${kp(v.d)} [÷] ${kp(R)} [=]`,out:N(pk,4)},{t:'오늘로 할인',ba:`${v.s-1} [N]  ${v.r} [I/Y]  0 [PMT]  ${kn(+pk.toFixed(4))} [FV]  [CPT] [PV]`,sci:`[Ans] [÷] ${kp(1+R)} [^] ${v.s-1} [=]`,out:dv(pk*pvif(R,v.s-1)),why:`첫 배당이 ${v.s}년 후 → 영구연금 공식은 ${v.s-1}년 시점 가치.`}]};
+KEYS['p9-25']=v=>{const R=v.r/100;return[{t:'지름길: PE = (E + 추가이익)/R ÷ E',sci:`1 [÷] ${kp(R)} [=]    [(] ${kp(v.e)} [+] ${kp(v.a)} [)] [÷] ${kp(R)} [÷] ${kp(v.e)} [=]    [(] ${kp(v.e)} [+] ${kp(v.b)} [)] [÷] ${kp(R)} [÷] ${kp(v.e)} [=]`,out:N(1/R,2)+' / '+N((v.e+v.a)/R/v.e,2)+' / '+N((v.e+v.b)/R/v.e,2),why:'성장이 없으면 PE = 1/R.'}]};
+
+/* CH11 */
+KEYS['p11-18']=v=>{const f=(b,e)=>[v.rf/100+v.mrp/100*b,(e/100-v.rf/100)/b];const Y=f(v.by,v.ey),Z=f(v.bz,v.ez);
+return[{t:'CAPM 요구수익률 (Y / Z)',sci:`${kp(v.rf/100)} [+] ${kp(v.mrp/100)} [×] ${kp(v.by)} [=]    ${kp(v.rf/100)} [+] ${kp(v.mrp/100)} [×] ${kp(v.bz)} [=]`,out:N(Y[0]*100,2)+'% / '+N(Z[0]*100,2)+'%',why:'주어진 기대수익률 < CAPM → 고평가, > CAPM → 저평가.'},
+{t:'Reward-to-risk (Y / Z)',sci:`[(] ${kp(v.ey/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.by)} [=]    [(] ${kp(v.ez/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.bz)} [=]`,out:N(Y[1],4)+' / '+N(Z[1],4),why:'시장 = MRP = '+kp(v.mrp/100)+'와 비교.'}]};
+KEYS['p11-24']=v=>{const t=v.tg/100,x=v.ex/100,y=v.ey/100,wx=(t-y)/(x-y),wy=1-wx;
+return[{t:'X 비중',sci:`[(] ${kp(t)} [−] ${kp(y)} [)] [÷] [(] ${kp(x)} [−] ${kp(y)} [)] [=]`,out:N(wx,5)},
+{t:'Y 투자금액',sci:`[(] 1 [−] [Ans] [)] [×] ${kp(v.w)} [=]`,out:dv(wy*v.w)},
+{t:'포트폴리오 베타',sci:`${kp(+wx.toFixed(6))} [×] ${kp(v.bx)} [+] ${kp(+wy.toFixed(6))} [×] ${kp(v.by)} [=]`,out:N(wx*v.bx+wy*v.by,4)}]};
+function statKeys(v,beta){const s=statsCalc(v.p,v.a,v.b),eq=s.p.every(x=>Math.abs(x-s.p[0])<1e-9),fr=s.p.map(x=>Math.round(x*100));
+const one=(R,nm,E,S)=>({t:`${nm}: STAT으로 E(R)과 σ`,ba:eq?`[2ND] [DATA] [2ND] [CLR WORK]  `+R.map((r,i)=>`${kn(r)} [ENTER] [↓] [↓]`).join(' ')+`  [2ND] [STAT] (1-V) [↓] [↓] x̄  [↓] [↓] σx`:`[2ND] [DATA] [2ND] [CLR WORK]  `+R.map((r,i)=>`${kn(r)} [ENTER] [↓] ${fr[i]} [ENTER] [↓]`).join(' ')+`  [2ND] [STAT] (1-V) [↓] [↓] x̄  [↓] [↓] σx`,out:N(E*100,2)+'% / '+N(S*100,2)+'%',why:eq?'확률이 같으면 수익률만 입력 → x̄ = E(R), σx(모표준편차) = σ.':'확률 × 100을 빈도(Y01…)로 입력 → x̄ = E(R), σx = σ. (공학용: STAT 모드 Frequency ON)'});
+const st=[one(s.A,beta?'Stock I':'Stock A',s.ea,s.sa),one(s.B,beta?'Stock II':'Stock B',s.eb,s.sb)];
+if(!beta){st.push({t:'지름길: 상관계수는 2-변수 STAT의 r',ba:`[2ND] [DATA] [2ND] [CLR WORK]  `+s.A.map((a,i)=>`${kn(a)} [ENTER] [↓] ${kn(s.B[i])} [ENTER] [↓]`).join(' ')+`  [2ND] [STAT] (LIN) … r`,out:N(s.rho,4),why:'확률이 같을 때만 그대로 사용 가능.'},{t:'공분산 = r × σA × σB',sci:`${kp(+s.rho.toFixed(6))} [×] ${kp(+s.sa.toFixed(6))} [×] ${kp(+s.sb.toFixed(6))} [=]`,out:N(s.cov,6)})}
+else{const rf=v.rf/100,m=v.m/100;st.push({t:'베타 = (E(R) – Rf)/MRP',sci:`[(] ${kp(+s.ea.toFixed(6))} [−] ${kp(rf)} [)] [÷] ${kp(m)} [=]    [(] ${kp(+s.eb.toFixed(6))} [−] ${kp(rf)} [)] [÷] ${kp(m)} [=]`,out:N((s.ea-rf)/m,2)+' / '+N((s.eb-rf)/m,2)})}
+return st}
+KEYS['p11-25']=v=>statKeys(v,false);KEYS['p11-33']=v=>statKeys(v,true);
+KEYS['p11-30']=v=>{const s=(v.em-v.rf)/v.sm;return[{t:'CML 기울기',sci:`[(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.sm/100)} [=] [STO] A`,out:N(s,5)},{t:'(a) 기대수익률 / (b) 표준편차',sci:`${kp(v.rf/100)} [+] [RCL] A [×] ${kp(v.sp/100)} [=]    [(] ${kp(v.ep/100)} [−] ${kp(v.rf/100)} [)] [÷] [RCL] A [=]`,out:N((v.rf/100+s*v.sp/100)*100,2)+'% / '+N((v.ep-v.rf)/100/s*100,2)+'%'}]};
+KEYS['p11-31']=v=>{const s=(v.ep-v.rf)/v.sp,sm=(v.em-v.rf)/s/100,b=v.rho*v.si/100/sm;
+return[{t:'지름길: CML 기울기 → σM',sci:`[(] ${kp(v.ep/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.sp/100)} [=] [STO] A    [(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [÷] [RCL] A [=]`,out:N(s,5)+' → '+N(sm,6),why:'TA 방식(비중 w)과 같은 값이 두 줄로 나옵니다.'},
+{t:'β = ρ × σA ÷ σM',sci:`${kp(v.rho)} [×] ${kp(v.si/100)} [÷] [Ans] [=]`,out:N(b,4)},
+{t:'CAPM',sci:`${kp(v.rf/100)} [+] [Ans] [×] [(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [=]`,out:N((v.rf/100+b*(v.em-v.rf)/100)*100,2)+'%'}]};
+KEYS['p11-34']=v=>{const e1=v.e1/100,e2=v.e2/100,rf=(v.b1*e2-v.b2*e1)/(v.b1-v.b2);
+return[{t:'지름길: Rf 한 줄',sci:`[(] ${kp(v.b1)} [×] ${kp(e2)} [−] ${kp(v.b2)} [×] ${kp(e1)} [)] [÷] [(] ${kp(v.b1)} [−] ${kp(v.b2)} [)] [=] [STO] A`,out:N(rf*100,2)+'%',why:'두 증권의 reward-to-risk가 같다는 식을 정리한 결과.'},
+{t:'시장 기대수익률',sci:`[RCL] A [+] [(] ${kp(e1)} [−] [RCL] A [)] [÷] ${kp(v.b1)} [=]`,out:N((rf+(e1-rf)/v.b1)*100,2)+'%'}]};
+/* ===== CONTENT: Korean concept notes + English answer phrases ===== */
+const CH=[
+{id:'home',tab:'시작'},
+{id:'ta',tab:'TA 리뷰'},
+{id:'ch1',tab:'Ch 1',num:'CHAPTER 1',title:'Introduction to Corporate Finance',
+ lead:'기업재무의 목표는 “주주가치(주가) 극대화”이고, 경영자와 주주의 이해가 어긋나는 것이 대리인 문제입니다.',
+ pts:['<b>Goal of the firm</b>: 현재 주가 = 미래 모든 현금흐름(단기+장기)의 위험·시점·크기를 반영한 현재가치. 그래서 “주가에 집중하면 단기 이익만 쫓는다”는 말은 틀린 것으로 봅니다.',
+  '<b>Agency problem(대리인 문제)</b>: 주인(주주)과 대리인(경영자)의 목표 불일치. 해결 수단은 성과연동 보상(stock options), 이사회·기관투자자 감시, 기업지배권 시장(takeover threat).',
+  '<b>소유 구조</b>: 은행·기관이 큰 지분을 가진 독일·일본은 감시 능력이 커서 대리인 문제가 덜할 수 있음. 단, 펀드매니저와 펀드 투자자 사이의 2차 대리인 문제가 생길 수 있음.',
+  '<b>Ethics</b>: 시장이 소송·평판 비용을 가격에 반영한다는 관점 vs. 비경제적 문제는 규제·정치로 다뤄야 한다는 관점이 둘 다 가능합니다.'],
+ analogy:'병원 비유: 환자(주주)가 의사(경영자)에게 치료를 맡긴 관계. 의사가 환자 이익보다 자기 편의를 앞세우면 대리인 비용이 생깁니다.',
+ fx:[['Stock value','P₀ = PV of all expected future cash flows'],['Agency cost','monitoring costs + lost value from conflicts']],
+ ph:[['The goal of financial management is to maximize the current value per share of existing stock.','재무관리의 목표는 기존 주식의 주당 가치 극대화'],['Agency problems arise from conflicts of interest between stockholders and managers.','대리인 문제는 주주-경영자 이해상충에서 발생'],['Institutional owners have greater resources and ability to monitor managers.','기관투자자는 경영자 감시 능력이 더 큼']]},
+{id:'ch2',tab:'Ch 2',num:'CHAPTER 2',title:'Financial Statements and Cash Flow',
+ lead:'회계 이익(Net income)과 현금흐름(Cash flow)은 다릅니다. 시험은 “현금흐름 항등식”을 맞추는 문제입니다.',
+ pts:['<b>감가상각은 비현금 비용</b>: 세금을 줄여주지만 현금이 나가지 않으므로 OCF 계산 때 다시 더합니다.',
+  '<b>이자는 재무활동</b>: OCF에 넣지 않고, 채권자에게 가는 현금흐름(CF to creditors)으로 봅니다.',
+  '<b>Cash flow identity</b>: 자산이 만든 현금(CFA) = 채권자에게 간 현금 + 주주에게 간 현금.',
+  '<b>순이익이 음수여도 배당 가능</b>: 현금흐름이 충분하면 됩니다(2-18).',
+  '<b>CFA가 음수일 수 있음</b>: 고정자산·운전자본에 크게 투자하면, 그 해에는 주주·채권자로부터 돈을 조달한 것입니다(2-19).',
+  '<b>세금</b>: 과세표준이 음수면 세금 0으로 처리합니다(교재 해답 기준).'],
+ analogy:'가계부 비유: “월급 명세서상 소득”(순이익)과 “통장에 실제 남은 돈”(현금흐름)은 다릅니다. 감가상각은 통장에서 빠져나가지 않은 비용입니다.',
+ fx:[['EBIT','Sales – COGS – Other expenses – Depreciation'],['Operating cash flow','OCF = EBIT + Depreciation – Taxes'],['Net capital spending','NCS = NFA_end – NFA_beg + Depreciation'],['Change in NWC','ΔNWC = (CA – CL)_end – (CA – CL)_beg'],['Cash flow from assets','CFA = OCF – ΔNWC – NCS'],['CF to creditors','Interest paid – Net new borrowing'],['CF to stockholders','Dividends paid – Net new equity raised'],['Identity','CFA = CF to creditors + CF to stockholders']],
+ ph:[['Depreciation is a non-cash expense, so it is added back to compute OCF.','감가상각은 비현금비용이라 OCF에서 다시 더함'],['Interest is a financing expense, not an operating expense.','이자는 영업비용이 아닌 재무비용'],['A negative CFA means the firm raised funds on a net basis from creditors and stockholders.','CFA가 음수면 순자금조달을 한 것']]},
+{id:'ch4',tab:'Ch 4',num:'CHAPTER 4',title:'Discounted Cash Flow Valuation',
+ lead:'다른 시점의 돈은 같은 시점으로 옮겨야 비교할 수 있습니다. 모든 Ch 4 문제는 “타임라인 그리기 → 한 시점으로 모으기”입니다.',
+ pts:['<b>PV/FV</b>: 미래로 보낼 땐 (1+r)ᵗ를 곱하고, 현재로 데려올 땐 나눕니다.',
+  '<b>Annuity 공식은 첫 현금흐름 “한 기간 전” 가치</b>를 줍니다. 4-52(대학 학비), 4-70(격년 영구연금), 9-19(우선주)의 핵심 함정입니다.',
+  '<b>Annuity due</b>(기초 지급): 일반 연금 값 × (1 + r).',
+  '<b>Growing annuity</b>: 월급처럼 g%씩 커지는 현금흐름. 4-55에서 저축률이 매년 일정한 이유는 월급과 저축이 같은 g로 커지기 때문.',
+  '<b>EAR vs APR</b>: APR은 단순 연이율 표기, EAR은 복리 효과를 반영한 실제 연이율. 월복리면 r = APR/12, 기간 수 = 개월 수.',
+  '<b>기간이 2년 단위</b>(4-70)면 “2년 실효이자율”을 먼저 구해서 영구연금 공식에 넣습니다.',
+  '<b>이자율·기간 구하기</b>(4-65, 4-68, 4-69): 공식을 로그로 풀거나, 시행착오/계산기로 풉니다. 시험에서는 식을 세운 뒤 “Using a financial calculator, r = …”라고 쓰면 됩니다.'],
+ analogy:'환자 나이 맞추기 비유: 5세 아이와 40세 성인 검사치를 바로 비교하지 않듯, 돈도 같은 “시점(나이)”으로 보정한 뒤 비교합니다.',
+ fx:[['Future value','FV = PV × (1 + r)ᵗ'],['Present value','PV = FV/(1 + r)ᵗ'],['Annuity PV','PVA = C × {1 – [1/(1 + r)]ᵗ}/r'],['Annuity FV','FVA = C × [(1 + r)ᵗ – 1]/r'],['Annuity due','PVA_due = PVA × (1 + r)'],['Perpetuity','PV = C/r'],['Growing perpetuity','PV = C₁/(r – g)'],['Growing annuity','PV = C₁ × [1/(r – g)] × {1 – [(1 + g)/(1 + r)]ᵗ}'],['EAR','EAR = (1 + APR/m)ᵐ – 1;  continuous: e^APR – 1'],['Solve for t','t = ln{1/[1 – (PV/C) × r]}/ln(1 + r)']],
+ ph:[['The PVA formula gives the value one period before the first payment.','연금 공식은 첫 지급 한 기간 전의 가치'],['We discount this lump sum back to today.','이 일시금을 현재로 할인'],['Setting the two present values equal and solving for r, we get …','두 PV를 같게 놓고 r을 풀면'],['Using a spreadsheet or financial calculator, r = 8.07%.','스프레드시트/계산기로 풀면']]},
+{id:'ch5',tab:'Ch 5',num:'CHAPTER 5',title:'NPV and Other Investment Rules',
+ lead:'NPV가 기준입니다. Payback·IRR·PI는 보조 지표이고, 언제 틀리는지가 시험 포인트입니다.',
+ pts:['<b>NPV rule</b>: NPV > 0이면 채택. 상호배타적이면 NPV가 큰 것.',
+  '<b>Payback</b>: 원금 회수 기간. 시간가치와 회수 이후 현금흐름을 무시 → 최악은 회수 시점에 딱 한 번 들어오는 경우, 최선은 무한대(5-23).',
+  '<b>IRR</b>: NPV = 0이 되는 할인율. 투자형(–, +, +…)이면 IRR > r일 때 채택.',
+  '<b>규모 문제(scale problem)</b>: 작은 프로젝트가 IRR은 높아도 NPV는 작을 수 있음 → <b>incremental IRR</b>(큰 것 – 작은 것)이 r보다 크면 큰 프로젝트 선택(5-18).',
+  '<b>Multiple IRRs</b>: 현금흐름 부호가 여러 번 바뀌면 IRR이 여러 개(Descartes’ rule of signs). 이때는 IRR 규칙 대신 NPV > 0 구간을 봅니다(5-22, 5-24).',
+  '<b>PI</b> = PV of future CFs / initial investment. 자본 제약(capital rationing)에서 유용.'],
+ analogy:'검사 비유: NPV는 “확진 검사”, Payback·IRR은 “선별 검사”. 선별 검사는 빠르지만 위양성/위음성이 있어 결과가 엇갈리면 NPV로 확인합니다.',
+ fx:[['NPV','NPV = –C₀ + Σ CFₜ/(1 + r)ᵗ'],['IRR','0 = –C₀ + Σ CFₜ/(1 + IRR)ᵗ'],['Payback','Years before recovery + (Unrecovered cost / CF in next year)'],['Profitability index','PI = PV of future CFs / Initial investment'],['Incremental IRR','IRR of (CF_large – CF_small)'],['Descartes’ rule','# of IRRs ≤ # of sign changes']],
+ ph:[['Since the NPV is positive, the project should be accepted.','NPV가 양수이므로 채택'],['The IRR criterion can rank mutually exclusive projects incorrectly because of the scale problem.','IRR은 규모 문제로 순위를 잘못 매길 수 있음'],['Because the incremental IRR (12.68%) exceeds the required return (8%), we choose the larger project.','증분 IRR이 요구수익률보다 크므로 큰 프로젝트 선택'],['Because the cash flows change sign twice, there are either zero or two IRRs.','부호가 두 번 바뀌므로 IRR은 0개 또는 2개']]},
+{id:'ch6',tab:'Ch 6',num:'CHAPTER 6',title:'Making Capital Investment Decisions',
+ lead:'프로젝트 때문에 “추가로” 생기는 현금흐름(incremental cash flow)만 셉니다.',
+ pts:['<b>포함</b>: 기회비용(opportunity cost, 예: 기존 기계를 팔 수 있었던 돈), 부수효과(side effects), 순운전자본(NWC) 투자와 회수.',
+  '<b>제외</b>: 매몰비용(sunk cost), 이자비용(할인율에 이미 반영).',
+  '<b>OCF (tax shield approach)</b>: 비용 절감액 × (1 – T) + 감가상각 × T. 감가상각의 절세효과(D × T)를 따로 더하는 방식.',
+  '<b>MACRS</b>: 표의 비율 × 취득원가. 프로젝트 종료 시점 장부가 = 원가 – 누적 감가상각.',
+  '<b>After-tax salvage</b>: 장부가보다 싸게 팔면 손실 → 세금 환급(+), 비싸게 팔면 이익 → 세금(–).',
+  '<b>NWC</b>: 초기에 투자(–), 매년 추가분(–), 마지막 해에 전액 회수(+). 6-13에서 마지막 해 추가분은 바로 회수되므로 0.',
+  '<b>EAC</b>: 수명이 다른 기계를 영구 교체할 때 비교 → 비용의 PV를 연금으로 환산. 덜 음수인 쪽 선택(6-18).',
+  '<b>교체 결정</b>: “새 기계 구입” vs “기존 기계 유지”를 두 프로젝트처럼 비교하거나, 차이(증분) 현금흐름으로 계산 → 같은 답(6-30).'],
+ analogy:'수술 결정 비유: 이미 쓴 검사비(매몰비용)는 수술할지 말지에 영향을 주면 안 됩니다. 수술해서 “앞으로 달라지는” 비용·효과만 봅니다.',
+ fx:[['OCF (tax shield)','OCF = (Sales – Costs)(1 – T) + T × D'],['OCF (bottom-up)','OCF = Net income + Depreciation'],['After-tax salvage','ATSV = S – T × (S – BV)'],['Book value','BV = Cost – Accumulated depreciation'],['EAC','EAC = PV of costs / PVIFA(r, life)'],['Project NPV','NPV = –Capex – NWC₀ + Σ (OCF – ΔNWC)ₜ/(1 + r)ᵗ + (ATSV + NWC recovery)/(1 + r)ᵀ']],
+ ph:[['Sunk costs are irrelevant to the decision.','매몰비용은 의사결정과 무관'],['The asset is sold at a loss to book value, which creates a tax refund.','장부가 이하로 매각 → 세금 환급'],['Since we are only dealing with costs, a negative NPV is expected; choose the less negative one.','비용만 비교하므로 덜 음수인 쪽 선택'],['Machine B should be chosen because it has the less negative EAC.','EAC가 덜 음수인 B 선택']]},
+{id:'ch7',tab:'Ch 7',num:'CHAPTER 7',title:'Risk Analysis, Real Options, and Capital Budgeting',
+ lead:'NPV 추정에는 불확실성이 있으니, 손익분기점과 “나중에 바꿀 수 있는 선택권(real options)”을 함께 봅니다.',
+ pts:['<b>Accounting break-even</b>: 순이익 = 0이 되는 판매량. (FC + D)/(P – v).',
+  '<b>Cash break-even</b>: OCF = 0. FC/(P – v).',
+  '<b>Financial break-even</b>: NPV = 0. 초기투자를 EAC로 바꿔 매년 회수해야 할 금액으로 봅니다(7-10).',
+  '<b>Option to wait</b>: 오늘 NPV가 음수여도 기다리면 양수가 될 수 있음. 각 연도 NPV를 “모두 오늘 가치로” 할인해서 최대인 해를 고릅니다(7-5).',
+  '<b>Option to abandon</b>: 첫해 이후 남은 현금흐름의 PV가 매각가치보다 작으면 포기. 기준 현금흐름 = 매각가치 / PVIFA(r, 남은 기간)(7-23).',
+  '<b>Sensitivity / scenario analysis</b>: 변수 하나씩 바꾸기 vs. 여러 변수를 동시에 바꾼 시나리오.'],
+ analogy:'치료 계획 비유: 지금 수술할 수도, 경과 관찰 후 결정할 수도 있습니다(wait). 반응이 나쁘면 중단할 수 있는 선택권(abandon)은 그 자체로 가치가 있습니다.',
+ fx:[['Accounting BE','Q = (FC + D)/(P – v)'],['Cash BE','Q = FC/(P – v)'],['Financial BE','Q = [EAC + FC(1 – T) – D × T]/[(P – v)(1 – T)]'],['EAC of investment','EAC = Initial investment / PVIFA(r, n)'],['Wait (value today)','NPV_k = [–Cost_k + CF × PVIFA(r, n – k)]/(1 + r)ᵏ'],['Abandon threshold','C = Salvage / PVIFA(r, remaining years)']],
+ ph:[['To compare, all NPVs must be discounted to a common date (today).','비교하려면 모든 NPV를 같은 시점으로'],['The firm should abandon the project if the PV of the revised cash flows is less than the salvage value.','수정 현금흐름의 PV < 매각가치이면 포기'],['At the financial break-even point, the project’s NPV is zero.','재무적 손익분기점에서 NPV = 0']]},
+{id:'ch8',tab:'Ch 8',num:'CHAPTER 8',title:'Interest Rates and Bond Valuation',
+ lead:'채권 가격 = 이표(연금)의 PV + 액면가(일시금)의 PV. 금리가 오르면 가격은 내립니다.',
+ pts:['<b>반기 지급(semiannual)</b>: 쿠폰 ÷ 2, 이자율 ÷ 2, 기간 × 2. 가장 흔한 실수 포인트.',
+  '<b>Par / Premium / Discount</b>: 쿠폰율 = YTM이면 액면가, 쿠폰율 > YTM이면 할증, < 이면 할인. 그래서 새 채권을 액면가에 팔려면 쿠폰율 = 현재 YTM(8-21).',
+  '<b>Interest rate risk</b>: 만기가 길수록, 쿠폰이 낮을수록 가격 변동이 큽니다(8-19).',
+  '<b>YTM = Current yield + Capital gains yield</b>: 할증채는 현재수익률이 높고 가격이 하락, 할인채는 반대(8-29).',
+  '<b>HPY</b>: 만기 전에 팔 때 실제 실현 수익률. 금리가 떨어지면 매도가가 올라 HPY > YTM(8-30).',
+  '<b>Zero coupon</b>: 액면가의 PV만 남습니다. 불규칙 쿠폰은 구간별 연금 PV를 구해 다시 할인(8-31).'],
+ analogy:'시소 비유: 한쪽이 금리, 다른 쪽이 채권가격. 저쿠폰·장기채는 시소 판이 길어서 같은 금리 변화에도 더 크게 움직입니다.',
+ fx:[['Bond price','P = C × PVIFA(r, n) + F × PVIF(r, n)'],['Semiannual','C/2, r/2, 2n'],['Current yield','Annual coupon / Price'],['Capital gains yield','(P₁ – P₀)/P₀'],['Relationship','YTM = Current yield + Capital gains yield'],['% price change','(P_new – P_old)/P_old']],
+ ph:[['All else the same, the lower the coupon rate, the greater the price sensitivity to interest rates.','다른 조건이 같으면 쿠폰이 낮을수록 가격 민감도가 큼'],['A bond sells at par when its coupon rate equals the YTM.','쿠폰율 = YTM이면 액면가 거래'],['The HPY exceeds the YTM because interest rates fell, and bond prices rise when yields fall.','금리 하락 → 가격 상승 → HPY > YTM']]},
+{id:'ch9',tab:'Ch 9',num:'CHAPTER 9',title:'Stock Valuation',
+ lead:'주가 = 미래 배당의 현재가치. 성장 패턴에 맞는 공식을 고르는 게 핵심입니다.',
+ pts:['<b>Zero growth</b>: 영구연금 P = D/R. 우선주가 대표적(9-19).',
+  '<b>Constant growth (Gordon)</b>: P₀ = D₁/(R – g) = D₀(1 + g)/(R – g). D₀(방금 지급)와 D₁(다음 해) 구분이 함정.',
+  '<b>Differential growth</b>: 고성장 기간 배당을 하나씩 구하고, 일정 성장이 시작되기 “한 해 전” 주가 Pₙ = Dₙ₊₁/(R – g)를 구해 함께 할인(9-15, 9-31).',
+  '<b>요구수익률 분해</b>: R = D₁/P₀ + g = 배당수익률 + 자본이득률.',
+  '<b>지연 시작 영구연금</b>: 첫 배당이 5년 후면 영구연금 공식은 4년 시점 가치 → 4년 할인(9-19).',
+  '<b>PE ratio</b>: 성장기회(NPVGO)가 클수록 PE가 높습니다(9-25).'],
+ analogy:'성장곡선 비유: 소아 성장기(고성장)를 지나 성인이 되면 일정한 속도로 자랍니다. 성인이 되는 시점의 “몸값”(Pₙ)을 한 번에 계산하고 앞의 성장기 배당을 더합니다.',
+ fx:[['Zero growth','P₀ = D/R'],['Constant growth','P₀ = D₁/(R – g),  D₁ = D₀(1 + g)'],['Differential growth','P₀ = Σ Dₜ/(1 + R)ᵗ + Pₙ/(1 + R)ⁿ,  Pₙ = Dₙ₊₁/(R – g)'],['Required return','R = D₁/P₀ + g'],['PE with growth','P = EPS/R + NPVGO']],
+ ph:[['We find the price of the stock when the dividends level off at a constant growth rate.','배당이 일정 성장으로 안정되는 시점의 주가를 구함'],['The price today is the PV of the dividends during the high-growth period plus the PV of P₃.','현재 주가 = 고성장기 배당 PV + P₃의 PV'],['The PE ratio reflects the value of growth opportunities.','PE는 성장기회의 가치를 반영']]},
+{id:'ch11',tab:'Ch 11',num:'CHAPTER 11',title:'Return, Risk, and the CAPM',
+ lead:'분산투자로 없앨 수 있는 위험(unsystematic)은 보상받지 못하고, 베타로 측정하는 체계적 위험만 보상받습니다.',
+ pts:['<b>기대수익률·분산·표준편차</b>: 상황별 확률 × 수익률로 계산. 표준편차는 총위험.',
+  '<b>공분산·상관계수</b>: 두 자산이 같이 움직이는 정도. ρ가 낮을수록 분산효과가 큽니다(11-25).',
+  '<b>Beta</b>: 시장 대비 민감도 = 체계적 위험. β = ρ × σᵢ/σ_M(11-31).',
+  '<b>CAPM / SML</b>: E(R) = R_f + β[E(R_M) – R_f]. 기대수익률이 SML 위에 있으면 저평가(undervalued), 아래면 고평가(11-18).',
+  '<b>Reward-to-risk (Treynor) ratio</b>: (E(R) – R_f)/β. 균형에서는 모든 자산이 같음 → 두 자산으로 R_f, R_M 역산 가능(11-34).',
+  '<b>CML</b>: 잘 분산된 포트폴리오만 해당, x축은 σ. SML은 모든 자산, x축은 β(11-30).',
+  '<b>음(–)의 비중</b>: 공매도(short sale). 목표 수익률이 두 자산보다 높으면 낮은 쪽을 공매도(11-24).',
+  '<b>11-33의 함정</b>: σ가 큰 주식(II)보다 β가 큰 주식(I)이 “더 위험한” 주식입니다.'],
+ analogy:'유전 vs 생활습관 비유: 생활습관 위험(개별 기업 위험)은 관리(분산)로 줄일 수 있지만, 모두에게 공통인 환경 위험(시장 위험)은 피할 수 없어 그 대가로 보상(위험프리미엄)을 받습니다.',
+ fx:[['Expected return','E(R) = Σ pₛ Rₛ'],['Variance','σ² = Σ pₛ (Rₛ – E[R])²'],['Covariance','Cov = Σ pₛ (R_A – E[R_A])(R_B – E[R_B])'],['Correlation','ρ = Cov/(σ_A σ_B)'],['Portfolio return / beta','E(R_p) = Σ wᵢE(Rᵢ);  β_p = Σ wᵢβᵢ'],['CAPM (SML)','E(Rᵢ) = R_f + βᵢ[E(R_M) – R_f]'],['CML','E(R_p) = R_f + {[E(R_M) – R_f]/σ_M} × σ_p'],['Beta','βᵢ = ρᵢ,M × σᵢ/σ_M'],['Reward-to-risk','[E(Rᵢ) – R_f]/βᵢ']],
+ ph:[['Stock Y plots below the SML and is overvalued; its price must fall.','SML 아래 → 고평가 → 가격 하락해야'],['A negative portfolio weight means short selling the stock.','음의 비중은 공매도'],['Unsystematic risk can be diversified away, so only systematic risk is rewarded.','비체계적 위험은 분산으로 제거 → 체계적 위험만 보상'],['A well-diversified portfolio has no unsystematic risk and lies on the CML.','잘 분산된 포트폴리오는 CML 위에 있음']]},
+{id:'sheet',tab:'공식집'}
+];
+
+const CH1QA=[
+['1-3','Goal of the firm','“Managers should not focus on the current stock value because it leads to short-termism.” Evaluate.','The statement is false, provided markets are efficient. The current stock value reflects the risk, timing, and magnitude of all future cash flows, both short-term and long-term. Maximizing the current stock price therefore already accounts for long-term profits.','현재 주가는 단기·장기 모든 현금흐름의 위험·시점·크기를 반영 → 진술은 틀림.'],
+['1-4','Ethics and firm goals','Can maximizing stock value conflict with ethical behavior, safety, the environment, or society?','An argument can be made either way. One view: in a market economy these things are priced (lawsuits, fines, reputation), so stock-value maximization already includes them. The other view: they are non-economic issues best handled through regulation and the political process. Example: a safety fix costs $30 million but saves only $20 million in liability claims. Should the firm do it?','양쪽 다 논증 가능: 시장이 가격에 반영한다 vs. 규제·정치의 영역. 안전 개선 비용 > 소송 절감액 사례를 들 것.'],
+['1-5','International firm goal','Would the goal of maximizing stock value differ in a foreign country?','The goal is the same, but the best course of action toward that goal may differ because of different social, political, and economic institutions.','목표는 같고, 제도 차이로 실행 방법만 다를 수 있음.'],
+['1-7','Agency problems and ownership','Are agency problems more or less severe in Germany and Japan, where banks and institutions own most stock?','Less severe. Ownership is concentrated in institutions rather than many individuals, so there are fewer diverse opinions on corporate goals. Institutions have the resources and experience to monitor managers more effectively, which aligns owner and manager decisions on risky projects.','덜 심각: 소유 집중 + 기관의 감시 능력.'],
+['1-8','Institutional activism','Large institutions now dominate U.S. ownership and are more active. Implications?','Growing institutional ownership and activism may reduce agency problems and create a more efficient market for corporate control. However, if fund managers do not act in their own investors’ interests, a new agency problem arises between the fund and its investors, so the overall problem may not shrink.','대리인 문제 완화 + 지배권 시장 효율화, 단 펀드–투자자 간 2차 대리인 문제 가능.'],
+['1-9','Executive compensation','Is very high CEO pay (e.g., ~$95 million) excessive, compared with top athletes and entertainers?','There is a market for executive talent, just as for athletes and performers, and compensation is the price that clears that market. Much of the growth comes from stock-based pay, which aligns managers with stockholders. Critics argue that part of this reward reflects market-wide price gains rather than managerial skill, so pay could be tied to performance relative to the market.','경영자 노동시장 가격 + 주식보상으로 이해일치. 비판: 시장 전체 상승분까지 보상 → 상대성과 연동 제안.']
+];
+/* ===== TA REVIEW: step-by-step calculator walkthroughs ===== */
+const TA=[
+{ref:'4-66',card:'p4-66',title:'Future Value and Multiple Cash Flows (보험 상품)',
+ q:'아이 생일 1~6번째에 $500, $600, $700, $800, $900, $1,000을 내고, 65세에 $300,000을 받는 보험. 이자율은 처음 6년 11%, 그 이후 7%. 살 만한가?',
+ goal:'① 내는 돈(payments)의 PV와 ② 받는 돈(receiving)의 PV를 같은 시점(오늘)으로 구해서 ③ 비교한다.',
+ tl:'Year:  0 | 1    2    3    4    5    6     |  7 … 65\nCF:      | 500  600  700  800  900  1000  |       300,000\nRate:    |←———— r₁ = 11% ————→|←—— r₂ = 7% ——→|',
+ steps:[
+ {t:'내는 돈의 PV (11%로 각각 할인)',f:'PV = 500/1.11 + 600/1.11² + 700/1.11³ + 800/1.11⁴ + 900/1.11⁵ + 1,000/1.11⁶',
+  rows:[['500 ÷ 1.11 = M+','450.45'],['600 ÷ 1.11 ^ 2 = M+','486.97'],['700 ÷ 1.11 ^ 3 = M+','511.83'],['800 ÷ 1.11 ^ 4 = M+','526.98'],['900 ÷ 1.11 ^ 5 = M+','534.11'],['1000 ÷ 1.11 ^ 6 = M+','534.64'],['RCL M','3,044.99']],
+  ba:'CF  CF0 = 0 ↓  C01 = 500 ↓ F01 = 1 ↓  C02 = 600 ↓↓  C03 = 700 ↓↓  C04 = 800 ↓↓  C05 = 900 ↓↓  C06 = 1000  →  NPV  I = 11 ↓  CPT',
+  res:'$3,044.99',en:'The PV of the premiums is $3,044.99.'},
+ {t:'받는 돈을 Year 6으로 할인 (7%, 59년)',f:'PV₆ = 300,000/1.07⁵⁹      (65 – 6 = 59년)',
+  rows:[['1.07 ^ 59 =','54.1555'],['300000 ÷ Ans =','5,539.60']],
+  ba:'N = 59   I/Y = 7   PMT = 0   FV = 300000   CPT PV',res:'$5,539.60 (Year 6 시점)',en:'Discounting the $300,000 back to Year 6 at 7% gives $5,539.60.'},
+ {t:'Year 6 → Year 0으로 할인 (11%, 6년)',f:'PV₀ = 5,539.60/1.11⁶',
+  rows:[['1.11 ^ 6 =','1.870415'],['5539.60 ÷ Ans =','2,961.70']],
+  ba:'N = 6   I/Y = 11   PMT = 0   FV = 5539.60   CPT PV',res:'$2,961.70',en:'Discounting this amount back to today at 11% gives $2,961.70.'},
+ {t:'비교하고 결론',f:'PV(payments) $3,044.99  vs.  PV(receiving) $2,961.70   → 차이 $83.29',rows:[['3044.99 – 2961.70 =','83.29']],res:'NOT worth buying',en:'Since the PV of the payments ($3,044.99) exceeds the PV of the payoff ($2,961.70), the policy is not worth buying.'}],
+ tips:['금리가 바뀌는 Year 6에서 반드시 끊어서 두 번 할인합니다. 300,000을 한 번에 1.07⁶⁵이나 1.11⁶⁵로 나누면 틀립니다.','기간은 65 – 6 = 59년. 7%는 Year 6 “이후” 구간에 적용됩니다.','TA 노트의 $3,044.98 / $2,961.72는 중간 반올림 차이이고, 해답지는 $3,044.99 / $2,961.70입니다.']},
+
+{ref:'4-69',card:'p4-69',title:'Break-Even Investment Returns (영구연금 vs 연금)',
+ q:'Plan X: 매년 $25,000 영구연금. Plan Y: 10년간 매년 $51,000 연금. 둘 다 1년 후 첫 지급. 몇 % 할인율에서 두 plan이 무차별한가?',
+ goal:'PV(X) = PV(Y)가 되는 r을 찾는다. 양변의 r이 약분되는 것이 핵심.',
+ tl:'X:  0 | 1      2      3      …   ∞      $25,000 forever\nY:  0 | 1      2      …   10           $51,000 × 10 years',
+ steps:[
+ {t:'두 PV를 같다고 놓기',f:'25,000/r = (51,000/r) × [1 – 1/(1+r)¹⁰]   →  양변 × r  →  25,000 = 51,000 × [1 – 1/(1+r)¹⁰]',rows:[],res:'식 세우기',en:'Setting the PV of the perpetuity equal to the PV of the annuity:'},
+ {t:'비율 계산',f:'25,000/51,000 = 1 – 1/(1+r)¹⁰',rows:[['25000 ÷ 51000 =','0.490196']],res:'0.490196',en:''},
+ {t:'1/(1+r)¹⁰ 구하기',f:'1/(1+r)¹⁰ = 1 – 0.490196',rows:[['1 – 0.490196 =','0.509804']],res:'0.509804',en:''},
+ {t:'(1+r)¹⁰ 구하기',f:'(1+r)¹⁰ = 1/0.509804',rows:[['1 ÷ 0.509804 =','1.961538']],res:'1.961538',en:''},
+ {t:'10제곱근 → r',f:'1 + r = 1.961538^(1/10)',rows:[['1.961538 ^ ( 1 ÷ 10 ) =','1.069694'],['Ans – 1 =','0.069694']],
+  ba:'N = 10   PV = –0.509804   PMT = 0   FV = 1   CPT I/Y',res:'r = 6.97%',en:'Solving for r, the discount rate at which we are indifferent is 6.97%.'}],
+ tips:['괄호 ( 1 ÷ 10 )를 꼭 쳐야 합니다. 안 치면 1.961538¹ ÷ 10으로 계산됩니다.','검산: r = 6.97%면 PV(X) = 25,000/0.069694 ≈ $358,709, PV(Y)도 ≈ $358,709.','해석: r이 6.97%보다 높으면 연금(Y), 낮으면 영구연금(X)이 유리.']},
+
+{ref:'8-19',card:'p8-19',title:'Interest Rate Risk (쿠폰과 가격 민감도)',
+ q:'Faulk 7% 쿠폰, Yoo 11% 쿠폰. 둘 다 만기 12년, 반기 지급, YTM 9%. 금리가 2%p 오르면/내리면 가격이 몇 % 변하나?',
+ goal:'① YTM 9%에서 두 채권 가격 → ② 11%에서 가격·변화율 → ③ 7%에서 가격·변화율 → ④ 결론.',
+ tl:'반기 지급 변환:  쿠폰 ÷ 2 (Faulk $35, Yoo $55)   기간 × 2 (N = 24)   이자율 ÷ 2 (4.5% / 5.5% / 3.5%)\n채권가격 = C × [1 – 1/(1+R)ᵀ]/R + FV/(1+R)ᵀ',
+ steps:[
+ {t:'반기 기준으로 숫자 바꾸기',f:'Faulk C = 1,000 × 7% ÷ 2 = $35,  Yoo C = 1,000 × 11% ÷ 2 = $55,  T = 12 × 2 = 24',rows:[],res:'C = 35 / 55, T = 24',en:'Because the bonds pay semiannually, we use half the coupon, half the YTM, and 24 periods.'},
+ {t:'YTM 9% (R = 4.5%) 가격',f:'P = C × PVIFA + 1,000 × PVIF',
+  rows:[['1.045 ^ 24 =','2.876014'],['1 ÷ Ans =   (PVIF)','0.347703'],['( 1 – 0.347703 ) ÷ 0.045 =   (PVIFA)','14.495478'],['35 × 14.495478 + 1000 × 0.347703 =','507.34 + 347.70 = 855.05'],['55 × 14.495478 + 1000 × 0.347703 =','797.25 + 347.70 = 1,144.95']],
+  ba:'N = 24   I/Y = 4.5   PMT = 35   FV = 1000   CPT PV  →  PMT = 55   CPT PV',res:'Faulk $855.05 · Yoo $1,144.95',en:'At a 9% YTM, the Faulk bond sells for $855.05 and the Yoo bond for $1,144.95.'},
+ {t:'YTM 11% (R = 5.5%) 가격과 변화율',f:'%ΔP = (새 가격 – 원래 가격)/원래 가격',
+  rows:[['1.055 ^ 24 =','3.614590'],['1 ÷ Ans =   (PVIF)','0.276657'],['( 1 – 0.276657 ) ÷ 0.055 =   (PVIFA)','13.151699'],['35 × 13.151699 + 276.66 =','736.97'],['55 × 13.151699 + 276.66 =','1,000.00'],['( 736.97 – 855.05 ) ÷ 855.05 =','–13.81%'],['( 1000 – 1144.95 ) ÷ 1144.95 =','–12.66%']],
+  ba:'I/Y = 5.5   (나머지 그대로)   PMT = 35  CPT PV  →  PMT = 55  CPT PV',res:'Faulk –13.81% · Yoo –12.66%',en:'If rates rise by 2%, the Faulk bond falls by 13.81% and the Yoo bond by 12.66%.'},
+ {t:'YTM 7% (R = 3.5%) 가격과 변화율',f:'',
+  rows:[['1.035 ^ 24 =','2.283328'],['1 ÷ Ans =   (PVIF)','0.437957'],['( 1 – 0.437957 ) ÷ 0.035 =   (PVIFA)','16.058368'],['35 × 16.058368 + 437.96 =','1,000.00'],['55 × 16.058368 + 437.96 =','1,321.17'],['( 1000 – 855.05 ) ÷ 855.05 =','+16.95%'],['( 1321.17 – 1144.95 ) ÷ 1144.95 =','+15.39%']],
+  ba:'I/Y = 3.5   PMT = 35  CPT PV  →  PMT = 55  CPT PV',res:'Faulk +16.95% · Yoo +15.39%',en:'If rates fall by 2%, the Faulk bond rises by 16.95% and the Yoo bond by 15.39%.'},
+ {t:'결론',f:'저쿠폰(Faulk)의 변화율이 오를 때도 내릴 때도 더 큼',rows:[],res:'Lower coupon → more sensitive',en:'All else the same, the lower the coupon rate, the greater the price sensitivity to changes in interest rates.'}],
+ tips:['빠른 검산: 쿠폰율 = YTM이면 가격은 정확히 $1,000 (11% Yoo, 7% Faulk).','PVIF·PVIFA는 두 채권이 같으니 한 번만 계산하고 쿠폰만 바꿔 넣으면 됩니다.','재무계산기는 I/Y만 바꾸고 CPT PV를 다시 누르면 됩니다. PV가 음수로 나오는 것은 부호 규칙 때문입니다.']},
+
+{ref:'9-31',card:'p9-31',title:'Nonconstant Growth (성장률이 줄어드는 배당)',
+ q:'방금 배당 D₀ = $2.95. 성장률이 20% → 15% → 10%로 내려가다가 이후 5%로 영원히 유지. 요구수익률 13%. 현재 주가는?',
+ goal:'고성장기 배당(D₁~D₃)을 하나씩 구하고, 일정 성장이 시작되는 시점 직전 주가 P₃를 Gordon 공식으로 구한 뒤 전부 오늘로 할인.',
+ tl:'D₀ = 2.95 | D₁ (×1.20) | D₂ (×1.15) | D₃ (×1.10) | D₄ (×1.05) → 이후 5% 영구 성장\nYear:   0       1            2            3            4 …',
+ steps:[
+ {t:'D₁',f:'D₁ = 2.95 × 1.20',rows:[['2.95 × 1.2 =','3.54']],res:'$3.54',en:''},
+ {t:'D₂',f:'D₂ = D₁ × 1.15',rows:[['3.54 × 1.15 =','4.071']],res:'$4.071',en:''},
+ {t:'D₃',f:'D₃ = D₂ × 1.10',rows:[['4.071 × 1.1 =','4.4781']],res:'$4.4781',en:''},
+ {t:'D₄ (일정 성장 시작)',f:'D₄ = D₃ × 1.05',rows:[['4.4781 × 1.05 =','4.702005']],res:'$4.702005',en:''},
+ {t:'P₃ (Growing perpetuity)',f:'P₃ = D₄/(R – g) = 4.702005/(0.13 – 0.05)',rows:[['4.702005 ÷ 0.08 =','58.7751']],res:'$58.78',en:'The price at Year 3 is P₃ = D₄/(R – g) = $58.78.'},
+ {t:'모두 오늘로 할인',f:'P₀ = D₁/1.13 + D₂/1.13² + (D₃ + P₃)/1.13³',
+  rows:[['3.54 ÷ 1.13 = M+','3.1327'],['4.071 ÷ 1.13 ^ 2 = M+','3.1882'],['( 4.4781 + 58.7751 ) ÷ 1.13 ^ 3 = M+','43.8376'],['RCL M','50.16']],
+  ba:'CF  CF0 = 0 ↓  C01 = 3.54 ↓↓  C02 = 4.071 ↓↓  C03 = 63.2532  →  NPV  I = 13 ↓  CPT',res:'P₀ = $50.16',en:'The current share price is the PV of D₁–D₃ plus the PV of P₃, which is $50.16.'}],
+ tips:['Gordon 공식은 분자 배당보다 한 기간 앞선 가격을 줍니다: D₄로 계산하면 P₃(P₄가 아님).','D₃와 P₃는 같은 시점(Year 3)이니 더해서 한 번에 할인하면 빠릅니다 (재무계산기 C03 = 4.4781 + 58.7751).','성장률은 이전 배당에 곱합니다. D₂ = 2.95 × 1.2 × 1.15 (2.95 × 1.15가 아님).']},
+
+{ref:'11-31',card:'p11-31',title:'Beta and CAPM (상관계수로 베타 구하기)',
+ q:'무위험자산 + 시장포트폴리오로 만든 포트폴리오 Y: E(R) 9%, σ 16%. R_f = 4.1%, E(R_M) = 11%. 시장과 상관계수 0.38, σ 60%인 증권 A의 기대수익률은?',
+ goal:'① Y의 무위험자산 비중 w → ② σ_M → ③ β_A = ρ·σ_A/σ_M → ④ CAPM으로 E(R_A).',
+ tl:'Y = w × (Risk-free) + (1 – w) × (Market)\nβ_A = Cov(R_A, R_M)/σ_M² = ρ_A,M × σ_A/σ_M        CAPM: E(R_A) = R_f + β_A[E(R_M) – R_f]',
+ steps:[
+ {t:'무위험자산 비중 w',f:'0.09 = w × 0.041 + (1 – w) × 0.11   →   0.09 = 0.11 – 0.069w',rows:[['0.11 – 0.041 =','0.069'],['( 0.11 – 0.09 ) ÷ 0.069 =','0.289855'],['1 – 0.289855 =   (시장 비중)','0.710145']],res:'w = 0.289855',en:'Solving E(R_Y) = w·R_f + (1 – w)·E(R_M) gives w = 0.2899 in the risk-free asset.'},
+ {t:'시장 표준편차 σ_M',f:'σ_Y = (1 – w) × σ_M      (σ_Rf = 0, 공분산 항 = 0)',rows:[['0.16 ÷ 0.710145 =','0.225306']],res:'σ_M = 22.53%',en:'Since the risk-free asset has zero variance, σ_Y = (1 – w)σ_M, so σ_M = 22.53%.'},
+ {t:'베타 β_A',f:'β_A = ρ × σ_A/σ_M = 0.38 × 0.60/0.225306',rows:[['0.38 × 0.6 ÷ 0.225306 =','1.011957']],res:'β_A = 1.0120',en:'The beta of the security is 0.38 × 0.60/0.2253 = 1.012.'},
+ {t:'CAPM으로 기대수익률',f:'E(R_A) = 0.041 + 1.011957 × (0.11 – 0.041)',rows:[['0.11 – 0.041 =','0.069'],['1.011957 × 0.069 + 0.041 =','0.110825']],res:'E(R_A) = 11.08%',en:'Using the CAPM, the expected return is 0.041 + 1.012(0.069) = 11.08%.'}],
+ tips:['지름길 (해답지 방식): CML 기울기 = (0.09 – 0.041)/0.16 = 0.30625 → σ_M = (0.11 – 0.041)/0.30625 = 0.2253. 같은 답입니다.','σ_M을 0.2253으로 반올림하면 β = 1.01198 (TA 노트). 최종 답 11.08%는 동일.','중간값은 소수 4~6자리까지 들고 가세요.']}
+];
+
+function kbd(s){return s.split(' ').filter(Boolean).map(t=>/^[\d.,]+$/.test(t)||/^\(.*\)$/.test(t)&&t.length>2?`<span>${esc(t)}</span>`:/^[÷×^=+–\-()]$|^M\+$|^RCL$|^Ans$|^M$/.test(t)?`<kbd>${esc(t)}</kbd>`:`<span>${esc(t)}</span>`).join(' ')}
+function taHTML(){return `<section class="view" id="v-ta" hidden><div class="chhead"><span class="num">TA REVIEW · 5 PROBLEMS</span><h2>계산기로 따라 하는 단계별 풀이</h2></div>
+ <div class="pane"><p class="lead" style="margin:0">TA 리뷰 문제 5개를 “1단계 → 2단계 …” 순서로 다시 정리했습니다.</p>
+ <ul style="margin-top:8px"><li><b>공학용 계산기</b> 줄은 그대로 누르면 됩니다. <kbd>^</kbd> = xʸ 키, <kbd>Ans</kbd> = 직전 결과, <kbd>M+</kbd>/<kbd>RCL</kbd> <kbd>M</kbd> = 메모리에 더하기/불러오기.</li><li><b>재무계산기(BA II Plus)</b> 줄은 같은 단계를 한 번에 끝내는 방법입니다. 결과가 음수로 나오는 건 부호 규칙 때문입니다.</li><li>각 단계 끝의 <b>영어 문장</b>을 이어 쓰면 그대로 답안이 됩니다.</li></ul>
+ <div class="tajump">${TA.map(p=>`<a href="#ta-${p.ref}" class="ref">${p.ref}</a>`).join('')}</div></div>
+ ${TA.map(p=>`<article class="card ta" id="ta-${p.ref}"><header><span class="ref">${p.ref}</span><h3>${esc(p.title)}</h3><button class="btn" data-go="${p.card}" style="background:var(--paper2);color:var(--ink)">숫자 바꿔 연습 →</button></header>
+  <p class="prompt"><span class="lbl">문제 요약</span>${esc(p.q)}</p>
+  <div class="tagoal"><b>Goal</b> ${esc(p.goal)}</div>
+  <pre class="tl">${esc(p.tl)}</pre>
+  <ol class="tasteps">${p.steps.map((s,i)=>`<li><div class="sh"><span class="sn">${i+1}단계</span><b>${esc(s.t)}</b><span class="sr">${esc(s.res)}</span></div>
+   ${s.f?`<div class="sf">${esc(s.f)}</div>`:''}
+   ${s.rows.length?`<div class="keytab"><div class="kh"><span>공학용 계산기 입력</span><span>화면</span></div>${s.rows.map(r=>`<div class="kr"><span class="kk">${kbd(r[0])}</span><span class="kv">${esc(r[1])}</span></div>`).join('')}</div>`:''}
+   ${s.ba?`<div class="ba"><span>BA II Plus</span><code>${esc(s.ba)}</code></div>`:''}
+   ${s.en?`<div class="sen" lang="en">${esc(s.en)}</div>`:''}</li>`).join('')}</ol>
+  <div class="tatips"><b>실수 포인트</b><ul>${p.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></article>`).join('')}</section>`}
+function taWire(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const c=CALCS.find(x=>x.id===b.dataset.go);if(!c)return;show(c.ch,false);const el=document.getElementById('card-'+c.id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})});
+ document.querySelectorAll('.tajump a').forEach(a=>a.onclick=e=>{e.preventDefault();const el=document.getElementById(a.getAttribute('href').slice(1));if(el)el.scrollIntoView({behavior:'smooth',block:'start'})})}
+/* ===== UI ===== */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let solved=new Set(store.get('cf-solved',[]));
+const fmtIn=(t,v)=>t==='$'&&Math.abs(v)>=1000?Number(v).toLocaleString('en-US',{maximumFractionDigits:2}):String(v);
+const fmtOut=x=>{const v=x.v;if(x.f==='$')return M(v);if(x.f==='%')return P(v);if(x.f==='x')return N(v,2)+'×';if(x.f==='yr')return N(v,x.d??2)+' yrs';return N(v,x.d??4)};
+const sig3=x=>{if(x===0)return 0;const p=Math.pow(10,Math.floor(Math.log10(Math.abs(x)))-2);return Math.round(x/p)*p};
+const clean=x=>+x.toPrecision(10);
+
+/* --- chart: NPV profile --- */
+function npvChart(series,lo,hi){const W=620,H=230,L=66,Rr=14,T=14,B=34;const xs=[],K=160;for(let i=0;i<=K;i++)xs.push(lo+(hi-lo)*i/K);
+ let ys=series.map(s=>xs.map(r=>npv(r,s.cf)));let mn=Math.min(0,...ys.flat()),mx=Math.max(0,...ys.flat());if(mx-mn<1){mx+=1}const pad=(mx-mn)*.08;mn-=pad;mx+=pad;
+ const X=r=>L+(r-lo)/(hi-lo)*(W-L-Rr),Y=v=>T+(mx-v)/(mx-mn)*(H-T-B);
+ const cm=v=>{const a=Math.abs(v);const s=v<0?'–':'';return a>=1e6?s+'$'+(a/1e6).toFixed(1)+'M':a>=1e3?s+'$'+(a/1e3).toFixed(0)+'K':s+'$'+a.toFixed(0)};
+ let g='';for(let i=0;i<=5;i++){const r=lo+(hi-lo)*i/5;g+=`<line class="axis" x1="${X(r)}" y1="${T}" x2="${X(r)}" y2="${H-B}"/><text x="${X(r)}" y="${H-B+16}" text-anchor="middle">${(r*100).toFixed(0)}%</text>`}
+ for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4;g+=`<text x="${L-8}" y="${Y(v)+4}" text-anchor="end">${cm(v)}</text>`}
+ g+=`<line class="zero" x1="${L}" y1="${Y(0)}" x2="${W-Rr}" y2="${Y(0)}"/>`;
+ series.forEach((s,k)=>{g+=`<polyline class="s${k%2}" points="${xs.map((r,i)=>X(r).toFixed(1)+','+Y(ys[k][i]).toFixed(1)).join(' ')}"/>`;roots(r=>npv(r,s.cf),lo,hi,(hi-lo)/2000).forEach(r=>{g+=`<circle class="dot" cx="${X(r)}" cy="${Y(0)}" r="4.5"/>`})});
+ g+=`<text class="cap" x="${L}" y="${H-4}">Discount rate →  (red dots = IRR, where NPV crosses zero)</text>`;
+ const leg=series.length>1?`<div class="legend">${series.map((s,k)=>`<span>${k?'- - -':'——'} Project ${esc(s.name)}</span>`).join('')}</div>`:'';
+ return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="NPV profile">${g}</svg>${leg}`}
+
+/* --- calculator shortcuts --- */
+const kfmt=s=>esc(s).replace(/\[([^\]]+)\]/g,'<kbd>$1</kbd>');
+function renderKeys(c,el){const box=$('.kbox',el);if(!KEYS[c.id]){box.hidden=true;return}let st;try{st=KEYS[c.id](vals[c.id])}catch(e){box.innerHTML='';return}
+ box.innerHTML=`<div class="khd"><b>계산기 지름길</b><span>숫자를 바꾸면 키 입력도 바뀝니다 · <kbd>^</kbd> = yˣ · <kbd>(-)</kbd>/<kbd>+/-</kbd> = 음수 · BA II Plus는 P/Y = 1</span></div><ol class="ksteps">${st.map((s,i)=>`<li><div class="ksh"><span class="sn">${i+1}단계</span><b>${esc(s.t)}</b><span class="kout">${esc(s.out)}</span></div>${s.ba?`<div class="krow"><span class="kl">BA II Plus</span><span class="kc">${kfmt(s.ba)}</span></div>`:''}${s.sci?`<div class="krow"><span class="kl">공학용</span><span class="kc">${kfmt(s.sci)}</span></div>`:''}${s.why?`<div class="kwhy">${esc(s.why)}</div>`:''}</li>`).join('')}</ol>`}
+
+/* --- problem card --- */
+const vals={};
+function cardHTML(c){const v=vals[c.id];
+ const ins=c.inputs.map(i=>{const id=`${c.id}-${i.k}`;const unit=i.t==='%'?'%':i.t==='$'?'$':i.t==='int'?'#':'';
+  const ctl=i.t==='sel'?`<select id="${id}">${i.opts.map(x=>`<option${x===v[i.k]?' selected':''}>${x}</option>`).join('')}</select>`:`<input id="${id}" inputmode="${i.t==='list'?'text':'decimal'}" value="${esc(i.t==='list'?v[i.k]:fmtIn(i.t,v[i.k]))}" autocomplete="off">`;
+  return `<div class="in${i.t==='list'?' wide':''}"><label for="${id}">${esc(i.l)} <span class="unit">${unit}</span></label>${ctl}</div>`}).join('');
+ return `<article class="card" id="card-${c.id}"><header><span class="ref">${c.ref}</span><h3>${esc(c.title)}</h3><span class="solved" ${solved.has(c.id)?'':'hidden'}>SOLVED</span></header>
+ <p class="prompt" lang="en"><span class="lbl">PROBLEM — 숫자를 바꾸면 문제도 바뀝니다</span><span class="ptxt"></span></p>
+ <div class="calc"><div class="keys"><div class="ins">${ins}</div>
+  <div class="btns"><button class="btn gold" data-a="rand">숫자 바꾸기</button><button class="btn" data-a="reset">교재 숫자로</button><button class="btn" data-a="prac" aria-pressed="false">연습 모드</button></div></div>
+  <div class="lcdwrap"><div class="lcd" aria-live="polite"></div><div class="pr" hidden></div></div></div>
+ <div class="kbox"></div>
+ <div class="chart" hidden></div>
+ <div class="sol"><div class="shd"><b>ENGLISH SOLUTION</b><span><span class="copied" hidden>복사됨</span> <button class="btn" data-a="copy" style="background:var(--paper2);color:var(--ink)">풀이 복사</button></span></div>
+  <p class="lockmsg">연습 모드: 답을 입력하고 “채점”을 누르면 풀이가 보입니다.</p><div class="steps"></div><div class="ans"></div></div></article>`}
+
+function readVals(c){const v=vals[c.id];c.inputs.forEach(i=>{const el=document.getElementById(`${c.id}-${i.k}`);if(!el)return;if(i.t==='list'||i.t==='sel')v[i.k]=el.value;else{const x=parseNum(el.value);if(isFinite(x))v[i.k]=(i.t==='int')?Math.max(1,Math.round(x)):x}})}
+function update(c){const el=document.getElementById('card-'+c.id),v=vals[c.id];let r;try{r=c.compute(v)}catch(e){r=null}
+ $('.ptxt',el).textContent=c.prompt(v);
+ if(!r){$('.lcd',el).innerHTML='<div class="row"><span>입력값을 확인하세요</span><span>Error</span></div>';return}
+ c._r=r;
+ $('.lcd',el).innerHTML=r.out.map(x=>`<div class="row${x.key?' key':''}"><span>${esc(x.l)}</span><span>${esc(fmtOut(x))}</span></div>`).join('');
+ $('.steps',el).innerHTML=r.steps.map(s=>s.startsWith('## ')?`<div class="h">${esc(s.slice(3))}</div>`:`<div>${esc(s)}</div>`).join('');
+ $('.ans',el).innerHTML=`<b>ANSWER</b>${esc(r.answer)}`;
+ renderKeys(c,el);
+ const ch=$('.chart',el);if(r.chart){ch.hidden=false;ch.innerHTML=npvChart(r.chart.series,r.chart.lo,r.chart.hi)}else ch.hidden=true;
+ if(el.classList.contains('practice'))buildPractice(c)}
+function buildPractice(c){const el=document.getElementById('card-'+c.id),pr=$('.pr',el);el.classList.remove('revealed');const keys=c._r.out.filter(x=>x.key);
+ pr.innerHTML=`<div class="hint">답을 입력하세요 (% 문제는 8.07처럼 숫자만, 음수는 –/-)</div>`+keys.map((x,i)=>`<div class="q"><label for="${c.id}-ans${i}">${esc(x.l)}${x.f==='%'?' (%)':''}</label><input id="${c.id}-ans${i}" inputmode="decimal" autocomplete="off"><span class="mk" id="${c.id}-mk${i}"></span></div>`).join('')+`<div class="btns"><button class="btn gold" data-a="check">채점</button><button class="btn" data-a="reveal">풀이 보기</button></div>`}
+function check(c){const el=document.getElementById('card-'+c.id),keys=c._r.out.filter(x=>x.key);let all=true;
+ keys.forEach((x,i)=>{const u=parseNum(document.getElementById(`${c.id}-ans${i}`).value),mk=document.getElementById(`${c.id}-mk${i}`);const tgt=x.f==='%'?x.v*100:x.v;const tol=Math.max(Math.abs(tgt)*0.005,x.f==='%'?0.02:0.01);const ok=isFinite(u)&&isFinite(tgt)&&Math.abs(u-tgt)<=tol||(!isFinite(tgt)&&!isFinite(u));
+  mk.textContent=ok?'✓':'✗';mk.className='mk '+(ok?'ok':'no');if(!ok)all=false});
+ el.classList.add('revealed');
+ if(all){solved.add(c.id);store.set('cf-solved',[...solved]);$('.solved',el).hidden=false;refreshCounts()}}
+function randomize(c){const v=vals[c.id];const U=()=>0.8+Math.random()*0.4;
+ c.inputs.forEach(i=>{if(i.fixed)return;const x=v[i.k];
+  if(i.t==='$'&&x)v[i.k]=clean(sig3(x*U()));
+  else if(i.t==='%'&&x)v[i.k]=clean(Math.round(x*U()*(Math.abs(x)<2?100:10))/(Math.abs(x)<2?100:10));
+  else if(i.t==='n'&&x)v[i.k]=clean(Math.round(x*U()*100)/100);
+  else if(i.t==='list')v[i.k]=parseList(x).map(z=>{if(!z)return 0;const y=sig3(z*U());return Math.abs(y)<1?String(clean(y)).replace(/^(-?)0\./,'$1.'):clean(y)}).join(', ')});
+ setInputs(c)}
+function setInputs(c){const v=vals[c.id];c.inputs.forEach(i=>{const el=document.getElementById(`${c.id}-${i.k}`);if(el)el.value=i.t==='list'||i.t==='sel'?v[i.k]:fmtIn(i.t,v[i.k])});update(c)}
+function wireCard(c){const el=document.getElementById('card-'+c.id);
+ el.addEventListener('input',e=>{if(e.target.closest('.ins')){readVals(c);update(c)}});
+ el.addEventListener('change',e=>{if(e.target.closest('.ins')){readVals(c);update(c);const i=c.inputs.find(z=>`${c.id}-${z.k}`===e.target.id);if(i&&i.t==='$')e.target.value=fmtIn('$',vals[c.id][i.k])}});
+ el.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;
+  if(a==='rand')randomize(c);
+  if(a==='reset'){c.inputs.forEach(i=>vals[c.id][i.k]=i.v);setInputs(c)}
+  if(a==='prac'){const on=!el.classList.contains('practice');el.classList.toggle('practice',on);b.setAttribute('aria-pressed',on);$('.pr',el).hidden=!on;if(on)buildPractice(c);else el.classList.remove('revealed')}
+  if(a==='check')check(c);
+  if(a==='reveal')el.classList.add('revealed');
+  if(a==='copy'){const txt=`Problem ${c.ref}\n`+c._r.steps.map(s=>s.replace(/^## /,'\n')).join('\n')+'\n\nAnswer: '+c._r.answer;const done=()=>{const s=$('.copied',el);s.hidden=false;setTimeout(()=>s.hidden=true,1500)};
+   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done).catch(()=>{const r=document.createRange();r.selectNodeContents($('.steps',el));const sl=getSelection();sl.removeAllRanges();sl.addRange(r)});}
+ })}
+
+/* --- TVM calculator --- */
+function tvmHTML(){return `<div class="pane" style="padding:0;overflow:hidden;border:0"><div class="calc" style="grid-template-columns:minmax(0,1fr)"><div class="keys tvm">
+ <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px"><b style="font-family:var(--f-display);font-stretch:80%;font-size:18px">TVM 계산기</b><span class="unit" style="font:11px var(--f-mono);color:var(--keylab)">N · I/Y · PV · PMT · FV</span></div>
+ <div class="regs">${[['N','기간 수','15'],['IY','기간 이자율 %','7.9'],['PV','현재가치','-153239.01'],['PMT','매기 지급액',''],['FV','미래가치','0']].map(([k,l,v])=>`<div class="reg"><b>${k==='IY'?'I/Y':k}</b><input id="tvm-${k}" aria-label="${l}" value="${v}" inputmode="decimal" placeholder="${l}"><button class="btn gold" data-cpt="${k}">CPT</button></div>`).join('')}</div>
+ <div class="btns"><button class="btn" id="tvm-bgn" aria-pressed="false">BGN (기초 지급)</button><button class="btn" id="tvm-clr">CLR</button></div>
+ <div class="lcd"><div class="row key"><span id="tvm-lab">PMT 계산 결과</span><span id="tvm-out">—</span></div></div>
+ <div class="steps" id="tvm-steps" style="color:var(--keyink)"></div>
+ <div style="font-size:12px;color:var(--keylab)">부호 규칙: 내가 내는 돈은 –, 받는 돈은 + (BA II Plus와 동일). 월복리면 I/Y = 연이율/12, N = 개월 수. 채권은 PMT = 쿠폰, FV = 액면가.</div>
+ </div></div></div>`}
+function tvmWire(){let bgn=false;const g=k=>parseNum($('#tvm-'+k).value)||0;const b=$('#tvm-bgn');b.onclick=()=>{bgn=!bgn;b.setAttribute('aria-pressed',bgn)};
+ $('#tvm-clr').onclick=()=>{['N','IY','PV','PMT','FV'].forEach(k=>$('#tvm-'+k).value='');$('#tvm-out').textContent='—';$('#tvm-steps').innerHTML=''};
+ document.querySelectorAll('[data-cpt]').forEach(btn=>btn.onclick=()=>{const k=btn.dataset.cpt;let n=g('N'),r=g('IY')/100,pv=g('PV'),pmt=g('PMT'),fv=g('FV');const a=1+r*(bgn?1:0);
+  const f=(n,r,pv,pmt,fv)=>pv*Math.pow(1+r,n)+pmt*(1+r*(bgn?1:0))*fvifa(r,n)+fv;let res,txt=[];
+  const eq=`0 = PV(1 + r)^N + PMT${bgn?'(1 + r)':''} × [(1 + r)^N – 1]/r + FV`;
+  if(k==='FV'){res=-(pv*Math.pow(1+r,n)+pmt*a*fvifa(r,n));txt=[eq,`FV = –[${N(pv,2)}(${D(1+r)})^${n} + ${N(pmt,2)} × ${N(a*fvifa(r,n),4)}] = ${N(res,2)}`]}
+  if(k==='PV'){res=-(fv+pmt*a*fvifa(r,n))*pvif(r,n);txt=[`PV = –[FV/(1 + r)^N + PMT${bgn?'(1 + r)':''} × {1 – [1/(1 + r)]^N}/r]`,`PV = –[${N(fv,2)}/${D(1+r)}^${n} + ${N(pmt,2)} × ${N(a*pvifa(r,n),4)}] = ${N(res,2)}`]}
+  if(k==='PMT'){res=-(pv*Math.pow(1+r,n)+fv)/(a*fvifa(r,n));txt=[eq,`PMT = –[${N(pv,2)}(${D(1+r)})^${n} + ${N(fv,2)}]/${N(a*fvifa(r,n),4)} = ${N(res,2)}`,`Equivalently, PV = PMT × {1 – [1/(1 + r)]^N}/r${bgn?' × (1 + r)':''} solved for PMT.`]}
+  if(k==='N'){if(Math.abs(r)<1e-12)res=-(pv+fv)/pmt;else{const A=pmt*a/r;res=Math.log((A-fv)/(pv+A))/Math.log(1+r)}txt=[eq,`N = ln[(PMT${bgn?'(1+r)':''}/r – FV)/(PV + PMT${bgn?'(1+r)':''}/r)]/ln(1 + r) = ${N(res,4)}`]}
+  if(k==='IY'){const rs=roots(x=>f(n,x,pv,pmt,fv),-0.99,1.5,0.0005);res=rs.length?(rs.find(x=>x>0)??rs[0])*100:NaN;txt=[eq,`Solve for r by trial and error (financial calculator): r = ${N(res,4)}% per period`]}
+  $('#tvm-'+k).value=isFinite(res)?(+res.toFixed(k==='N'||k==='IY'?4:2)):'';$('#tvm-'+k).classList.add('hit');setTimeout(()=>$('#tvm-'+k).classList.remove('hit'),900);
+  $('#tvm-lab').textContent=(k==='IY'?'I/Y':k)+' 계산 결과';$('#tvm-out').textContent=isFinite(res)?(k==='IY'?N(res,4)+'%':N(res,k==='N'?4:2)):'해 없음 — 부호 확인';
+  $('#tvm-steps').innerHTML=txt.map(s=>`<div>${esc(s)}</div>`).join('')})}
+
+/* --- EAR converter --- */
+function earHTML(){return `<div class="pane"><h3>EAR / APR 변환 <small>4-56 · 4-65 · 4-70</small></h3><div class="ins" style="grid-template-columns:repeat(auto-fill,minmax(130px,1fr))">
+ <div class="in"><label for="ear-apr" style="color:var(--ink2)">APR %</label><input id="ear-apr" value="9" inputmode="decimal" style="background:var(--paper2);color:var(--ink)"></div>
+ <div class="in"><label for="ear-m" style="color:var(--ink2)">연 복리 횟수 m (0 = 연속)</label><input id="ear-m" value="365" inputmode="decimal" style="background:var(--paper2);color:var(--ink)"></div>
+ <div class="in"><label for="ear-k" style="color:var(--ink2)">기간(년) k</label><input id="ear-k" value="2" inputmode="decimal" style="background:var(--paper2);color:var(--ink)"></div></div>
+ <div class="steps" id="ear-out" style="margin-top:10px"></div></div>`}
+function earWire(){const u=()=>{const a=parseNum($('#ear-apr').value)/100,m=parseNum($('#ear-m').value),k=parseNum($('#ear-k').value);const e=m>0?Math.pow(1+a/m,m)-1:Math.exp(a)-1,ek=m>0?Math.pow(1+a/m,m*k)-1:Math.exp(a*k)-1;
+ $('#ear-out').innerHTML=[m>0?`EAR = (1 + ${D(a)}/${m})^${m} – 1 = ${P(e,4)}`:`EAR = e^${D(a)} – 1 = ${P(e,4)}`,`Periodic rate = APR/m = ${m>0?P(a/m,5):'—'}`,m>0?`Effective ${k}-year rate = (1 + ${D(a)}/${m})^(${m}×${k}) – 1 = ${P(ek,4)}`:`Effective ${k}-year rate = e^(${D(a)}×${k}) – 1 = ${P(ek,4)}`].map(s=>`<div>${esc(s)}</div>`).join('')};
+ ['ear-apr','ear-m','ear-k'].forEach(i=>$('#'+i).addEventListener('input',u));u()}
+
+/* --- CF worksheet --- */
+function cfHTML(){return `<article class="card" id="cfw"><header><span class="ref">CF</span><h3>현금흐름 워크시트 (NPV · IRR · Payback · PI)</h3></header>
+ <p class="prompt">계산기의 CF 기능처럼, 0년부터 현금흐름을 쉼표로 넣으세요. 어떤 프로젝트든 바로 검산할 수 있습니다.</p>
+ <div class="calc"><div class="keys"><div class="ins"><div class="in wide"><label for="cfw-cf">Cash flows CF0, CF1, …</label><input id="cfw-cf" value="-1500000, 900000, 700000, 725000"></div><div class="in"><label for="cfw-r">I (discount rate) %</label><input id="cfw-r" value="8" inputmode="decimal"></div></div></div>
+ <div class="lcdwrap"><div class="lcd" id="cfw-lcd"></div></div></div><div class="chart" id="cfw-chart"></div>
+ <div class="sol"><div class="steps" id="cfw-steps"></div></div></article>`}
+function cfWire(){const u=()=>{const cf=parseList($('#cfw-cf').value).filter(isFinite),r=parseNum($('#cfw-r').value)/100;if(cf.length<2)return;const n=npv(r,cf),ir=irrs(cf),pb=payback(cf),dpb=payback(cf,r),pi=(n-cf[0])/-cf[0];
+ const rows=[['NPV',M(n)],['IRR',ir.length?ir.map(x=>P(x)).join(' / '):'none'],['Payback',isFinite(pb)?N(pb,2)+' yrs':'never'],['Discounted payback',isFinite(dpb)?N(dpb,2)+' yrs':'never'],['PI',N(pi,3)]];
+ $('#cfw-lcd').innerHTML=rows.map((x,i)=>`<div class="row${i<2?' key':''}"><span>${x[0]}</span><span>${x[1]}</span></div>`).join('');
+ $('#cfw-steps').innerHTML=[`NPV = ${M0(cf[0])} + `+cf.slice(1).map((c,t)=>`${M0(c)}/${D(1+r)}^${t+1}`).join(' + ')+` = ${M(n)}`,`0 = ${M0(cf[0])} + `+cf.slice(1).map((c,t)=>`${M0(c)}/(1 + IRR)^${t+1}`).join(' + ')+(ir.length?`  →  IRR = ${ir.map(x=>P(x)).join(', ')}`:''),`PI = PV of future CFs / Initial investment = ${M(n-cf[0])}/${M0(-cf[0])} = ${N(pi,3)}`].map(s=>`<div>${esc(s)}</div>`).join('');
+ const hi=Math.max(0.3,...ir.filter(x=>x>0).map(x=>x*1.3));$('#cfw-chart').innerHTML=npvChart([{cf,name:'NPV'}],Math.min(0,...ir.map(x=>x-0.05)),Math.min(hi,2))};
+ ['cfw-cf','cfw-r'].forEach(i=>$('#'+i).addEventListener('input',u));u()}
+
+/* --- views --- */
+function conceptHTML(c){return `<div class="concept"><div class="pane"><h3>개념 쉽게 이해하기 <small>KOREAN NOTES</small></h3><p class="lead">${c.lead}</p><ul>${c.pts.map(p=>`<li>${p}</li>`).join('')}</ul><div class="analogy">${c.analogy}</div></div>
+ <div class="pane" style="display:grid;gap:16px;align-content:start"><div><h3>핵심 공식 <small>FORMULAS</small></h3><div class="fx">${c.fx.map(f=>`<div><span>${f[0]}</span><code>${esc(f[1])}</code></div>`).join('')}</div></div>
+ <div><h3>영어 답안 표현 <small>EXAM PHRASES</small></h3><div class="phr">${c.ph.map(p=>`<div><span class="en" lang="en">${esc(p[0])}</span><span class="ko">${p[1]}</span></div>`).join('')}</div></div></div></div>`}
+function homeHTML(){return `<section class="view" id="v-home">
+ <div class="hero2"><div class="pane" style="display:grid;gap:14px;align-content:start"><h3 style="font-size:20px">이렇게 쓰세요</h3>
+  <ol class="ord"><li><div><b>챕터 탭</b>에서 개념(한국어)과 공식, 영어 답안 표현을 먼저 읽습니다.</div></li>
+  <li><div>각 문제 카드의 <b>계산기</b>는 교재 숫자로 채워져 있고, 숫자를 바꾸면 <b>영어 문제 문장·답·영어 풀이가 함께</b> 바뀝니다.</div></li>
+  <li><div>카드마다 <b>계산기 지름길</b>이 1단계 → 2단계 순서로 나옵니다. BA II Plus(TVM·CF·STAT 기능)와 공학용 계산기 입력을 같이 보여주고, 오른쪽 초록 칸이 그 단계에서 화면에 떠야 할 값입니다.</div></li>
+  <li><div><b>숫자 바꾸기</b>로 새 문제를 만들고 <b>연습 모드</b>를 켜면 답이 가려집니다. 직접 풀어서 입력 → <b>채점</b>.</div></li>
+  <li><div>채점 후 열리는 <b>English solution</b>을 그대로 답안 구조로 연습하세요. “풀이 복사”로 노트에 붙일 수 있습니다.</div></li></ol>
+  <div class="analogy"><b>영어 답안 4단계</b><br><span class="mono" lang="en">① State the formula → ② Plug in the numbers → ③ Compute (show intermediate values) → ④ Conclude in one sentence (“Since NPV &gt; 0, accept the project.”)</span><br><span style="font-size:13px;color:var(--ink2)">중간값은 소수 4자리 정도로 쓰고, 최종 답은 $ 소수 2자리·% 2자리로 맞추면 해답지와 비교하기 쉽습니다.</span></div>
+ </div>${tvmHTML()}</div>
+ <div class="pane"><h3>시험 전 계산기 세팅 <small>BA II Plus</small></h3><div class="kc" style="display:grid;gap:4px">
+ <div>${kfmt('[2ND] [P/Y] 1 [ENTER]')}  — 연 1회 기준 (반기·월은 N과 I/Y를 직접 바꿔서 입력)</div>
+ <div>${kfmt('[2ND] [FORMAT] 4 [ENTER]')}  — 소수 4자리 표시 (중간값 반올림 오차 방지)</div>
+ <div>${kfmt('[2ND] [CLR TVM]')} / ${kfmt('[CF] [2ND] [CLR WORK]')}  — 문제마다 이전 값 지우기</div>
+ <div>${kfmt('[2ND] [BGN] [2ND] [SET]')}  — 기초 지급(annuity due)일 때만 BGN, 끝나면 END로 되돌리기</div>
+ <div style="font-family:var(--f-body);font-size:13px;color:var(--ink2)">부호 규칙: 내는 돈 –, 받는 돈 +. PV를 구하면 음수로 나오는 게 정상입니다. 공학용 계산기는 Casio fx-570 기준이며 <kbd>Ans</kbd>, <kbd>STO</kbd>/<kbd>RCL</kbd>, STAT 모드를 씁니다.</div></div></div>
+ ${earHTML()}
+ <div class="pane"><h3>시험 범위 <small>RWJJ 12th ed. · 교수님 지정 문제</small></h3><div class="mono" style="display:grid;gap:4px" id="scope"></div></div>
+ </section>`}
+
+function build(){const main=$('main .wrap');let h=homeHTML()+taHTML();
+ CH.filter(c=>c.num).forEach(c=>{h+=`<section class="view" id="v-${c.id}" hidden><div class="chhead"><span class="num">${c.num}</span><h2>${c.title}</h2></div>${conceptHTML(c)}`;
+  if(c.id==='ch1')h+=`<div class="qa">${CH1QA.map(q=>`<details><summary><span class="ref">${q[0]}</span><span>${q[1]} — <span style="font-weight:400;color:var(--ink2)">${esc(q[2])}</span></span></summary><p class="en" lang="en">${esc(q[3])}</p><p class="ko">${q[4]}</p></details>`).join('')}</div>`;
+  if(c.id==='ch5')h+=cfHTML();
+  CALCS.filter(x=>x.ch===c.id).forEach(x=>{vals[x.id]={};x.inputs.forEach(i=>vals[x.id][i.k]=i.v);h+=cardHTML(x)});h+='</section>'});
+ h+=`<section class="view" id="v-sheet" hidden><div class="chhead"><span class="num">FORMULA SHEET</span><h2>한 장 공식집</h2></div><div class="sheet">${CH.filter(c=>c.fx).map(c=>`<div class="pane"><h3>${c.tab} <small>${esc(c.title)}</small></h3><div class="fx">${c.fx.map(f=>`<div><span>${f[0]}</span><code>${esc(f[1])}</code></div>`).join('')}</div></div>`).join('')}</div></section>`;
+ main.innerHTML=h;
+ $('#scope').innerHTML=CH.filter(c=>c.num).map(c=>{const ps=c.id==='ch1'?CH1QA.map(q=>q[0]):CALCS.filter(x=>x.ch===c.id).map(x=>x.ref);return `<div><b>${c.tab}</b> ${esc(c.title)} — ${ps.join(', ')}</div>`}).join('');
+ CALCS.forEach(c=>{wireCard(c);update(c)});taWire();tvmWire();earWire();cfWire();
+ const nav=$('nav.tabs .wrap');nav.innerHTML=CH.map(c=>`<button role="tab" data-v="${c.id}" aria-selected="false">${c.tab}<span class="ct"></span></button>`).join('');
+ nav.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.v,true)});
+ $('#nCalc').textContent=CALCS.length;refreshCounts();const start=(location.hash||'').slice(1);show(CH.some(c=>c.id===start)?start:store.get('cf-tab','home'),false)}
+function show(id,scroll){document.querySelectorAll('section.view').forEach(s=>s.hidden=s.id!=='v-'+id);document.querySelectorAll('nav.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===id));store.set('cf-tab',id);if(scroll)window.scrollTo({top:0})}
+function refreshCounts(){document.querySelectorAll('nav.tabs button').forEach(b=>{const xs=CALCS.filter(x=>x.ch===b.dataset.v);if(xs.length)$('.ct',b).textContent=xs.filter(x=>solved.has(x.id)).length+'/'+xs.length});
+ const t=$('#solvedTotal');if(t)t.textContent=`${[...solved].filter(id=>CALCS.some(c=>c.id===id)).length} / ${CALCS.length}`}
+build();
+</script>
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
+</body></html>
