@@ -190,6 +190,54 @@ section.view{display:grid;gap:22px}
 .copied{font-size:12px;color:var(--good)}
 @media (prefers-reduced-motion:no-preference){.lcd .row span:last-child{transition:color .2s,text-shadow .2s}}
 
+/* calculator dock */
+.dk-fab{position:fixed;z-index:30;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));display:flex;align-items:center;gap:9px;border:0;cursor:pointer;background:var(--gold);color:var(--goldink);font:700 14px var(--f-body);padding:12px 16px 12px 13px;border-radius:999px;box-shadow:0 10px 26px rgba(0,0,0,.28),inset 0 -2px 0 rgba(0,0,0,.2)}
+.dk-fab:hover{filter:brightness(1.06)}
+.dk-fab-ic{display:grid;grid-template-columns:repeat(3,5px);gap:2px}.dk-fab-ic i{width:5px;height:5px;border-radius:1.5px;background:var(--goldink)}
+body.dk-open .dk-fab{display:none}
+.dock{position:fixed;z-index:31;top:0;right:0;bottom:0;width:380px;max-width:100%;background:var(--body);color:var(--keyink);display:flex;flex-direction:column;box-shadow:-12px 0 32px rgba(0,0,0,.3);padding:calc(12px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) 14px;overflow-y:auto}
+@media (min-width:1180px){body.dk-open main,body.dk-open .top,body.dk-open nav.tabs{margin-right:380px}}
+@media (max-width:620px){.dock{top:auto;left:0;width:auto;height:auto;max-height:86vh;border-radius:16px 16px 0 0;padding-left:calc(12px + env(safe-area-inset-left,0px));padding-right:calc(12px + env(safe-area-inset-right,0px))}}
+.dk-head{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.dk-tabs{display:flex;gap:4px;flex:1;background:var(--body2);padding:3px;border-radius:8px}
+.dk-tabs button{flex:1;border:0;background:transparent;color:var(--keylab);font:600 12.5px var(--f-body);padding:8px 4px;border-radius:6px;cursor:pointer;white-space:nowrap}
+.dk-tabs button[aria-selected="true"]{background:var(--gold);color:var(--goldink)}
+.dk-x{border:0;background:var(--key);color:var(--keyink);width:34px;height:34px;border-radius:8px;cursor:pointer;font-size:15px}
+.dk-pane{display:grid;gap:10px;align-content:start}
+.dk-lcd{background:var(--lcd);color:var(--lcdink);border-radius:8px;padding:10px 12px;box-shadow:inset 0 2px 8px rgba(0,0,0,.35);font-family:var(--f-lcd);display:grid;gap:2px;min-width:0}
+.dk-hist{font-size:11.5px;color:var(--lcddim);display:grid;gap:1px;min-height:0}.dk-hist div{cursor:pointer;text-align:right;overflow-wrap:anywhere}.dk-hist b{color:var(--lcdink);font-weight:400}
+.dk-expr{font:15px var(--f-lcd);color:var(--lcdink);text-align:right;background:rgba(255,255,255,.28);border:0;border-radius:5px;padding:6px 8px;width:100%;min-width:0}
+.dk-expr::placeholder{color:var(--lcddim)}
+.dk-expr:focus{outline:2px solid var(--lcddim)}
+.dk-lab{font-size:13px;color:var(--lcddim);text-align:right;overflow-wrap:anywhere}
+.dk-reg input.auto{outline:2px dashed var(--gold);outline-offset:-2px}
+.dk-from{background:var(--body2);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:8px 10px;margin-bottom:10px;display:grid;gap:2px}.dk-from b{font-size:12.5px;color:var(--gold)}.dk-from span{font-size:11.5px;color:var(--keylab)}
+.dk-res{font-size:32px;text-align:right;line-height:1.15;overflow-wrap:anywhere}
+.dk-lcd.sm .dk-res{font-size:24px}
+.dk-flags{display:flex;gap:12px;justify-content:flex-end;font-size:11px;color:var(--lcddim);margin-top:2px}.dk-flags b{color:var(--lcdink);font-weight:400}
+.dk-link{cursor:pointer;text-decoration:underline}
+.dk-keys{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px}
+.dk-k{border:0;border-radius:8px;padding:13px 0;font:600 16px var(--f-mono);background:var(--key);color:var(--keyink);cursor:pointer;box-shadow:inset 0 -3px 0 rgba(0,0,0,.35)}
+.dk-k:active{transform:translateY(1px);box-shadow:inset 0 -1px 0 rgba(0,0,0,.35)}
+.dk-k.k-sci{background:var(--body2);font-size:13px;color:var(--keylab)}
+.dk-k.k-fn{background:var(--body2);font-size:14px}
+.dk-k.k-op{background:#4A4F49;color:var(--gold);font-size:18px}
+.dk-k.k-eq{background:var(--gold);color:var(--goldink);font-size:18px}
+.dk-tip{margin:0;font-size:11.5px;color:var(--keylab);line-height:1.5}
+.dk-regs{display:grid;gap:7px}
+.dk-reg{display:grid;grid-template-columns:44px minmax(0,1fr) 60px;gap:7px;align-items:center}
+.dk-reg b{font:700 13px var(--f-mono);color:var(--gold)}
+.dk-reg input,.dk-fld input,.dk-fld textarea{width:100%;min-width:0;font:500 15px var(--f-mono);color:var(--keyink);background:var(--key);border:0;border-radius:6px;padding:9px 10px;text-align:right}
+.dk-fld textarea{text-align:left;resize:vertical;font-size:14px}
+.dk-reg input.hit{background:var(--lcd);color:var(--lcdink)}
+.dk-cpt,.dk-btn{border:0;border-radius:6px;padding:9px 8px;font:700 12px var(--f-mono);cursor:pointer;box-shadow:inset 0 -2px 0 rgba(0,0,0,.3)}
+.dk-cpt{background:var(--gold);color:var(--goldink)}
+.dk-btn{background:var(--body2);color:var(--keyink)}.dk-btn[aria-pressed="true"]{background:var(--gold);color:var(--goldink)}
+.dk-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.dk-note{font-size:11.5px;color:var(--keylab)}
+.dk-fld{display:grid;gap:4px}.dk-fld span{font-size:11.5px;color:var(--keylab)}
+.dk-fld.inl{grid-template-columns:1fr 120px;align-items:center}
+.dk-grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.dk-kv{display:flex;justify-content:space-between;gap:10px;align-items:baseline}.dk-kv span{font-family:var(--f-body);font-size:11.5px;color:var(--lcddim)}.dk-kv b{font-weight:400;font-size:15px;text-align:right;overflow-wrap:anywhere}.dk-kv.big b{font-size:20px}
 /* home chapter map */
 .maphead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:6px}
 .maphead h2{font-size:24px;font-weight:750;font-stretch:80%}
@@ -214,13 +262,15 @@ section.view{display:grid;gap:22px}
 .ksteps>li{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;min-width:0;background:var(--card)}
 .ksh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}.ksh b{font-size:14.5px}
 .kout{margin-left:auto;font:600 15px var(--f-lcd);background:var(--lcd);color:var(--lcdink);padding:2px 9px;border-radius:4px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.krow{display:grid;grid-template-columns:78px minmax(0,1fr);gap:8px;align-items:start}
+.krow{display:grid;grid-template-columns:78px minmax(0,1fr) auto;gap:8px;align-items:start}
+.krun{border:0;cursor:pointer;background:var(--gold);color:var(--goldink);font:700 11.5px var(--f-body);padding:6px 10px;border-radius:6px;white-space:nowrap;box-shadow:inset 0 -2px 0 rgba(0,0,0,.2);align-self:center}
+.krun:hover{filter:brightness(1.07)}
 .kl{font:600 11px/2 var(--f-mono);color:var(--ink2);letter-spacing:.03em}
 .kc{font:13.2px/2 var(--f-mono);overflow-wrap:anywhere}
 .kc kbd{margin:0 1px}
 .kwhy{font-size:12.8px;color:var(--ink2);border-left:2px solid var(--gold);padding-left:8px;overflow-wrap:anywhere}
 .card.practice:not(.revealed) .kout{color:transparent;text-shadow:0 0 8px var(--lcddim)}
-@media (max-width:560px){.krow{grid-template-columns:minmax(0,1fr);gap:0}.kout{margin-left:0}}
+@media (max-width:560px){.krow{grid-template-columns:minmax(0,1fr);gap:2px}.krun{justify-self:start;margin-bottom:4px}.kout{margin-left:0}}
 /* TA review */
 kbd{font:600 12px var(--f-mono);background:var(--body);color:var(--keyink);border-radius:4px;padding:1px 6px;box-shadow:inset 0 -2px 0 rgba(0,0,0,.35);white-space:nowrap}
 .tajump{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.tajump a{text-decoration:none}
@@ -636,7 +686,7 @@ answer:`The risk-free rate is ${P(rf)} and the expected market return is ${P(rm)
 /* ===== CALCULATOR SHORTCUTS: step-by-step keystrokes for every problem =====
    step = {t:title, ba:'BA II Plus keys', sci:'scientific keys', out:'display', why:'Korean note'}
    [X] = a key; plain text = number you type */
-const rd=x=>Math.abs(x)>=100?+(+x).toFixed(2):+(+x).toFixed(6);
+const rd=x=>Math.abs(x)>=100?+(+x).toFixed(4):+(+x).toPrecision(8);
 const kn=x=>{x=rd(x);return x<0?`${-x} [+/-]`:`${x}`};
 const kp=x=>String(rd(x));               /* plain number for scientific entry */
 const dv=(x,d=2)=>!isFinite(x)?'Error':(x<0?'-':'')+Math.abs(x).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
@@ -651,7 +701,7 @@ const KEYS={};
 /* CH2 */
 KEYS['p2-17']=v=>{const t=v.t/100,ebit=v.s-v.cogs-v.sga-v.dep,ti=ebit-v.int,tax=Math.max(0,ti*t),ni=ti-tax,ocf=ebit+v.dep-tax,nld=v.int-(ocf-v.dnwc-v.ncs-(v.div-v.neq));
 return[{t:'EBIT',sci:`${kp(v.s)} [−] ${kp(v.cogs)} [−] ${kp(v.sga)} [−] ${kp(v.dep)} [=]`,out:dv(ebit)},
-{t:'과세표준 → 세금 → 순이익',sci:`[Ans] [−] ${kp(v.int)} [=]  →  ${ti>0?`[Ans] [×] ${kp(1-t)} [=]`:'음수이므로 세금 0, 순이익 = 과세표준'}`,out:dv(ni),why:'TI × (1 – T)로 세금과 순이익을 한 번에.'},
+{t:'과세표준 → 세금 → 순이익',sci:`${kp(ebit)} [−] ${kp(v.int)} [=]  →  ${ti>0?`[Ans] [×] ${kp(1-t)} [=]`:'음수이므로 세금 0, 순이익 = 과세표준'}`,out:dv(ni),why:'TI × (1 – T)로 세금과 순이익을 한 번에.'},
 {t:'OCF',sci:`${kp(ebit)} [+] ${kp(v.dep)} [−] ${kp(tax)} [=]`,out:dv(ocf)},
 {t:'지름길: 장기부채 변화 한 줄',sci:`${kp(v.int)} [−] [(] ${kp(ocf)} [−] ${kp(v.dnwc)} [−] ${kp(v.ncs)} [−] ${kp(v.div)} [+] ${kp(v.neq)} [)] [=]`,out:dv(nld),why:'Net new LTD = Interest – (CFA – CF to stockholders).'}]};
 KEYS['p2-19']=v=>{const t=v.t/100,ebit=v.s-v.cogs-v.dep,ti=ebit-v.int,tax=Math.max(0,ti*t),ni=ti-tax,ocf=ebit+v.dep-tax,dn=(v.ca1-v.cl1)-(v.ca0-v.cl0),ncs=v.nfa1-v.nfa0+v.dep,cfa=ocf-dn-ncs,cfc=v.int-v.nd,cfs=cfa-cfc;
@@ -684,13 +734,13 @@ return[{t:'현재 카드: 개월 수',ba:TVM({'I/Y':+(v.a1/12).toFixed(6),PV:v.p
 KEYS['p4-66']=v=>{const c=parseList(v.cf),n=c.length,r1=v.r1/100,r2=v.r2/100,cf=[0,...c],pp=npv(r1,cf),p6=v.pay*pvif(r2,v.age-n),p0=p6*pvif(r1,n);
 return[{t:'지름길: 보험료 PV를 CF 워크시트로',ba:CFK(cf,v.r1),sci:c.map((x,i)=>`${kp(x)} [÷] ${kp(1+r1)} [^] ${i+1} [M+]`).join('  ')+'  [RCL] [M]',out:dv(pp)},
 {t:`받는 돈 → Year ${n} (${pc(v.r2)}, ${v.age-n}년)`,ba:TVM({N:v.age-n,'I/Y':v.r2,PMT:0,FV:v.pay},'PV'),sci:`${kp(v.pay)} [÷] ${kp(1+r2)} [^] ${v.age-n} [=]`,out:dv(-p6)},
-{t:`Year ${n} → 오늘 (${pc(v.r1)})`,ba:`${n} [N]  ${v.r1} [I/Y]  ${kn(p6)} [FV]  [CPT] [PV]`,sci:`[Ans] [÷] ${kp(1+r1)} [^] ${n} [=]`,out:dv(-p0),why:'금리가 바뀌는 시점에서 끊어 두 번 할인.'},
+{t:`Year ${n} → 오늘 (${pc(v.r1)})`,ba:`${n} [N]  ${v.r1} [I/Y]  ${kn(p6)} [FV]  [CPT] [PV]`,sci:`${kp(p6)} [÷] ${kp(1+r1)} [^] ${n} [=]`,out:dv(-p0),why:'금리가 바뀌는 시점에서 끊어 두 번 할인.'},
 {t:'비교',sci:`${kp(pp)} [−] ${kp(p0)} [=]`,out:dv(pp-p0),why:pp>p0?'양수 → 내는 돈 PV가 더 큼 → 사지 않음':'음수 → 받는 돈 PV가 더 큼 → 삼'}]};
 KEYS['p4-68']=v=>{const T=Math.max(v.np,v.st+v.nc),cf=Array(T).fill(0);for(let t=0;t<v.np;t++)cf[t]-=v.p;for(let t=v.st;t<v.st+v.nc;t++)cf[t]+=v.c;const r=irr1(cf);
 return[{t:'지름길: CF 워크시트 + IRR',ba:CFK(cf)+'  [IRR] [CPT]',out:N(r*100,2)+'%',why:'첫 납입이 오늘이므로 CF0부터 음수. 받는 해 사이에 0인 해가 있으면 0도 입력. '+cfSum(cf)}]};
 KEYS['p4-69']=v=>{const k=v.x/v.y,r=Math.pow(1-k,-1/v.n)-1;
 return[{t:'비율',sci:`${kp(v.x)} [÷] ${kp(v.y)} [=]`,out:N(k,6)},
-{t:'1/(1+r)ⁿ',sci:`1 [−] [Ans] [=]`,out:N(1-k,6)},
+{t:'1/(1+r)ⁿ',sci:`1 [−] ${kp(k)} [=]`,out:N(1-k,6)},
 {t:'지름길: TVM으로 r 바로',ba:TVM({N:v.n,PV:-(1-k),PMT:0,FV:1},'I/Y'),sci:`[(] 1 [÷] ${kp(1-k)} [)] [^] [(] 1 [÷] ${v.n} [)] [−] 1 [=]`,out:N(r*100,2)+'%',why:'(1+r)ⁿ = 1/0.5098 → "PV 0.5098이 n년 뒤 1이 되는 이자율"로 보면 TVM 한 번.'}]};
 KEYS['p4-70']=v=>{const j=v.apr/100/v.m,ear=Math.pow(1+j,v.m)-1,Rk=Math.pow(1+j,v.m*v.k)-1,pv=v.c/Rk,a=pv*Math.pow(1+ear,v.k-v.f1),b=pv*Math.pow(1+ear,v.k-v.f2);
 return[{t:'연 실효이자율(EAR)',ba:`[2ND] [ICONV]  ${kp(v.apr)} [ENTER] [↓] [↓] ${v.m} [ENTER] [↑] [CPT]`,sci:`[(] 1 [+] ${kp(v.apr/100)} [÷] ${v.m} [)] [^] ${v.m} [−] 1 [=]`,out:N(ear*100,4)+'%'},
@@ -751,14 +801,14 @@ return[{t:`YTM ${pc(y0)}: 두 채권 가격`,ba:TVM({N:n,'I/Y':+(y0/v.m).toFixed
 {t:`YTM ${pc(yd)}: I/Y만 바꾸기 → 변화율`,ba:`${kp(yd/v.m)} [I/Y]  ${kn(c1)} [PMT]  [CPT] [PV]   →   ${kn(c2)} [PMT]  [CPT] [PV]`,out:dv(-P[2][0])+' / '+dv(-P[2][1])+'  ('+N((P[2][0]/P[0][0]-1)*100,2)+'% / '+N((P[2][1]/P[0][1]-1)*100,2)+'%)'}]};
 KEYS['p8-21']=v=>{const n=v.n*v.m,y=ytm(v.p,v.F,v.c/100,v.n,v.m);
 return[{t:'지름길: TVM으로 기간 이자율',ba:TVM({N:n,PV:-v.p,PMT:+(v.F*v.c/100/v.m).toFixed(6),FV:v.F},'I/Y'),out:N(y/v.m*100,4)+'%'},
-{t:'연 YTM = 쿠폰율',sci:`[Ans] [×] ${v.m} [=]`,out:N(y*100,2)+'%'}]};
+{t:'연 YTM = 쿠폰율',sci:`${kp(y/v.m*100)} [×] ${v.m} [=]`,out:N(y*100,2)+'%'}]};
 KEYS['p8-29']=v=>{const y=v.y/100,f=c=>[bondP(1000,c/100,v.n,y,1),bondP(1000,c/100,v.n-1,y,1)];const A=f(v.cp),B=f(v.cd);
 const blk=(X,c,nm)=>[{t:`Bond ${nm}: P0 → P1 (N만 바꾸기)`,ba:TVM({N:v.n,'I/Y':v.y,PMT:c*10,FV:1000},'PV')+`   →   ${v.n-1} [N]  [CPT] [PV]`,out:dv(-X[0])+' → '+dv(-X[1])},
 {t:`Bond ${nm}: 현재수익률 / 자본이득률`,sci:`${c*10} [÷] ${kp(X[0].toFixed(2))} [=]    [(] ${kp(X[1].toFixed(2))} [−] ${kp(X[0].toFixed(2))} [)] [÷] ${kp(X[0].toFixed(2))} [=]`,out:N(c*10/X[0]*100,2)+'% / '+N((X[1]/X[0]-1)*100,2)+'%',why:'두 수익률의 합 = YTM으로 검산.'}];
 return[...blk(A,v.cp,'P'),...blk(B,v.cd,'D')]};
 KEYS['p8-30']=v=>{const y=ytm(v.p,1000,v.c/100,v.n,1),y2=y+v.dy/100,p2=bondP(1000,v.c/100,v.n-v.h,y2,1),cf=[-v.p];for(let t=1;t<=v.h;t++)cf.push(v.c*10+(t===v.h?p2:0));
 return[{t:'YTM (기대수익률)',ba:TVM({N:v.n,PV:-v.p,PMT:v.c*10,FV:1000},'I/Y'),out:N(y*100,4)+'%'},
-{t:`${v.h}년 뒤 매도가격 (I/Y ${v.dy<0?'–':'+'} ${Math.abs(v.dy)}, N = ${v.n-v.h})`,ba:`[−] ${Math.abs(v.dy)} [=] [I/Y]  ${v.n-v.h} [N]  [CPT] [PV]`,out:dv(-p2),why:'YTM 결과가 화면에 남아 있을 때 바로 1을 빼서 I/Y에 저장.'},
+{t:`${v.h}년 뒤 매도가격 (I/Y ${v.dy<0?'–':'+'} ${Math.abs(v.dy)}, N = ${v.n-v.h})`,ba:`${kp(y2*100)} [I/Y]  ${v.n-v.h} [N]  [CPT] [PV]`,out:dv(-p2),why:'1단계 YTM에서 금리 변화를 더하거나 빼서 I/Y에 넣고, 남은 기간으로 N만 바꿉니다. (계산기에 YTM이 남아 있으면 [−] 1 [=] [I/Y]로 바로 저장)'},
 {t:'지름길: HPY는 TVM 한 번',ba:`${v.h} [N]  ${kn(v.p)} [PV]  ${kn(v.c*10)} [PMT]  ${kn(+p2.toFixed(2))} [FV]  [CPT] [I/Y]`,out:N(irr1(cf)*100,2)+'%',why:'산 가격 = PV, 매년 쿠폰 = PMT, 판 가격 = FV.'}]};
 KEYS['p8-31']=v=>{const i=v.r/2,T=2*(v.z+v.y1+v.y2),cf=Array(T+1).fill(0);for(let t=2*v.z+1;t<=2*(v.z+v.y1);t++)cf[t]=v.k1;for(let t=2*(v.z+v.y1)+1;t<=T;t++)cf[t]=v.k2;cf[T]+=v.F;
 return[{t:'지름길: Bond M을 CF 워크시트로 (반기 단위)',ba:CFK(cf,i),out:dv(npv(i/100,cf)),why:'0인 기간도 F로 묶어 입력, 마지막 기간 = 쿠폰 + 액면. '+cfSum(cf)},
@@ -767,11 +817,11 @@ return[{t:'지름길: Bond M을 CF 워크시트로 (반기 단위)',ba:CFK(cf,i)
 /* CH9 */
 function dgKeys(v){const R=v.r/100,g=v.g/100,gs=parseList(v.gs).map(x=>x/100);let d=v.d0;const ds=gs.map(x=>d*=1+x);const n=gs.length,pn=d*(1+g)/(R-g),cf=[0,...ds];cf[n]+=pn;
 return[{t:'배당을 Ans로 이어서 계산',sci:`${kp(v.d0)} `+gs.map(x=>`[×] ${kp(1+x)} [=]`).join(' ')+`  →  [×] ${kp(1+g)} [=]`,out:ds.map(x=>N(x,4)).join(' → ')+' → D'+(n+1)+' '+N(d*(1+g),4),why:'곱한 결과가 화면에 남으니 다음 성장률만 계속 곱하면 됩니다.'},
-{t:`P${n} = D${n+1}/(R – g)`,sci:`[Ans] [÷] ${kp(R-g)} [=]`,out:N(pn,4)},
+{t:`P${n} = D${n+1}/(R – g)`,sci:`${kp(d*(1+g))} [÷] ${kp(R-g)} [=]`,out:N(pn,4)},
 {t:`지름길: CF 워크시트 (C0${n} = D${n} + P${n})`,ba:CFK(cf,v.r),out:dv(npv(R,cf)),why:'같은 시점의 배당과 주가를 더해서 한 칸에 입력. '+cfSum(cf)}]}
 KEYS['p9-15']=dgKeys;KEYS['p9-31']=dgKeys;
 KEYS['p9-18']=v=>[{t:'한 줄로 D0',sci:`${kp(v.p)} [×] [(] ${kp(v.r/100)} [−] ${kp(v.g/100)} [)] [÷] ${kp(1+v.g/100)} [=]`,out:N(v.p*(v.r-v.g)/100/(1+v.g/100),4)}];
-KEYS['p9-19']=v=>{const R=v.r/100,pk=v.d/R;return[{t:`P${v.s-1} = D/R`,sci:`${kp(v.d)} [÷] ${kp(R)} [=]`,out:N(pk,4)},{t:'오늘로 할인',ba:`${v.s-1} [N]  ${v.r} [I/Y]  0 [PMT]  ${kn(+pk.toFixed(4))} [FV]  [CPT] [PV]`,sci:`[Ans] [÷] ${kp(1+R)} [^] ${v.s-1} [=]`,out:dv(pk*pvif(R,v.s-1)),why:`첫 배당이 ${v.s}년 후 → 영구연금 공식은 ${v.s-1}년 시점 가치.`}]};
+KEYS['p9-19']=v=>{const R=v.r/100,pk=v.d/R;return[{t:`P${v.s-1} = D/R`,sci:`${kp(v.d)} [÷] ${kp(R)} [=]`,out:N(pk,4)},{t:'오늘로 할인',ba:`${v.s-1} [N]  ${v.r} [I/Y]  0 [PMT]  ${kn(+pk.toFixed(4))} [FV]  [CPT] [PV]`,sci:`${kp(pk)} [÷] ${kp(1+R)} [^] ${v.s-1} [=]`,out:dv(pk*pvif(R,v.s-1)),why:`첫 배당이 ${v.s}년 후 → 영구연금 공식은 ${v.s-1}년 시점 가치.`}]};
 KEYS['p9-25']=v=>{const R=v.r/100;return[{t:'지름길: PE = (E + 추가이익)/R ÷ E',sci:`1 [÷] ${kp(R)} [=]    [(] ${kp(v.e)} [+] ${kp(v.a)} [)] [÷] ${kp(R)} [÷] ${kp(v.e)} [=]    [(] ${kp(v.e)} [+] ${kp(v.b)} [)] [÷] ${kp(R)} [÷] ${kp(v.e)} [=]`,out:N(1/R,2)+' / '+N((v.e+v.a)/R/v.e,2)+' / '+N((v.e+v.b)/R/v.e,2),why:'성장이 없으면 PE = 1/R.'}]};
 
 /* CH11 */
@@ -780,7 +830,7 @@ return[{t:'CAPM 요구수익률 (Y / Z)',sci:`${kp(v.rf/100)} [+] ${kp(v.mrp/100
 {t:'Reward-to-risk (Y / Z)',sci:`[(] ${kp(v.ey/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.by)} [=]    [(] ${kp(v.ez/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.bz)} [=]`,out:N(Y[1],4)+' / '+N(Z[1],4),why:'시장 = MRP = '+kp(v.mrp/100)+'와 비교.'}]};
 KEYS['p11-24']=v=>{const t=v.tg/100,x=v.ex/100,y=v.ey/100,wx=(t-y)/(x-y),wy=1-wx;
 return[{t:'X 비중',sci:`[(] ${kp(t)} [−] ${kp(y)} [)] [÷] [(] ${kp(x)} [−] ${kp(y)} [)] [=]`,out:N(wx,5)},
-{t:'Y 투자금액',sci:`[(] 1 [−] [Ans] [)] [×] ${kp(v.w)} [=]`,out:dv(wy*v.w)},
+{t:'Y 투자금액',sci:`[(] 1 [−] ${kp(wx)} [)] [×] ${kp(v.w)} [=]`,out:dv(wy*v.w)},
 {t:'포트폴리오 베타',sci:`${kp(+wx.toFixed(6))} [×] ${kp(v.bx)} [+] ${kp(+wy.toFixed(6))} [×] ${kp(v.by)} [=]`,out:N(wx*v.bx+wy*v.by,4)}]};
 function statKeys(v,beta){const s=statsCalc(v.p,v.a,v.b),eq=s.p.every(x=>Math.abs(x-s.p[0])<1e-9),fr=s.p.map(x=>Math.round(x*100));
 const one=(R,nm,E,S)=>({t:`${nm}: STAT으로 E(R)과 σ`,ba:eq?`[2ND] [DATA] [2ND] [CLR WORK]  `+R.map((r,i)=>`${kn(r)} [ENTER] [↓] [↓]`).join(' ')+`  [2ND] [STAT] (1-V) [↓] [↓] x̄  [↓] [↓] σx`:`[2ND] [DATA] [2ND] [CLR WORK]  `+R.map((r,i)=>`${kn(r)} [ENTER] [↓] ${fr[i]} [ENTER] [↓]`).join(' ')+`  [2ND] [STAT] (1-V) [↓] [↓] x̄  [↓] [↓] σx`,out:N(E*100,2)+'% / '+N(S*100,2)+'%',why:eq?'확률이 같으면 수익률만 입력 → x̄ = E(R), σx(모표준편차) = σ.':'확률 × 100을 빈도(Y01…)로 입력 → x̄ = E(R), σx = σ. (공학용: STAT 모드 Frequency ON)'});
@@ -792,8 +842,8 @@ KEYS['p11-25']=v=>statKeys(v,false);KEYS['p11-33']=v=>statKeys(v,true);
 KEYS['p11-30']=v=>{const s=(v.em-v.rf)/v.sm;return[{t:'CML 기울기',sci:`[(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.sm/100)} [=] [STO] A`,out:N(s,5)},{t:'(a) 기대수익률 / (b) 표준편차',sci:`${kp(v.rf/100)} [+] [RCL] A [×] ${kp(v.sp/100)} [=]    [(] ${kp(v.ep/100)} [−] ${kp(v.rf/100)} [)] [÷] [RCL] A [=]`,out:N((v.rf/100+s*v.sp/100)*100,2)+'% / '+N((v.ep-v.rf)/100/s*100,2)+'%'}]};
 KEYS['p11-31']=v=>{const s=(v.ep-v.rf)/v.sp,sm=(v.em-v.rf)/s/100,b=v.rho*v.si/100/sm;
 return[{t:'지름길: CML 기울기 → σM',sci:`[(] ${kp(v.ep/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.sp/100)} [=] [STO] A    [(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [÷] [RCL] A [=]`,out:N(s,5)+' → '+N(sm,6),why:'TA 방식(비중 w)과 같은 값이 두 줄로 나옵니다.'},
-{t:'β = ρ × σA ÷ σM',sci:`${kp(v.rho)} [×] ${kp(v.si/100)} [÷] [Ans] [=]`,out:N(b,4)},
-{t:'CAPM',sci:`${kp(v.rf/100)} [+] [Ans] [×] [(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [=]`,out:N((v.rf/100+b*(v.em-v.rf)/100)*100,2)+'%'}]};
+{t:'β = ρ × σA ÷ σM',sci:`${kp(v.rho)} [×] ${kp(v.si/100)} [÷] ${kp(sm)} [=]`,out:N(b,4)},
+{t:'CAPM',sci:`${kp(v.rf/100)} [+] ${kp(b)} [×] [(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [=]`,out:N((v.rf/100+b*(v.em-v.rf)/100)*100,2)+'%'}]};
 KEYS['p11-34']=v=>{const e1=v.e1/100,e2=v.e2/100,rf=(v.b1*e2-v.b2*e1)/(v.b1-v.b2);
 return[{t:'지름길: Rf 한 줄',sci:`[(] ${kp(v.b1)} [×] ${kp(e2)} [−] ${kp(v.b2)} [×] ${kp(e1)} [)] [÷] [(] ${kp(v.b1)} [−] ${kp(v.b2)} [)] [=] [STO] A`,out:N(rf*100,2)+'%',why:'두 증권의 reward-to-risk가 같다는 식을 정리한 결과.'},
 {t:'시장 기대수익률',sci:`[RCL] A [+] [(] ${kp(e1)} [−] [RCL] A [)] [÷] ${kp(v.b1)} [=]`,out:N((rf+(e1-rf)/v.b1)*100,2)+'%'}]};
@@ -1009,6 +1059,156 @@ function taHTML(){return `<section class="view" id="v-ta" hidden><div class="chh
   <div class="tatips"><b>실수 포인트</b><ul>${p.tips.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div></article>`).join('')}</section>`}
 function taWire(){document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const c=CALCS.find(x=>x.id===b.dataset.go);if(!c)return;show(c.ch,false);const el=document.getElementById('card-'+c.id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'})});
  document.querySelectorAll('.tajump a').forEach(a=>a.onclick=e=>{e.preventDefault();const el=document.getElementById(a.getAttribute('href').slice(1));if(el)el.scrollIntoView({behavior:'smooth',block:'start'})})}
+/* ===== CALCULATOR DOCK: basic + financial, available on every tab ===== */
+const DK={ans:0,mem:0,A:0,expr:'',hist:[],mode:'basic',bgn:false};
+/* safe expression parser (no eval) */
+function calcEval(src){const s=String(src).replace(/×|x(?=[\d(.])/g,'*').replace(/÷/g,'/').replace(/[−–]/g,'-').replace(/\*\*/g,'^').replace(/,/g,'').replace(/\s+/g,'');let i=0;
+ const eat=c=>{if(s.startsWith(c,i)){i+=c.length;return true}return false};
+ function expr(){let v=term();for(;;){if(eat('+'))v+=term();else if(s[i]==='-'){i++;v-=term()}else return v}}
+ function term(){let v=fac();for(;;){if(eat('*'))v*=fac();else if(eat('/'))v/=fac();else return v}}
+ function fac(){let b=un();if(eat('^'))return Math.pow(b,fac());return b}
+ function un(){if(eat('-'))return -un();if(eat('+'))return un();
+  for(const [n,f] of [['√',Math.sqrt],['ln',Math.log],['log',Math.log10]]){if(s.startsWith(n,i)&&!s.startsWith(n+'(',i)){i+=n.length;return f(un())}}
+  return post()}
+ function post(){let v=prim();for(;;){if(eat('%'))v/=100;else if(eat('²'))v*=v;else return v}}
+ function prim(){if(eat('(')){const v=expr();eat(')');return v}
+  for(const [n,f] of [['√(',Math.sqrt],['ln(',Math.log],['e^(',Math.exp],['log(',Math.log10],['exp(',Math.exp]]){if(eat(n)){const v=expr();eat(')');return f(v)}}
+  if(eat('Ans'))return DK.ans;if(eat('M'))return DK.mem;if(eat('A'))return DK.A;if(eat('π'))return Math.PI;
+  const m=/^\d*\.?\d+(e[-+]?\d+)?/i.exec(s.slice(i));if(m){i+=m[0].length;return parseFloat(m[0])}
+  throw new Error('syntax')}
+ if(!s)throw new Error('empty');const v=expr();if(i<s.length)throw new Error('syntax');return v}
+const fmtNum=x=>!isFinite(x)?'Error':Math.abs(x)>=1e12||(Math.abs(x)<1e-6&&x!==0)?x.toExponential(6):(+x.toPrecision(12)).toLocaleString('en-US',{maximumFractionDigits:8});
+
+/* TVM solver: 0 = PV(1+r)^N + PMT(1+r·bgn)·FVIFA + FV */
+function tvmSolve(R,k,bgn){const n=+R.N||0,r=(+R.IY||0)/100,pv=+R.PV||0,pmt=+R.PMT||0,fv=+R.FV||0,a=1+r*(bgn?1:0);
+ if(k==='FV')return -(pv*Math.pow(1+r,n)+pmt*a*fvifa(r,n));
+ if(k==='PV')return -(fv+pmt*a*fvifa(r,n))*pvif(r,n);
+ if(k==='PMT')return -(pv*Math.pow(1+r,n)+fv)/(a*fvifa(r,n));
+ if(k==='N'){if(Math.abs(r)<1e-12)return -(pv+fv)/pmt;const A=pmt*a/r;return Math.log((A-fv)/(pv+A))/Math.log(1+r)}
+ if(k==='IY'){const f=rr=>pv*Math.pow(1+rr,n)+pmt*(1+rr*(bgn?1:0))*fvifa(rr,n)+fv;const rs=roots(f,-0.99,2,0.0005);return rs.length?(rs.find(x=>x>0)??rs[0])*100:NaN}}
+
+/* run a keystroke string from the shortcut cards (BA II Plus or scientific) */
+const REGK={'[N]':'N','[I/Y]':'IY','[PV]':'PV','[PMT]':'PMT','[FV]':'FV'};
+function runKeys(str){const toks=String(str).match(/\[[^\]]+\]|[^\s\[\]]+/g)||[];
+ if(toks.includes('[CF]'))return runCF(toks);
+ if(toks.some(t=>['[ICONV]','[DATA]','[STAT]','[AMORT]','[Δ%]'].includes(t)))return null;
+ const save={ans:DK.ans,mem:DK.mem,A:DK.A};let expr='',used='basic';const R=DK.curRegs?DK.curRegs():{N:'',IY:'',PV:'',PMT:'',FV:''},res=[];let ok=true;
+ const isNum=t=>/^-?\d*\.?\d+$/.test(t);
+ const evalNow=()=>{if(!expr)return null;const v=calcEval(expr);res.push({e:expr,v});DK.ans=v;expr='';return v};
+ try{for(let i=0;i<toks.length;i++){const t=toks[i],nx=toks[i+1],nx2=toks[i+2];
+  if(isNum(t)){if(REGK[nx]){R[REGK[nx]]=+t;used='tvm';i++;continue}
+   if(nx==='[+/-]'&&REGK[nx2]){R[REGK[nx2]]=-t;used='tvm';i+=2;continue}
+   expr+=t;continue}
+  switch(t){case '[2ND]':if(nx==='[CLR TVM]'){Object.keys(R).forEach(k=>R[k]=0);used='tvm';i++}break;
+   case '[CPT]':{const k=REGK[nx];if(!k){ok=false;break}const v=tvmSolve(R,k,false);R[k]=+v.toFixed(8);res.push({e:'CPT '+(k==='IY'?'I/Y':k),v,tvm:k});DK.ans=v;used='tvm';i++;break}
+   case '[+/-]':expr=expr?'-('+expr+')':'-Ans';break;
+   case '[+]':expr=(expr||'Ans')+'+';break;case '[−]':expr=(expr||'Ans')+'-';break;case '[×]':expr=(expr||'Ans')+'*';break;case '[÷]':expr=(expr||'Ans')+'/';break;case '[^]':expr=(expr||'Ans')+'^';break;
+   case '[(]':expr+='(';break;case '[)]':expr+=')';break;case '[(-)]':expr+='-';break;case '[Ans]':expr+='Ans';break;case '[ln]':expr+='ln';break;
+   case '[=]':evalNow();break;
+   case '[M+]':{const v=expr?evalNow():DK.ans;DK.mem+=v;break}
+   case '[RCL]':if(nx==='[M]'){expr+='M';i++}else if(nx==='A'){expr+='A';i++}break;
+   case '[STO]':if(nx==='A'){if(expr)evalNow();DK.A=DK.ans;i++}break;
+   case '→':break;
+   default:if(/[가-힣]/.test(t)||/^[a-z=]/i.test(t))ok=false}
+  if(!ok)break}
+  if(ok&&expr)evalNow()}catch(e){ok=false}
+ if(!ok||!res.length||res.some(r=>!isFinite(r.v))){Object.assign(DK,save);return null}
+ return {mode:used,res,R,last:res[res.length-1]}}
+function runCF(toks){const vals=[];let i=toks.indexOf('[CLR WORK]')+1,I;const num=()=>{let v=+toks[i++];if(toks[i]==='[+/-]'){v=-v;i++}return v};
+ try{const c0=num();if(toks[i++]!=='[ENTER]')return null;const flows=[c0];
+  while(i<toks.length&&toks[i]==='[↓]'){i++;const v=num();i++;i++;let f=1;if(/^\d+$/.test(toks[i]||'')&&toks[i+1]==='[ENTER]'){f=+toks[i];i+=2}for(let j=0;j<f;j++)flows.push(v)}
+  const ni=toks.indexOf('[NPV]');if(ni>=0)I=+toks[ni+1];return {mode:'cf',cf:flows,I,irr:toks.includes('[IRR]')}}catch(e){return null}}
+
+function dockHTML(){const K=[['AC','k-fn'],['⌫','k-fn'],['(','k-fn'],[')','k-fn'],['÷','k-op'],
+ ['x²','k-sci'],['√','k-sci'],['xʸ','k-sci'],['1/x','k-sci'],['×','k-op'],
+ ['7',''],['8',''],['9',''],['ln','k-sci'],['−','k-op'],
+ ['4',''],['5',''],['6',''],['eˣ','k-sci'],['+','k-op'],
+ ['1',''],['2',''],['3',''],['%','k-sci'],['=','k-eq'],
+ ['0',''],['.',''],['±','k-fn'],['Ans','k-sci'],['M+','k-sci']];
+return `<button id="dkFab" class="dk-fab" aria-label="계산기 열기" aria-expanded="false"><span class="dk-fab-ic" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></span><b>계산기</b></button>
+<aside id="dock" class="dock" hidden aria-label="계산기"><div class="dk-head"><div class="dk-tabs" role="tablist">${[['basic','기본'],['tvm','TVM'],['cf','CF · NPV'],['conv','이자율']].map(([k,l])=>`<button role="tab" data-dm="${k}">${l}</button>`).join('')}</div><button class="dk-x" id="dkClose" aria-label="닫기">✕</button></div>
+<div class="dk-from" id="dkFrom" hidden></div>
+<section class="dk-pane" data-pane="basic">
+ <div class="dk-lcd"><div class="dk-hist" id="dkHist"></div><input class="dk-expr" id="dkExpr" placeholder="식을 바로 입력: 300000/1.07^59" autocomplete="off" spellcheck="false" inputmode="text"><div class="dk-res" id="dkRes">0</div><div class="dk-flags"><span>Ans <b id="dkAns">0</b></span><span>M <b id="dkMem">0</b></span><span>A <b id="dkA">0</b></span><span id="dkMc" class="dk-link">MC</span></div></div>
+ <div class="dk-keys">${K.map(([k,c])=>`<button class="dk-k ${c}" data-k="${k}">${k}</button>`).join('')}</div>
+ <p class="dk-tip">입력하는 즉시 결과가 보입니다. Enter = 확정(Ans에 저장) · x 또는 * = 곱하기 · ^ = 거듭제곱 · 위 기록을 누르면 그 값이 식에 들어갑니다.</p>
+</section>
+<section class="dk-pane" data-pane="tvm" hidden>
+ <div class="dk-regs">${[['N','기간 수'],['IY','기간 이자율 %'],['PV','현재가치'],['PMT','매기 지급액'],['FV','미래가치']].map(([k,l])=>`<label class="dk-reg"><b>${k==='IY'?'I/Y':k}</b><input id="dk-${k}" inputmode="decimal" placeholder="${l}" autocomplete="off"><button class="dk-cpt" data-dcpt="${k}">CPT</button></label>`).join('')}</div>
+ <div class="dk-row"><button class="dk-btn" id="dkBgn" aria-pressed="false">END</button><button class="dk-btn" id="dkTvmClr">CLR TVM</button><span class="dk-note">4칸만 채우면 빈칸 자동 계산 · 내는 돈 –, 받는 돈 +</span></div>
+ <div class="dk-lcd sm"><div class="dk-lab" id="dkTvmLab">5칸 중 4칸을 채우세요</div><div class="dk-res" id="dkTvmOut">—</div></div>
+ <p class="dk-tip">월복리: I/Y = 연이율 ÷ 12, N = 개월 수 · 반기 채권: I/Y ÷ 2, N × 2, PMT = 쿠폰 ÷ 2 · 결과는 기본 계산기의 Ans로 넘어갑니다.</p>
+</section>
+<section class="dk-pane" data-pane="cf" hidden>
+ <label class="dk-fld"><span>현금흐름 CF0, CF1, … (쉼표로 구분, 3x500 = 500을 3번)</span><textarea id="dkCf" rows="3">-1500000, 900000, 700000, 725000</textarea></label>
+ <label class="dk-fld inl"><span>할인율 I %</span><input id="dkCfI" value="8" inputmode="decimal"></label>
+ <div class="dk-lcd sm" id="dkCfOut"></div>
+ <p class="dk-tip">입력하는 즉시 NPV·IRR이 다시 계산됩니다. IRR이 여러 개면 모두 표시합니다.</p>
+</section>
+<section class="dk-pane" data-pane="conv" hidden>
+ <div class="dk-grid2"><label class="dk-fld"><span>APR (명목 연이율) %</span><input id="dkApr" value="9" inputmode="decimal"></label><label class="dk-fld"><span>연 복리 횟수 m (0 = 연속)</span><input id="dkM" value="365" inputmode="decimal"></label>
+ <label class="dk-fld"><span>EAR (실효 연이율) %</span><input id="dkEar" inputmode="decimal" placeholder="입력하면 APR 역산"></label><label class="dk-fld"><span>기간 k년 실효이자율</span><input id="dkK" value="2" inputmode="decimal"></label></div>
+ <div class="dk-lcd sm" id="dkConvOut"></div>
+</section></aside>`}
+
+function dockWire(){const dock=$('#dock'),fab=$('#dkFab'),exprIn=$('#dkExpr');
+ const open=o=>{dock.hidden=!o;fab.setAttribute('aria-expanded',o);document.body.classList.toggle('dk-open',o);store.set('dk-open',o)};
+ fab.onclick=()=>open(dock.hidden);$('#dkClose').onclick=()=>open(false);
+ const setMode=m=>{DK.mode=m;dock.querySelectorAll('[data-dm]').forEach(b=>b.setAttribute('aria-selected',b.dataset.dm===m));dock.querySelectorAll('.dk-pane').forEach(p=>p.hidden=p.dataset.pane!==m);store.set('dk-mode',m)};
+ dock.querySelectorAll('[data-dm]').forEach(b=>b.onclick=()=>{$('#dkFrom').hidden=true;setMode(b.dataset.dm)});
+ /* basic */
+ const draw=(res)=>{if(exprIn.value!==DK.expr)exprIn.value=DK.expr;if(res!==undefined)$('#dkRes').textContent=res;$('#dkAns').textContent=fmtNum(DK.ans);$('#dkMem').textContent=fmtNum(DK.mem);$('#dkA').textContent=fmtNum(DK.A);$('#dkHist').innerHTML=DK.hist.slice(-4).map(h=>`<div data-h="${h.v}">${esc(h.e)} = <b>${esc(fmtNum(h.v))}</b></div>`).join('')};
+ const live=()=>{let p='';try{if(DK.expr&&!/[+\-−×÷*/^(]$/.test(DK.expr))p=fmtNum(calcEval(DK.expr))}catch(e){}draw(p||(DK.expr?'…':'0'))};
+ let justEq=false;
+ const commit=()=>{if(!DK.expr)return;try{const v=calcEval(DK.expr);DK.hist.push({e:DK.expr,v});DK.ans=v;DK.expr='';draw(fmtNum(v));justEq=true}catch(e){draw('식을 확인하세요')}};
+ const press=k=>{const ops=['+','−','×','÷','^'];
+  if(justEq&&!ops.includes(k)&&!['=','⌫','AC','M+','x²','1/x','%','±','xʸ'].includes(k))DK.expr='';
+  if(justEq&&(ops.includes(k)||['x²','1/x','%','xʸ'].includes(k))&&!DK.expr)DK.expr='Ans';
+  justEq=false;
+  switch(k){case 'AC':DK.expr='';draw('0');return;case '⌫':DK.expr=DK.expr.replace(/(Ans|√\(|ln\(|e\^\(|.)$/,'');break;
+  case '=':commit();return;
+  case 'xʸ':DK.expr+='^';break;case 'x²':DK.expr+='²';break;case '√':DK.expr+='√(';break;case 'ln':DK.expr+='ln(';break;case 'eˣ':DK.expr+='e^(';break;
+  case '1/x':DK.expr='1÷('+(DK.expr||'Ans')+')';break;case '±':DK.expr=DK.expr.startsWith('−(')&&DK.expr.endsWith(')')?DK.expr.slice(2,-1):'−('+(DK.expr||'Ans')+')';break;
+  case 'M+':{try{DK.mem+=DK.expr?calcEval(DK.expr):DK.ans}catch(e){}draw();return}
+  default:DK.expr+=k}
+  live()};
+ dock.querySelectorAll('.dk-k').forEach(b=>b.onclick=()=>press(b.dataset.k));
+ exprIn.addEventListener('input',()=>{DK.expr=exprIn.value;justEq=false;live()});
+ exprIn.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();commit()}if(e.key==='Escape'){DK.expr='';draw('0')}});
+ $('#dkMc').onclick=()=>{DK.mem=0;draw()};
+ $('#dkHist').onclick=e=>{const d=e.target.closest('[data-h]');if(d){DK.expr+=String(+(+d.dataset.h).toPrecision(12));justEq=false;live()}};
+ document.addEventListener('keydown',e=>{if(dock.hidden||DK.mode!=='basic')return;const t=e.target;if(t.matches('input,textarea,select'))return;const map={'*':'×','/':'÷','-':'−','Enter':'=','=':'=','Backspace':'⌫','Escape':'AC'};const k=map[e.key]||(/^[0-9.+()^%]$/.test(e.key)?e.key:null);if(k){e.preventDefault();press(k)}});
+ /* TVM */
+ const KS=['N','IY','PV','PMT','FV'],b=$('#dkBgn');
+ const regs=()=>{const R={};KS.forEach(k=>{const v=$('#dk-'+k).value.trim();R[k]=v===''?null:parseNum(v)});return R};
+ const showT=(k,v)=>{const ok=isFinite(v);$('#dkTvmLab').textContent=(k==='IY'?'I/Y':k)+(DK.bgn?' (BGN)':'')+' =';$('#dkTvmOut').textContent=ok?(k==='IY'?fmtNum(+v.toFixed(6))+'%':fmtNum(+v.toFixed(k==='N'?6:2))):'해 없음 — 부호(+/–) 확인';if(ok){DK.ans=v;draw()}};
+ const autoT=()=>{const R=regs(),empty=KS.filter(k=>R[k]===null);KS.forEach(k=>$('#dk-'+k).classList.remove('auto'));if(empty.length!==1){if(empty.length>1){$('#dkTvmLab').textContent=`${empty.length}칸 비어 있음 — 4칸을 채우세요`;$('#dkTvmOut').textContent='—'}return}const k=empty[0],R2={};KS.forEach(x=>R2[x]=R[x]??0);$('#dk-'+k).classList.add('auto');showT(k,tvmSolve(R2,k,DK.bgn))};
+ b.onclick=()=>{DK.bgn=!DK.bgn;b.textContent=DK.bgn?'BGN':'END';b.setAttribute('aria-pressed',DK.bgn);autoT()};
+ $('#dkTvmClr').onclick=()=>{KS.forEach(k=>$('#dk-'+k).value='');autoT()};
+ KS.forEach(k=>$('#dk-'+k).addEventListener('input',autoT));
+ dock.querySelectorAll('[data-dcpt]').forEach(btn=>btn.onclick=e=>{e.preventDefault();const k=btn.dataset.dcpt,R=regs(),R2={};KS.forEach(x=>R2[x]=x===k?0:(R[x]??0));const v=tvmSolve(R2,k,DK.bgn);const inp=$('#dk-'+k);inp.value=isFinite(v)?+v.toFixed(k==='N'||k==='IY'?6:2):'';showT(k,v);inp.classList.add('hit');setTimeout(()=>inp.classList.remove('hit'),800)});
+ /* CF */
+ const cfu=()=>{const raw=$('#dkCf').value.split(/[;,\n]+/).map(x=>x.trim()).filter(Boolean);const cf=[];raw.forEach(x=>{const m=/^(\d+)\s*[x×*]\s*(.+)$/i.exec(x);if(m){const v=parseNum(m[2]);for(let j=0;j<+m[1];j++)cf.push(v)}else cf.push(parseNum(x))});const r=parseNum($('#dkCfI').value)/100;
+  if(cf.length<2||cf.some(x=>!isFinite(x))){$('#dkCfOut').innerHTML='<div class="dk-lab">CF를 2개 이상 입력하세요</div>';return}
+  const n=npv(r,cf),ir=irrs(cf),inv=cf[0]<0,pb=inv?payback(cf):NaN,dpb=inv?payback(cf,r):NaN,pi=inv?(n-cf[0])/-cf[0]:NaN;
+  $('#dkCfOut').innerHTML=[['NPV',fmtNum(+n.toFixed(2))],['IRR',ir.length?ir.map(x=>fmtNum(+(x*100).toFixed(4))+'%').join(' / '):'없음'],['Payback',inv?(isFinite(pb)?fmtNum(+pb.toFixed(4))+'년':'회수 안 됨'):'—'],['할인 Payback',inv?(isFinite(dpb)?fmtNum(+dpb.toFixed(4))+'년':'회수 안 됨'):'—'],['PI',inv?fmtNum(+pi.toFixed(4)):'—'],['기간 수',String(cf.length-1)]].map((x,i)=>`<div class="dk-kv${i<2?' big':''}"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('');DK.ans=n;draw()};
+ $('#dkCf').addEventListener('input',cfu);$('#dkCfI').addEventListener('input',cfu);
+ /* conversion */
+ const cu=e=>{const m=parseNum($('#dkM').value),k=parseNum($('#dkK').value)||1;let apr=parseNum($('#dkApr').value)/100;
+  if(e&&e.target.id==='dkEar'){const ear=parseNum($('#dkEar').value)/100;if(isFinite(ear)){apr=m>0?m*(Math.pow(1+ear,1/m)-1):Math.log(1+ear);$('#dkApr').value=+(apr*100).toFixed(6)}}
+  const ear=m>0?Math.pow(1+apr/m,m)-1:Math.exp(apr)-1,ek=Math.pow(1+ear,k)-1;if(!e||e.target.id!=='dkEar')$('#dkEar').value=isFinite(ear)?+(ear*100).toFixed(6):'';
+  $('#dkConvOut').innerHTML=[['EAR',fmtNum(+(ear*100).toFixed(6))+'%'],['기간 이자율 APR/m',m>0?fmtNum(+(apr/m*100).toFixed(6))+'%':'연속복리'],[`${k}년 실효이자율`,fmtNum(+(ek*100).toFixed(6))+'%'],['월 실효이자율',fmtNum(+((Math.pow(1+ear,1/12)-1)*100).toFixed(6))+'%']].map((x,i)=>`<div class="dk-kv${i===0?' big':''}"><span>${x[0]}</span><b>${x[1]}</b></div>`).join('')};
+ ['dkApr','dkM','dkK','dkEar'].forEach(id=>$('#'+id).addEventListener('input',cu));
+ DK.curRegs=()=>{const o={};KS.forEach(k=>{const v=$('#dk-'+k).value.trim();o[k]=v===''?'':parseNum(v)});return o};
+ /* load a step from a problem card */
+ DK.load=(label,keys)=>{const r=runKeys(keys);if(!r)return false;open(true);const from=$('#dkFrom');from.hidden=false;from.innerHTML=`<b>${esc(label)}</b><span>${r.mode==='cf'?'현금흐름과 할인율을 넣었습니다':r.mode==='tvm'?'TVM 칸에 값을 넣고 계산했습니다':'식을 그대로 계산했습니다'} · 숫자를 고치면 바로 다시 계산됩니다</span>`;
+  if(r.mode==='cf'){const rr=runs(r.cf);$('#dkCf').value=[r.cf[0],...rr.map(x=>x.f>1?`${x.f}x${x.v}`:x.v)].join(', ');if(r.I!==undefined&&isFinite(r.I))$('#dkCfI').value=r.I;setMode('cf');cfu();return true}
+  r.res.forEach(x=>DK.hist.push({e:x.e,v:x.v}));DK.ans=r.last.v;DK.expr='';
+  if(r.mode==='tvm'){KS.forEach(k=>{const v=r.R[k];$('#dk-'+k).value=v===''?'':+(+v).toFixed(6)});DK.bgn=false;b.textContent='END';b.setAttribute('aria-pressed',false);const lastT=[...r.res].reverse().find(x=>x.tvm);setMode('tvm');if(lastT)showT(lastT.tvm,lastT.v);if(r.last!==lastT){$('#dkTvmLab').textContent+=`  → 이어서 계산: ${fmtNum(r.last.v)}`}draw(fmtNum(r.last.v));return true}
+  setMode('basic');draw(fmtNum(r.last.v));return true};
+ setMode(store.get('dk-mode','basic'));draw('0');cfu();cu();autoT();open(!!store.get('dk-open',false))}
+
+function canRunKeys(s){if(!s)return false;const sv={ans:DK.ans,mem:DK.mem,A:DK.A};const r=runKeys(s);DK.ans=sv.ans;DK.mem=sv.mem;DK.A=sv.A;return !!r}
 /* ===== UI ===== */
 const $=(s,r=document)=>r.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1035,7 +1235,8 @@ function npvChart(series,lo,hi){const W=620,H=230,L=66,Rr=14,T=14,B=34;const xs=
 /* --- calculator shortcuts --- */
 const kfmt=s=>esc(s).replace(/\[([^\]]+)\]/g,'<kbd>$1</kbd>');
 function renderKeys(c,el){const box=$('.kbox',el);if(!KEYS[c.id]){box.hidden=true;return}let st;try{st=KEYS[c.id](vals[c.id])}catch(e){box.innerHTML='';return}
- box.innerHTML=`<div class="khd"><b>계산기 지름길</b><span>숫자를 바꾸면 키 입력도 바뀝니다 · <kbd>^</kbd> = yˣ · <kbd>(-)</kbd>/<kbd>+/-</kbd> = 음수 · BA II Plus는 P/Y = 1</span></div><ol class="ksteps">${st.map((s,i)=>`<li><div class="ksh"><span class="sn">${i+1}단계</span><b>${esc(s.t)}</b><span class="kout">${esc(s.out)}</span></div>${s.ba?`<div class="krow"><span class="kl">BA II Plus</span><span class="kc">${kfmt(s.ba)}</span></div>`:''}${s.sci?`<div class="krow"><span class="kl">공학용</span><span class="kc">${kfmt(s.sci)}</span></div>`:''}${s.why?`<div class="kwhy">${esc(s.why)}</div>`:''}</li>`).join('')}</ol>`}
+ box.innerHTML=`<div class="khd"><b>계산기 지름길</b><span>숫자를 바꾸면 키 입력도 바뀝니다 · <kbd>^</kbd> = yˣ · <kbd>(-)</kbd>/<kbd>+/-</kbd> = 음수 · BA II Plus는 P/Y = 1</span></div><ol class="ksteps">${st.map((s,i)=>`<li><div class="ksh"><span class="sn">${i+1}단계</span><b>${esc(s.t)}</b><span class="kout">${esc(s.out)}</span></div>${s.ba?`<div class="krow"><span class="kl">BA II Plus</span><span class="kc">${kfmt(s.ba)}</span>${canRunKeys(s.ba)?`<button class="krun" data-run="${i}" data-src="ba">▶ 계산기에서 실행</button>`:''}</div>`:''}${s.sci?`<div class="krow"><span class="kl">공학용</span><span class="kc">${kfmt(s.sci)}</span>${canRunKeys(s.sci)?`<button class="krun" data-run="${i}" data-src="sci">▶ 계산기에서 실행</button>`:''}</div>`:''}${s.why?`<div class="kwhy">${esc(s.why)}</div>`:''}</li>`).join('')}</ol>`;
+ box.onclick=e=>{const b=e.target.closest('.krun');if(!b)return;const s=st[+b.dataset.run];DK.load(`${c.ref} · ${+b.dataset.run+1}단계 ${s.t}`,s[b.dataset.src])}}
 
 /* --- problem card --- */
 const vals={};
@@ -1173,7 +1374,7 @@ function build(){const main=$('main .wrap');let h=homeHTML()+taHTML();
  h+=`<section class="view" id="v-sheet" hidden><div class="chhead"><span class="num">FORMULA SHEET</span><h2>한 장 공식집</h2></div><div class="sheet">${CH.filter(c=>c.fx).map(c=>`<div class="pane"><h3>${c.tab} <small>${esc(c.title)}</small></h3><div class="fx">${c.fx.map(f=>`<div><span>${f[0]}</span><code>${esc(f[1])}</code></div>`).join('')}</div></div>`).join('')}</div></section>`;
  main.innerHTML=h;
  $('#scope').innerHTML=CH.filter(c=>c.num).map(c=>{const ps=c.id==='ch1'?CH1QA.map(q=>q[0]):CALCS.filter(x=>x.ch===c.id).map(x=>x.ref);return `<div><b>${c.tab}</b> ${esc(c.title)} — ${ps.join(', ')}</div>`}).join('');
- CALCS.forEach(c=>{wireCard(c);update(c)});taWire();tvmWire();document.querySelectorAll('.tile[data-v]').forEach(t=>t.onclick=()=>show(t.dataset.v,true));heroLoop();earWire();cfWire();
+ CALCS.forEach(c=>{wireCard(c);update(c)});document.body.insertAdjacentHTML('beforeend',dockHTML());dockWire();taWire();tvmWire();document.querySelectorAll('.tile[data-v]').forEach(t=>t.onclick=()=>show(t.dataset.v,true));heroLoop();earWire();cfWire();
  const nav=$('nav.tabs .wrap');nav.innerHTML=CH.map(c=>`<button role="tab" data-v="${c.id}" aria-selected="false">${c.tab}<span class="ct"></span></button>`).join('');
  nav.addEventListener('click',e=>{const b=e.target.closest('button');if(b)show(b.dataset.v,true)});
  $('#nCalc').textContent=CALCS.length;refreshCounts();const start=(location.hash||'').slice(1);show(CH.some(c=>c.id===start)?start:store.get('cf-tab','home'),false)}
