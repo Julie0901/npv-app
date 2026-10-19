@@ -673,11 +673,14 @@ answer:`(a) The expected return is ${P(ea)}. (b) The standard deviation is ${P(s
 Cx({ch:'ch11',id:'p11-31',ref:'11-31',title:'Beta from correlation, then CAPM',
 inputs:[I('ep','Portfolio (Rf + market) return','%',9),I('sp','Portfolio SD','%',16),I('rf','Risk-free rate','%',4.1),I('em','Market expected return','%',11),I('rho','Correlation with market','n',0.38),I('si','Security SD','%',60)],
 prompt:v=>`A portfolio combining the risk-free asset and the market portfolio has an expected return of ${pc(v.ep)} and a standard deviation of ${pc(v.sp)}. The risk-free rate is ${pc(v.rf)} and the market's expected return is ${pc(v.em)}. Assuming CAPM holds, what expected return would a security earn if it had a ${v.rho} correlation with the market and a standard deviation of ${pc(v.si)}?`,
-compute:v=>{const s=(v.ep-v.rf)/v.sp,sm=(v.em-v.rf)/s/100,b=v.rho*v.si/100/sm,e=v.rf/100+b*(v.em-v.rf)/100;
-return{out:[o('Expected return',e,'%',1),o('Beta',b,'n',1,4),o('Market SD',sm,'%',1),o('CML slope',s,'n',0,4)],
-steps:['## Step 1. CML slope from the two points (R_f, 0) and the portfolio',`Slope = (${D(v.ep/100)} – ${D(v.rf/100)})/(${D(v.sp/100)} – 0) = ${N(s,4)}`,'## Step 2. Market SD',`${D(v.em/100)} = ${D(v.rf/100)} + ${N(s,4)} × σ_M  →  σ_M = ${P(sm)}`,'## Step 3. Beta',`β = ρ × σ_i/σ_M = ${v.rho} × ${D(v.si/100)}/${N(sm,4)} = ${N(b,4)}`,'## Step 4. CAPM',`E(R_i) = ${D(v.rf/100)} + ${N(b,4)}(${D(v.em/100)} – ${D(v.rf/100)}) = ${P(e)}`],
-answer:`The security's beta is ${N(b,2)}, so its expected return is ${P(e)}.`}}});
-
+compute:v=>{const ep=v.ep/100,rf=v.rf/100,em=v.em/100,w=(em-ep)/(em-rf),sm=v.sp/100/(1-w),b=v.rho*v.si/100/sm,e=rf+b*(em-rf),s=(ep-rf)/(v.sp/100);
+return{out:[o('Expected return',e,'%',1),o('Beta',b,'n',1,4),o('Market SD',sm,'%',1),o('Weight in risk-free (w)',w,'n',0,6)],
+steps:['## Step 1. Weight of the risk-free asset in portfolio Y',`E(R_Y) = w × R_f + (1 – w) × E(R_M)`,`${D(ep)} = w × ${D(rf)} + (1 – w) × ${D(em)}  →  ${D(ep)} = ${D(em)} – ${D(em-rf)}w`,`w = (${D(em)} – ${D(ep)})/${D(em-rf)} = ${N(w,6)};  1 – w = ${N(1-w,6)}`,
+'## Step 2. Standard deviation of the market',`σ_Y² = (w·σ_Rf)² + [(1 – w)σ_M]² + 2w(1 – w)σ_Rf·σ_M·ρ = [(1 – w)σ_M]²   (σ_Rf = 0)`,`σ_Y = (1 – w)σ_M  →  ${D(v.sp/100)} = ${N(1-w,6)} × σ_M  →  σ_M = ${N(sm,6)}, or ${P(sm)}`,
+'## Step 3. Beta of the security',`β_A = ρ_A,M × σ_A/σ_M = ${v.rho} × ${D(v.si/100)}/${N(sm,6)} = ${N(b,4)}`,
+'## Step 4. Expected return using the CAPM',`E(R_A) = R_f + β_A[E(R_M) – R_f] = ${D(rf)} + ${N(b,4)}(${D(em)} – ${D(rf)}) = ${P(e)}`,
+'## Alternative (CML slope)',`Slope = (${D(ep)} – ${D(rf)})/${D(v.sp/100)} = ${N(s,5)};  σ_M = (${D(em)} – ${D(rf)})/${N(s,5)} = ${N(sm,6)} — same result`],
+answer:`The security's beta is ${N(b,4)}, so its expected return is ${P(e)}.`}}});
 Cx({ch:'ch11',id:'p11-34',ref:'11-34',title:'SML: backing out Rf and the market return',
 inputs:[I('b1','Security 1 beta','n',1.25),I('e1','Security 1 expected return','%',13.28),I('b2','Security 2 beta','n',0.85),I('e2','Security 2 expected return','%',10.12)],
 prompt:v=>`Pete Corp. has a beta of ${v.b1} and an expected return of ${pc(v.e1)}. Repete Co. has a beta of ${v.b2} and an expected return of ${pc(v.e2)}. Assume both are correctly priced. Based on the CAPM, what is the expected return on the market? What is the risk-free rate?`,
@@ -843,10 +846,11 @@ else{const rf=v.rf/100,m=v.m/100;st.push({t:'베타 = (E(R) – Rf)/MRP',sci:`[(
 return st}
 KEYS['p11-25']=v=>statKeys(v,false);KEYS['p11-33']=v=>statKeys(v,true);
 KEYS['p11-30']=v=>{const s=(v.em-v.rf)/v.sm;return[{t:'CML 기울기',sci:`[(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.sm/100)} [=] [STO] A`,out:N(s,5)},{t:'(a) 기대수익률 / (b) 표준편차',sci:`${kp(v.rf/100)} [+] [RCL] A [×] ${kp(v.sp/100)} [=]    [(] ${kp(v.ep/100)} [−] ${kp(v.rf/100)} [)] [÷] [RCL] A [=]`,out:N((v.rf/100+s*v.sp/100)*100,2)+'% / '+N((v.ep-v.rf)/100/s*100,2)+'%'}]};
-KEYS['p11-31']=v=>{const s=(v.ep-v.rf)/v.sp,sm=(v.em-v.rf)/s/100,b=v.rho*v.si/100/sm;
-return[{t:'지름길: CML 기울기 → σM',sci:`[(] ${kp(v.ep/100)} [−] ${kp(v.rf/100)} [)] [÷] ${kp(v.sp/100)} [=] [STO] A    [(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [÷] [RCL] A [=]`,out:N(s,5)+' → '+N(sm,6),why:'TA 방식(비중 w)과 같은 값이 두 줄로 나옵니다.'},
+KEYS['p11-31']=v=>{const ep=v.ep/100,rf=v.rf/100,em=v.em/100,w=(em-ep)/(em-rf),sm=v.sp/100/(1-w),b=v.rho*v.si/100/sm;
+return[{t:'무위험자산 비중 w',sci:`[(] ${kp(em)} [−] ${kp(ep)} [)] [÷] [(] ${kp(em)} [−] ${kp(rf)} [)] [=]`,out:N(w,6),why:'E(R_Y) = w·R_f + (1 – w)·E(R_M)을 w로 정리 (TA 노트 방식).'},
+{t:'σ_M = σ_Y ÷ (1 – w)',sci:`${kp(v.sp/100)} [÷] [(] 1 [−] ${kp(w)} [)] [=]`,out:N(sm,6),why:'무위험자산은 σ = 0이라 σ_Y = (1 – w)σ_M.'},
 {t:'β = ρ × σA ÷ σM',sci:`${kp(v.rho)} [×] ${kp(v.si/100)} [÷] ${kp(sm)} [=]`,out:N(b,4)},
-{t:'CAPM',sci:`${kp(v.rf/100)} [+] ${kp(b)} [×] [(] ${kp(v.em/100)} [−] ${kp(v.rf/100)} [)] [=]`,out:N((v.rf/100+b*(v.em-v.rf)/100)*100,2)+'%'}]};
+{t:'CAPM',sci:`${kp(rf)} [+] ${kp(b)} [×] [(] ${kp(em)} [−] ${kp(rf)} [)] [=]`,out:N((rf+b*(em-rf))*100,2)+'%'}]};
 KEYS['p11-34']=v=>{const e1=v.e1/100,e2=v.e2/100,rf=(v.b1*e2-v.b2*e1)/(v.b1-v.b2);
 return[{t:'지름길: Rf 한 줄',sci:`[(] ${kp(v.b1)} [×] ${kp(e2)} [−] ${kp(v.b2)} [×] ${kp(e1)} [)] [÷] [(] ${kp(v.b1)} [−] ${kp(v.b2)} [)] [=] [STO] A`,out:N(rf*100,2)+'%',why:'두 증권의 reward-to-risk가 같다는 식을 정리한 결과.'},
 {t:'시장 기대수익률',sci:`[RCL] A [+] [(] ${kp(e1)} [−] [RCL] A [)] [÷] ${kp(v.b1)} [=]`,out:N((rf+(e1-rf)/v.b1)*100,2)+'%'}]};
