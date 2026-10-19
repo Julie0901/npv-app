@@ -405,9 +405,12 @@ inputs:[I('cf','Premiums (birthdays 1, 2, …)','list','500, 600, 700, 800, 900,
 prompt:v=>{const c=parseList(v.cf);return `A policy requires payments of ${c.map(M0).join(', ')} on the child's birthdays 1 through ${c.length}. At age ${v.age}, the child receives ${M0(v.pay)}. If the relevant rate is ${pc(v.r1)} for the first ${c.length} years and ${pc(v.r2)} thereafter, is the policy worth buying?`},
 compute:v=>{const c=parseList(v.cf),n=c.length,r1=v.r1/100,r2=v.r2/100;let vn=0;const lines=[];c.forEach((x,i)=>{const f=x*Math.pow(1+r1,n-1-i);vn+=f;lines.push(`FV${i+1} = ${M0(x)} × (${D(1+r1)})^${n-1-i} = ${M(f)}`)});
 const fv=vn*Math.pow(1+r2,v.age-n),pvPrem=c.reduce((s,x,i)=>s+x*pvif(r1,i+1),0),pvPay=v.pay*pvif(r2,v.age-n)*pvif(r1,n);
-return{out:[o('FV of premiums at age '+v.age,fv,'$',1),o('Value at year '+n,vn,'$'),o('PV of premiums',pvPrem,'$'),o('PV of payoff',pvPay,'$')],
-steps:[`## Step 1. Value of premiums at year ${n} (rate ${pc(v.r1)})`,...lines,`Value at year ${n} = ${M(vn)}`,`## Step 2. Compound to age ${v.age} (rate ${pc(v.r2)})`,`FV = ${M(vn)} × (${D(1+r2)})^${v.age-n} = ${M(fv)}`,'## Check with present values',`PV of premiums = ${M(pvPrem)};  PV of payoff = ${M0(v.pay)}/(${D(1+r2)})^${v.age-n}/(${D(1+r1)})^${n} = ${M(pvPay)}`],
-answer:fv>v.pay?`The policy is not worth buying: the premiums grow to ${M(fv)} by age ${v.age}, which is ${M(fv-v.pay)} more than the ${M0(v.pay)} payoff.`:`The policy is worth buying: the premiums grow to only ${M(fv)}, which is less than the ${M0(v.pay)} payoff.`}}});
+return{out:[o('PV of premiums',pvPrem,'$',1),o('PV of payoff',pvPay,'$',1),o('Difference (premiums – payoff)',pvPrem-pvPay,'$'),o('FV of premiums at age '+v.age,fv,'$')],
+steps:[`## Step 1. PV of the premiums (Years 1–${n}, discount at ${pc(v.r1)})`,`PV = `+c.map((x,i)=>`${M0(x)}/${D(1+r1)}^${i+1}`).join(' + '),`PV of premiums = ${M(pvPrem)}`,
+`## Step 2. PV of the payoff — split into two rates`,`(i) Discount to Year ${n} at ${pc(v.r2)} for ${v.age-n} years: ${M0(v.pay)}/(${D(1+r2)})^${v.age-n} = ${M(v.pay*pvif(r2,v.age-n))}`,`(ii) Discount to Year 0 at ${pc(v.r1)} for ${n} years: ${M(v.pay*pvif(r2,v.age-n))}/(${D(1+r1)})^${n} = ${M(pvPay)}`,
+'## Step 3. Compare the PVs',`PV of premiums ${M(pvPrem)}  vs.  PV of payoff ${M(pvPay)}  (difference ${M(Math.abs(pvPrem-pvPay))})`,
+`## Alternative: compare future values at age ${v.age}`,...lines,`Value at year ${n} = ${M(vn)};  FV at age ${v.age} = ${M(vn)} × (${D(1+r2)})^${v.age-n} = ${M(fv)} vs. ${M0(v.pay)}`,'Comparing at any single date gives the same decision.'],
+answer:pvPrem>pvPay?`Since the PV of the premiums (${M(pvPrem)}) exceeds the PV of the payoff (${M(pvPay)}), the policy is not worth buying.`:`Since the PV of the payoff (${M(pvPay)}) exceeds the PV of the premiums (${M(pvPrem)}), the policy is worth buying.`}}});
 
 Cx({ch:'ch4',id:'p4-68',ref:'4-68',title:'Calculating the rate of return on a savings plan',
 inputs:[I('p','Annual payment','$',9000),I('np','Number of payments (first today)','int',6),I('c','Annual benefit','$',20000),I('nc','Number of benefits','int',4),I('st','First benefit in year','int',6)],
