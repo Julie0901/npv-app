@@ -137,6 +137,12 @@ section.view{display:grid;gap:22px}
 .lcd .row span:last-child{font-size:16px;white-space:nowrap}
 .lcd .row.key span:last-child{font-size:20px}
 .lcd .row.key span:first-child{color:var(--lcdink);font-weight:600}
+.lcd-sec{font:600 10.5px var(--f-mono);letter-spacing:.14em;color:var(--lcddim);border-bottom:1px dashed var(--lcddim);padding-bottom:2px;margin-top:4px}
+.lcd-sec:first-child{margin-top:0}
+.lcd .row.step{align-items:flex-start;gap:12px}
+.lcd .row.step span:first-child{font-size:12px;color:var(--lcdink);flex:1 1 55%}
+.lcd .row.step span:first-child b{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:4px;background:var(--lcdink);color:var(--lcd);font:700 10.5px var(--f-mono);margin-right:4px;vertical-align:1px}
+.lcd .row.step span:last-child{font-size:14.5px;white-space:normal;text-align:right;flex:1 1 45%;overflow-wrap:anywhere}
 .card.practice:not(.revealed) .lcd .row span:last-child{color:transparent;text-shadow:0 0 9px var(--lcddim)}
 .pr{display:grid;gap:8px}
 .pr .q{display:grid;grid-template-columns:minmax(0,1fr) 120px auto;gap:6px;align-items:center}
@@ -261,7 +267,7 @@ body.dk-open .dk-fab{display:none}
 .ksteps{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .ksteps>li{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;min-width:0;background:var(--card)}
 .ksh{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline}.ksh b{font-size:14.5px}
-.kout{margin-left:auto;font:600 15px var(--f-lcd);background:var(--lcd);color:var(--lcdink);padding:2px 9px;border-radius:4px;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
+.kout{margin-left:auto;font:600 15px var(--f-lcd);background:var(--lcd);color:var(--lcdink);padding:2px 9px;border-radius:4px;white-space:normal;max-width:100%;overflow-wrap:anywhere;text-align:right}
 .krow{display:grid;grid-template-columns:78px minmax(0,1fr) auto;gap:8px;align-items:start}
 .krun{border:0;cursor:pointer;background:var(--gold);color:var(--goldink);font:700 11.5px var(--f-body);padding:6px 10px;border-radius:6px;white-space:nowrap;box-shadow:inset 0 -2px 0 rgba(0,0,0,.2);align-self:center}
 .krun:hover{filter:brightness(1.07)}
@@ -1266,7 +1272,8 @@ function update(c){const el=document.getElementById('card-'+c.id),v=vals[c.id];l
  $('.ptxt',el).textContent=c.prompt(v);
  if(!r){$('.lcd',el).innerHTML='<div class="row"><span>입력값을 확인하세요</span><span>Error</span></div>';return}
  c._r=r;
- $('.lcd',el).innerHTML=r.out.map(x=>`<div class="row${x.key?' key':''}"><span>${esc(x.l)}</span><span>${esc(fmtOut(x))}</span></div>`).join('');
+ let stp=[];try{stp=KEYS[c.id]?KEYS[c.id](v):[]}catch(e){}
+ $('.lcd',el).innerHTML=`<div class="lcd-sec">ANSWER</div>`+r.out.map(x=>`<div class="row${x.key?' key':''}"><span>${esc(x.l)}</span><span>${esc(fmtOut(x))}</span></div>`).join('')+(stp.length?`<div class="lcd-sec">STEP BY STEP</div>`+stp.map((s,i)=>`<div class="row step"><span><b>${i+1}</b> ${esc(s.t)}</span><span>${esc(s.out)}</span></div>`).join(''):'');
  $('.steps',el).innerHTML=r.steps.map(s=>s.startsWith('## ')?`<div class="h">${esc(s.slice(3))}</div>`:`<div>${esc(s)}</div>`).join('');
  $('.ans',el).innerHTML=`<b>ANSWER</b>${esc(r.answer)}`;
  renderKeys(c,el);
